@@ -62,6 +62,30 @@
 		</select>
 	</div>
 	
+	
+	<div class="span4">
+		Filter By Host<br>
+		<select name="dimension-hostname_max" class="span3 combobox">
+			<option value=""></option>
+			<?php foreach ($hosts as $h) { ?>
+				<option value="<?php echo $h ?>" <?php if (isset($hostname_max) AND $hostname_max == $h ) { echo "SELECTED"; } ?>><?php echo $h ?></option>
+			<?php } ?>
+		</select><br>
+		
+		Group By<br>
+		<input name="fact-group" class="span4 typeahead" value="<?php echo get_var('fact-group') ?>" data-provide="typeahead"><br><br>
+		Order By<br>
+		<input name="fact-order" class="span4 typeahead" value="<?php echo get_var('fact-order') ?>"><br><br>
+		Having<br>
+		<input name="fact-having" class="span4 typeahead" value="<?php echo get_var('fact-having') ?>"><br><br>
+		Limit<br>
+		<input name="fact-limit" class="span1" value="<?php echo get_var('fact-limit') ?>"><br><br>
+		<center>
+			<input type="submit" class="btn-primary btn-large" name="submit" value="Search">
+		</center>
+		
+	</div>
+	
 	<div class="span4">
 		<!--
 		Extra Fields<br>
@@ -74,31 +98,16 @@
 		<input name="fact-sample" class="span4" value="<?php echo get_var('fact-sample') ?>"><br><br>
 		Reviewed Status<br>
 		<select class="span4 combobox">
+			<option value=""></option>
 		<?php foreach ($review_types as $rt) { ?>
 				<option value="<?php echo $rt ?>" <?php if (get_var('fact-reviewed_status') == $rt) { echo ' SELECTED '; } ?>><?php echo $rt ?></option>
 		<?php } ?>
 		</select><br>
 		
-	</div>
-	<div class="span4">
-		Filter By Host<br>
-		<select name="dimension-hostname_max" class="span3 combobox">
-			<option value=""></option>
-			<?php foreach ($hosts as $h) { ?>
-				<option value="<?php echo $h ?>" <?php if (isset($hostname_max) AND $hostname_max == $h ) { echo "SELECTED"; } ?>><?php echo $h ?></option>
-			<?php } ?>
-		</select><br><br>
-		
-		Group By<br>
-		<input name="fact-group" class="span4 typeahead" value="<?php echo get_var('fact-group') ?>" data-provide="typeahead"><br><br>
-		Order By<br>
-		<input name="fact-order" class="span4 typeahead" value="<?php echo get_var('fact-order') ?>"><br><br>
-		Having<br>
-		<input name="fact-having" class="span4 typeahead" value="<?php echo get_var('fact-having') ?>"><br><br>
-		Limit<br>
-		<input name="fact-limit" class="span1" value="<?php echo get_var('fact-limit') ?>"><br><br>
-		<input type="submit" class="btn-primary btn-large" name="submit" value="Search">
+		Checksum<br>
+		<input name="fact-checksum" class="span4 typeahead" value="<?php echo get_var('fact-checksum') ?>"><br><br>
 		
 	</div>
+	
 </div>
 <hr>

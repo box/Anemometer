@@ -2,14 +2,18 @@
 include "SQL/Parser.php";
 /*
 	* todo: implement exra fields ... somehow<br> or remove extra fields for version 1
-	* todo: add reviewd to search fields ... tab for extended search?<br>
+	* todo: add reviewed_status to search fields ... tab for extended search?<br>
 	* todo: possible report for reviewed (aggregate by reviewd type, reviwed/unreviewed / new  or old, etc)<br>
 	* todo: cleanup MySQLReport object<br>
 	* todo: document / organise it all
 	* maybe make explain / create / etc ajax requests so we don't do requests when nobody looks at it
 */
 error_reporting(E_ALL);
-include "views/header.php";
+if (!get_var('noheader'))
+{
+	include "views/header.php";
+}
+
 $action = 'index';
 if (isset($_GET['action']))
 {
@@ -28,7 +32,10 @@ else
 {
 	print "Invalid action ($action)";
 }
-include "views/footer.php";
+if (!get_var('noheader'))
+{
+	include "views/footer.php";
+}
 
 // @todo validation?
 function get_var($name)
@@ -103,8 +110,10 @@ class WeatherStation
 		
 		$datasources = $this->data_model->get_data_source_names();
 		$path = $this->get_path();
-		
-		require "views/navbar.php";
+		if (!get_var('noheader'))
+		{
+			require "views/navbar.php";
+		}
 	}
 	
 	public function quicksearch()
@@ -159,7 +168,8 @@ class WeatherStation
 		$_GET['dimension-ts_min_start'] = date("Y-m-d H:i:s", strtotime( '-90 day'));
 		$_GET['dimension-ts_min_end'] = date("Y-m-d H:i:s");
 		$_GET['fact-group'] = 'DATE(ts_min)';
-		$_GET['fact-where'] = "checksum = '$checksum'";
+		//$_GET['fact-where'] = "checksum = '$checksum'";
+		$_GET['fact-checksum'] = $checksum;
 		$_GET['fact-order'] = 'DATE(ts_min) DESC';
 		$_GET['fact-limit'] = 90;
 		$_GET['action'] = "search";
@@ -279,7 +289,6 @@ class WeatherStation
 		$hide_form = get_var('hide_search_form');
 		$datasource = $this->get_var('datasource');
 		
-		
 		// bad ... 
 		$tables = $this->report_obj->get_tables();
 		$hosts = $this->report_obj->get_distinct_values($tables[1], 'hostname_max');
@@ -298,6 +307,9 @@ class WeatherStation
 		$this->report_obj->process_form_data();
 		$sql = $this->report_obj->query();
 		
+		$review_types = $this->data_model->get_review_types();
+		$reviewers = $this->data_model->get_reviewers();
+		
 		if (!isset($hide_form)) {
 			require "views/report.php";
 		}
@@ -307,10 +319,45 @@ class WeatherStation
 		$columns = $this->report_obj->get_column_names();
 		//prettyprint(print_r($_SERVER, true));
 		
-		require "views/report_result.php";
-		
+		if (get_var('output') == 'graph')
+		{
+			require "views/flot_test.php";
+		}
+		else
+		{
+			require "views/report_result.php";
+		}
 	}
 	
+	public function api()
+	{
+		$this->report_obj->process_form_data();
+		$sql = $this->report_obj->query();
+		
+		$data = array();
+		$result = $this->report_obj->execute($sql);
+		$columns = $this->report_obj->get_column_names();
+		
+		$output_types = array(
+							  'json' => "views/report_json.php",
+							  'print_r' => "views/report_printr.php",
+							  'table' => "views/report_result.php",
+							  'graph' => "views/flot_test.php"
+		);
+		
+		$output = get_var('output');
+		if (key_exists($output, $output_types))
+		{
+			require $output_types[$output];
+		}
+		else
+		{
+			require $output_types['table'];
+		}
+		
+		//$permalink =  site_url() . '?action=report&datasource='.$datasource. '&'.$this->report_obj->get_search_uri();
+	}
+		
 	function __destruct()
 	{
 	}
