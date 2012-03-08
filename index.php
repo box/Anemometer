@@ -340,6 +340,7 @@ class WeatherStation
 		
 		$output_types = array(
 							  'json' => "views/report_json.php",
+							  'json2' => "views/report_json2.php",
 							  'print_r' => "views/report_printr.php",
 							  'table' => "views/report_result.php",
 							  'graph' => "views/flot_test.php"
@@ -357,7 +358,43 @@ class WeatherStation
 		
 		//$permalink =  site_url() . '?action=report&datasource='.$datasource. '&'.$this->report_obj->get_search_uri();
 	}
+	
+	
+	private function set_search_defaults($type='report_defaults')
+	{
+		$defaults = $this->data_model->get_report_defaults($type);		
+		foreach ($defaults as $key => $value)
+		{
+			if (get_var($key) == null)
+			{
+				$_GET[$key] = $value;
+			}
+		}
+	}
+	
+	public function graph_search()
+	{
+		$this->set_search_defaults('graph_defaults');
+		$datasource = $this->get_var('datasource');
 		
+		$tables = $this->report_obj->get_tables();
+		$hosts = $this->report_obj->get_distinct_values($tables[1], 'hostname_max');
+		$hostname_max = get_var('dimension-hostname_max');
+		
+		$tables = $this->report_obj->get_tables();
+		foreach ($tables as $t)
+		{
+			$table_fields[$t] = $this->report_obj->get_table_fields($t);
+		}
+		$custom_fields = $this->report_obj->get_custom_fields();
+		
+		$this->report_obj->process_form_data();
+		$_GET['table_fields'][] = get_var('plot_field');
+		$ajax_request_url =  site_url() . '?action=api&output=json2&noheader=1&datasource='.$datasource. '&'.$this->report_obj->get_search_uri();
+		
+		require "views/graph_search.php";	
+	}
+	
 	function __destruct()
 	{
 	}
@@ -378,9 +415,9 @@ class WeatherStationModel
 		$this->conf = $conf;
 	}
 	
-	public function get_report_defaults()
+	public function get_report_defaults($type='report_defaults')
 	{
-		return $this->conf['report_defaults'];
+		return $this->conf[$type];
 	}
 	
 	public function get_review_types()
@@ -1088,6 +1125,13 @@ class MySQLTableReport  extends Report
 				
 			}
 		}
+		
+		$table_fields = get_var('table_fields');
+		foreach ($table_fields as $t)
+		{
+			$params[] = "table_fields%5B%5D={$t}";
+		}
+		
 		return join("&", $params);
 	}
 

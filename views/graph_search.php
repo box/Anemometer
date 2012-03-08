@@ -1,8 +1,55 @@
-<div>
-	<div id="theplot" style="width:600px; height: 300px;"></div>
-	<p>You selected: <span id="selection"></span></p>
-	<p><input id="clear_selection" type="button" value="Clear selection" /></p>
+<script>
+	$(function() {
+	});
+</script>
+
+<div class="row">
+	<form action="<?php echo site_url()."?action=report"; ?>" method="GET" class="form-inline">
+	<input type="hidden" name="action" value="report">
+	<input type="hidden" name="datasource" value="<?php echo $datasource; ?>">
+	<div class="row">
+		<div class="span3">
+			From<br>
+			<div class="input-append">
+				<input type="text" class="span2" name="dimension-ts_min_start" id="dimension-ts_min_start" value="<?php echo get_var('dimension-ts_min_start'); ?>">
+				<span class="add-on"><i class="icon-calendar" id="dp"></i></span>
+			</div>
+		</div>
+
+		<div class="span4">
+			To<br>
+			<div class="input-append">
+				<input type="text" class="span2" name="dimension-ts_min_end" id="dimension-ts_min_end" value="<?php echo get_var('dimension-ts_min_end'); ?>">
+				<span class="add-on"><i class="icon-calendar" id="dp"></i></span>
+			</div>
+		</div>
+
+	Column to plot<br>
+	<select name="plot_field" class="span3">
+			<optgroup label="Custom Fields">
+			<?php foreach ($custom_fields as $f)  { ?>
+				<option value="<?php echo $f ?>" <?php if (get_var('plot_field') == $f) { echo "SELECTED"; } ?>><?php echo $f ?></option>
+			<?php } ?>
+			</optgroup>
+
+			<?php foreach (array_keys($table_fields) as $table)  { ?>
+				<optgroup label="<?php echo $table; ?>">
+					<?php foreach ($table_fields[$table] as $f)  { ?>
+						<option value="<?php echo $f ?>" <?php if (get_var('plot_field') == $f) { echo "SELECTED"; } ?>><?php echo $f ?></option>
+					<?php } ?>
+				</optgroup>
+			<?php } ?>
+		</select>
+
+	<div>
+		<div id="theplot" style="width:600px; height: 300px;"></div>
+		<p>You selected: <span id="selection"></span></p>
+		<p><input id="clear_selection" type="button" value="Clear selection" /></p>
+	</div>
+
 </div>
+
+
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
 <script>
@@ -27,6 +74,12 @@ var thefreakingoptions = {
 var thedamndata = [];
 
 $(document).ready( function ()  {
+	// Setup the search widget stuff!
+	$("#dimension-ts_min_start").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
+	$("#dimension-ts_min_end").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
+	$('.combobox').combobox();
+	prettyPrint();
+
 	// div to plot within
 	var theplot = $("#theplot");
 
