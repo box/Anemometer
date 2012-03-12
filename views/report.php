@@ -97,7 +97,7 @@
 		Query Sample Contains<br>
 		<input name="fact-sample" class="span4" value="<?php echo get_var('fact-sample') ?>"><br><br>
 		Reviewed Status<br>
-		<select class="span4 combobox">
+		<select class="span4 combobox" name="fact-reviewed_status">
 			<option value=""></option>
 		<?php foreach ($review_types as $rt) { ?>
 				<option value="<?php echo $rt ?>" <?php if (get_var('fact-reviewed_status') == $rt) { echo ' SELECTED '; } ?>><?php echo $rt ?></option>
