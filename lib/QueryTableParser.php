@@ -13,7 +13,7 @@
  * 
  * @author Gavin Towey <gavin@box.com>
  * @created 2012-01-01
- * @license Please contact the author for licensing
+ * @license Apache 2.0 license.  See LICENSE document for more info
  * 
  * @todo handle table names with spaces wrapped in backticks or quotes
  * @todo stop parsing early if possible -- after the JOIN clause (if any)
