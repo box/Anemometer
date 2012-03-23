@@ -30,10 +30,16 @@ class Anemometer {
      * 
      * @param type $conf 
      */
-    function __construct($conf) {
-        $this->conf = $conf;
-        $this->data_model = new AnemometerModel($conf);
+    function __construct($conf)
+    {
         $this->load = new Loader();
+        if (empty($conf))
+        {
+            return;
+        }
+        
+        $this->conf = $conf;
+        $this->data_model = new AnemometerModel($conf);        
         $datasource = get_var('datasource');
         if (isset($datasource)) {
             $this->data_model->set_data_source($datasource);
@@ -50,10 +56,12 @@ class Anemometer {
      * a table or graph directly.  All other methods that get report results use this
      * either directly or as an ajax call. 
      */
-    public function api() {
+    public function api()
+    {
         // special case for optional pivot on hostname
         // mainly used to graph each host as a series
-        if (get_var('dimension-pivot-hostname_max') != null) {
+        if (get_var('dimension-pivot-hostname_max') != null)
+        {
             $dimension_table = $this->report_obj->get_table_by_alias('dimension');
             $hosts = $this->report_obj->get_distinct_values($dimension_table, 'hostname_max');
             $this->report_obj->set_pivot_values('dimension-pivot-hostname_max', $hosts);
@@ -78,7 +86,8 @@ class Anemometer {
         );
 
         $output = get_var('output');
-        if (key_exists($output, $output_types)) {
+        if (key_exists($output, $output_types))
+        {
             $this->load->view($output_types[$output], $data);
         } else {
             $this->load->view($output_types['table'], $data);
@@ -92,7 +101,8 @@ class Anemometer {
      * displayed below.  Regions can be selected in the graph directly which will
      * update the table results with the new time range. 
      */
-    public function graph_search() {
+    public function graph_search()
+    {
         $this->header();
         $this->set_search_defaults('graph_defaults');
         $data['datasource'] = get_var('datasource');
@@ -140,7 +150,8 @@ class Anemometer {
      * one, just redirect to the default report
      * 
      */
-    public function index() {
+    public function index()
+    {
         $this->header();
 
         $datasources = $this->data_model->get_data_source_names();
@@ -158,6 +169,13 @@ class Anemometer {
 
         // for multiple datasources, choose one
         $this->load->view('index', array('datasources' => $datasources));
+        $this->footer();
+    }
+    
+    public function noconfig()
+    {
+        $this->header();
+        $this->load->view("noconfig");
         $this->footer();
     }
     
@@ -378,9 +396,11 @@ class Anemometer {
         if ($this->header_printed) {
             return false;
         }
-
-        $datasources = $this->data_model->get_data_source_names();
-        $datasource = get_var('datasource');
+        if (is_object($this->data_model))
+        {
+            $datasources = $this->data_model->get_data_source_names();
+            $datasource = get_var('datasource');
+        }
 
         if (!get_var('noheader')) {
             $this->load->view("header");
