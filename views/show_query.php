@@ -8,20 +8,17 @@
 	</div>
 		<hr>
 			<div class="row">
-	<!-- <div id="theplot" class="span12" style="height: 300px;"></div> -->
+		<div id="theplot" class="span12" style="height: 300px;"></div>
 </div>
 <div class="row">
-	<p>You selected: <span id="selection"></span></p>
-	<p><a id="clear_selection" value="Clear selection" class="btn"/ href="#"><i class="icon-fire"></i> DieDieDie!!</a></p>
+	<!-- <p>You selected: <span id="selection"></span></p>
+	<p><a id="clear_selection" value="Clear selection" class="btn"/ href="#"><i class="icon-fire"></i> Reset Selection</a></p> -->
 </div>
 
 			<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
 <script>
-// Temporarily commenting out flot JS code due to browser crashes.
-/*
-//var dataurl = "http://dba1001.ve.box.net:90/weatherstation/index.php?action=api&datasource=Live&dimension-ts_min_start=2012-03-06+21%3A16%3A00&dimension-ts_min_end=2012-03-07+21%3A16%3A00&fact-first_seen=&table_fields%5B%5D=hour_ts&table_fields%5B%5D=Query_time_sum&dimension-hostname_max=&fact-group=hour_ts&fact-order=hour_ts&fact-having=&fact-limit=999&submit=Search&fact-where=&fact-sample=&fact-checksum=&output=json2&noheader=1"
-//var dataurl = "http://dba1001.ve.box.net:90/weatherstation/index.php?action=api&datasource=Live&dimension-ts_min_start=2012-03-06+21%3A16%3A00&dimension-ts_min_end=2012-03-07+21%3A16%3A00&fact-first_seen=&table_fields%5B%5D=hour_ts&table_fields%5B%5D=Query_time_sum&table_fields%5B%5D=ts_cnt&dimension-hostname_max=&fact-group=hour_ts&fact-order=hour_ts&fact-having=&fact-limit=999&submit=Search&fact-where=&fact-sample=&fact-checksum=&output=json2&noheader=1"
+
 // url to retrieve JSON from
 var dataurl = "<?php echo $ajax_request_url ?>"
 
@@ -32,7 +29,7 @@ var thefreakingoptions = {
 		points: { show: true},
 	},
 	legend: { noColumns: 2},
-	xaxis: { tickDecimals: 0 , tickSize: 1 },
+	xaxis: { tickDecimals: 0, mode: "time" },
 	yaxis: { min: 0 },
 	selection: { mode: "x" },
 };
@@ -44,15 +41,16 @@ var thedamndata = [];
 // Callback function for drawing the graph after data is retrieved from an AJAX call
 function newPlotData(data) {
 	console.debug(data);
-	//the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, data, thefreakingoptions);
-	//the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot($("#theplot"), data, thefreakingoptions);
+	for ( var i = 0; i < data.length; i++ )
+	{
+		for ( var j = 0; j < data[i].data.length; j++ )
+		{
+			data[i].data[j][0] = data[i].data[j][0] * 1000;
+		}
+	}
 	var theplot = $("#theplot");
 	thedamndata = data;
-	the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, data);
-	console.debug(thefreakingoptions);
-	//the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, thefreakingoptions);
-	setupSelection(theplot);
-	console.debug(the_freaking_plot_with_freaking_lasers_on_its_freaking_head);
+	the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, thefreakingoptions);
 }
 
 function setupSelection(theplot) {
@@ -76,13 +74,13 @@ $(document).ready( function ()  {
 
 	// Create the plot!
 	var the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, thefreakingoptions);
-
+	/*
 	// If the clear button is hit, reset the plot with the new values
 	$("#clear_selection").click(function () {
 		the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, thefreakingoptions);
 		the_freaking_plot_with_freaking_lasers_on_its_freaking_head.clearSelection();
 	});
-
+	*/
 
 	$.ajax({
 		url: dataurl,
@@ -93,7 +91,7 @@ $(document).ready( function ()  {
 
 
 });
-*/
+
 </script>
 
 	<div class="row">

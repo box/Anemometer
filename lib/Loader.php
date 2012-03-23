@@ -4,7 +4,7 @@
  * 
  * @author Gavin Towey <gavin@box.com>
  * @created 2012-01-01 
- * @package Loader
+ * @license please contact the authors for licensing information
  */
 class Loader
 {

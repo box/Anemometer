@@ -11,7 +11,7 @@
  * columns.
  * 
  * Basic usage:
- * 
+ * <code>
  * $report = new MySQLTableReport( $datasource, $tables, $report);
  *  
  * // run the query and get the result and header data
@@ -19,10 +19,10 @@
  * $columns = $report->get_column_names();
  * 
  * // ... display as desired.
- * 
+ * </code>
  * 
  * the parameters above have the following forms:
- * 
+ * <code>
  * $datasource = array(
  *      'host'  => $host, // the mysql server hostname
  *      'port'  => $port, // optional port number
@@ -34,13 +34,15 @@
  * $tables = array(
  *      'fact_table_name'       => 'fact',      // table_name => alias
  *      'dimension_table_name'  =>  'dimension', // table_name => alias
- * )
+ * );
+ * </code>
  * 
  * The aliases used for tables are mostly anything you choose *except* that one 
  * table must have the alias 'fact'.  This is considered the root table to which
  * any additional tables can be joined. There can be only one fact table, but you can
  * have any number of dimension tables as long as each have unique aliases
- * 
+ *
+ * <code>
  * $report = array(
  * 
  *      // the JOIN clause for any dimension tables.  Specify the exact clause used
@@ -79,11 +81,10 @@
  *              'snippet'   =>  'LEFT(info,15)'
  *      )
  * );
- * 
+ * </code>
  * 
  * @todo describe the config format in more detail 
  * 
- * @package MySQLTableReport
  * @author Gavin Towey <gavin@box.com>
  * @created 2012-01-01
  * @license contact the author for details and permissions
@@ -740,6 +741,9 @@ class MySQLTableReport {
             foreach ($this->form_fields[$alias] as $field => $config) {
                 $var_name = "{$alias}-{$field}";
                 $col_name = "{$alias}.{$field}";
+				if (isset($this->report['custom_fields'][$field])) {
+					$col_name = $this->report['custom_fields'][$field];
+				}
                 $functions = preg_split("/\|/", $config);
                 $args = array(array($col_name, $var_name, $values[$var_name]));
                 //print "checking fields {$var_name}=". $args[0][1]. "<br>";

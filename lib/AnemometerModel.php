@@ -9,7 +9,6 @@ require "QueryExplain.php";
  * and selecting and updating queries from the query_review table
  * 
  * 
- * @package AnemometerModel
  * @author Gavin Towey <gavin@box.com> and Geoff Anderson <geoff@box.com>
  * @created 2012-01-01
  * @license please contact the authors for licensing information 
@@ -229,7 +228,15 @@ class AnemometerModel {
      * @param array $sample     The qeury sample
      */
     public function init_query_explainer(array $sample) {
-        $this->explainer = new QueryExplain($this->conf['plugins']['explain'], $sample);
+        try
+        {
+            $this->explainer = new QueryExplain($this->conf['plugins']['explain'], $sample);    
+        }
+        catch (Exception $e)
+        {
+            // ignore it
+        }
+        
     }
 
     /**
@@ -242,7 +249,10 @@ class AnemometerModel {
         if (!isset($this->conf['plugins']['explain']) or !is_callable($this->conf['plugins']['explain'])) {
             return null;
         }
-
+        
+        if (!isset($this->explainer)) {
+            return null;
+        }
 
         return $this->explainer->explain($sample);
     }

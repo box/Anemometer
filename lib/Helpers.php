@@ -3,7 +3,7 @@
  *
  * Global helper functions for the weatherstation app
  * @author Gavin Towey <gavin@box.net>
- * @license @TODO some sort of GPL
+ * @license please contact the authors for licensing information
  * @created 2012-01-01
  */
 

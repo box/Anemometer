@@ -31,12 +31,18 @@
             
             <?php if (isset($datasource)) { ?> 
               <li><a href="<?php echo site_url(). "?action=report&datasource={$datasource}"; ?>"><?php echo $datasource ?></a></li>
+              <li class="divider-vertical"></li>
+              
+              <li><a href="<?php echo site_url().'?action=graph_search&datasource='.$datasource; ?>"><i class="icon-picture icon-white" style="width: 32px"></i> Graph Search</a></li>
+              <li><a href="<?php echo site_url().'?action=report&datasource='.$datasource; ?>"><i class="icon-list-alt icon-white" style="width: 16px"></i> Table Search</a></li>
             <?php } ?>
+            
+            
             
         </ul>
       </div><!--/.nav-collapse -->
       <?php if (isset($datasource)) { ?> 
-      <form class="form-search form-inline pull-right" id="quicksearch" action="<?php echo site_url()."?action=show_query&datasource={$datasource}"; ?>" method="post">
+      <form class="form-search form-inline pull-right" id="quicksearch" action="<?php echo site_url()."?action=quicksearch&datasource={$datasource}"; ?>" method="post">
         <input type="text" class="input-medium" name="checksum" placeholder="checksum">
           <a class="btn" href="javascript:document.getElementById('quicksearch').submit()"><i class="icon-search"></i> Find Query</a>
       </form>

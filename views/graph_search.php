@@ -55,8 +55,7 @@
 		</div>
 		
 		<div class="span4" >
-			<?php echo get_var('dimension-pivot-hostname_max') ?>
-			<input type="checkbox" name="dimension-pivot-hostname_max" value='ts_cnt'<?php echo (get_var('dimension-pivot-hostname_max') ? ' CHECKED ' : '') ?>> Show each host as a separate series
+			<input type="checkbox" name="dimension-pivot-hostname_max" value='ts_cnt'<?php echo (isset($dimension_pivot_hostname_max) ? ' CHECKED ' : '') ?>> Show each host as a separate series
 			
 		</div>
 		
@@ -76,11 +75,12 @@
 </div>
 <div class="row">
 	<p>You selected: <span id="selection"></span></p>
-	<p><a id="clear_selection" value="Clear selection" class="btn"/ href="#"><i class="icon-fire"></i> DieDieDie!!</a></p>
+	<p><a id="clear_selection" value="Clear selection" class="btn" href="#"><i class="icon-fire"></i> Reset Selection</a>
+		<a class="btn" href="<?php echo $graph_permalink; ?>"><i class="icon-magnet"></i> Graph Permalink</a></p>
 </div>
 <hr>
 	</div></div>
-<span id="report_table">loading...</div>
+<span id="report_table"><center><img src="img/ajax-loader.gif"></center></div>
 
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
@@ -91,15 +91,17 @@
 //var dataurl = "http://dba1001.ve.box.net:90/weatherstation/index.php?action=api&datasource=Live&dimension-ts_min_start=2012-03-06+21%3A16%3A00&dimension-ts_min_end=2012-03-07+21%3A16%3A00&fact-first_seen=&table_fields%5B%5D=hour_ts&table_fields%5B%5D=Query_time_sum&table_fields%5B%5D=ts_cnt&dimension-hostname_max=&fact-group=hour_ts&fact-order=hour_ts&fact-having=&fact-limit=999&submit=Search&fact-where=&fact-sample=&fact-checksum=&output=json2&noheader=1"
 // url to retrieve JSON from
 var dataurl = "<?php echo $ajax_request_url ?>";
-var table_dataurl = "<?php echo $ajax_request_url_table ?>";
+var table_base_url = "<?php echo $ajax_table_request_url_base ?>"
+var table_url_time_start_param = "<?php echo $table_url_time_start_param ?>"
+var table_url_time_end_param = "<?php echo $table_url_time_end_param ?>"
 // Setup options for the plot
 var thefreakingoptions = {
 	series: {
 		lines: { show: true },
 		points: { show: true},
 	},
-	legend: { noColumns: 2},
-	xaxis: { tickDecimals: 0 , tickSize: 1 },
+	legend: { noColumns: 2 },
+	xaxis: { tickDecimals: 0, mode: "time" },
 	yaxis: { min: 0 },
 	selection: { mode: "x" },
 };
@@ -110,32 +112,93 @@ var thedamndata = [];
 
 // Callback function for drawing the graph after data is retrieved from an AJAX call
 function newPlotData(data) {
-	console.debug(data);
-	//the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, data, thefreakingoptions);
-	//the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot($("#theplot"), data, thefreakingoptions);
+	// convert the timestamp from seconds to milliseconds
+	for ( var i = 0; i < data.length; i++ )
+	{
+		for ( var j = 0; j < data[i].data.length; j++ )
+		{
+			data[i].data[j][0] = data[i].data[j][0] * 1000;
+			data[i].data[j][0] = data[i].data[j][0] - (60*60*7*1000);
+		}
+	}
 	var theplot = $("#theplot");
 	thedamndata = data;
-	the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, data);
-	console.debug(thefreakingoptions);
-	//the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, thefreakingoptions);
+	the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, thefreakingoptions);
 	setupSelection(theplot);
-	console.debug(the_freaking_plot_with_freaking_lasers_on_its_freaking_head);
+}
+
+function leftPadThisThingYo(padThis, padding, amount)
+{
+	s = String(padThis);
+	returnStr = '';
+	if(s.length < amount)
+	{
+		for ( var i = 1; i < amount; i++)
+		{
+			returnStr += padding;
+		}
+		returnStr += padThis;
+	}
+	else
+	{
+		returnStr += padThis;
+	}
+	return returnStr;
+}
+
+function getMeAGoodDamnDate(d)
+{
+	
+	thedate = d.getFullYear();
+	thedate += '-';
+	thedate += leftPadThisThingYo(d.getMonth()+1, '0', 2);
+	thedate += '-';
+	thedate += leftPadThisThingYo(d.getDate(), '0', 2);
+	thedate += ' ';
+	thedate += leftPadThisThingYo(d.getHours(), '0', 2);
+	thedate += ':';
+	thedate += leftPadThisThingYo(d.getMinutes(), '0', 2);
+	thedate += ':';
+	thedate += leftPadThisThingYo(d.getSeconds(), '0', 2);
+	return thedate;
 }
 
 function setupSelection(theplot) {
 	// Add event handlers to the plot div that allow interactive selection of data
 	theplot.bind("plotselected", function (event, ranges) {
-		$("#selection").text(ranges.xaxis.from.toFixed(1) + " to " + ranges.xaxis.to.toFixed(1));
+		//$("#selection").text(ranges.xaxis.from.toFixed(1) + " to " + ranges.xaxis.to.toFixed(1));
 		plot = $.plot(theplot, thedamndata, $.extend ( true, {}, thefreakingoptions, {
 			xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
 		}));
+
+		d = new Date();
+		d.setTime(Math.floor(ranges.xaxis.from + (60*60*7*1000)));
+		//startTime = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+		startTime = getMeAGoodDamnDate(d);
+		d.setTime(Math.floor(ranges.xaxis.to + (60*60*7*1000)));
+		//endTime = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+		endTime = getMeAGoodDamnDate(d);
+		var new_table_data_url = table_base_url + '&' + escape(table_url_time_start_param) + '=' + escape(startTime) + '&' + escape(table_url_time_end_param)  + '=' + escape(endTime);
+		$('#report_table').html('<center><img src="img/ajax-loader.gif"></center>');
+		$.ajax({
+			url: new_table_data_url,
+			method: 'GET',
+			dataType: 'html',
+			success: showTableData
+		});
+		$("#selection").text(startTime + " to " + endTime);
 	});
 	theplot.bind("plotunselected", function (event) {
 		$("#selection").text("");
 	});
-	console.log('the options are:');
-	console.debug(thefreakingoptions);
 }
+
+function showTableData(data) {
+	tableDiv = document.getElementById('report_table');
+	tableDiv.innerHTML = data;
+	prettyPrint();
+}
+
 
 
 $(document).ready( function ()  {
@@ -145,7 +208,6 @@ $(document).ready( function ()  {
 	$('.combobox').combobox();
 	prettyPrint();
 
-
 	// div to plot within
 	var theplot = $("#theplot");
 
@@ -154,8 +216,18 @@ $(document).ready( function ()  {
 
 	// If the clear button is hit, reset the plot with the new values
 	$("#clear_selection").click(function () {
-		the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, thefreakingoptions);
+		//the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot($("#theplot"), thedamndata, thefreakingoptions);
+		the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot($("#theplot"), thedamndata, thefreakingoptions);
 		the_freaking_plot_with_freaking_lasers_on_its_freaking_head.clearSelection();
+		var new_table_url_now = table_base_url + '&' + escape(table_url_time_start_param) + '=' + escape($('#dimension-ts_min_start').val()) + '&' + escape(table_url_time_end_param)  + '=' + escape($('#dimension-ts_min_end').val());
+		$('#report_table').html('<center><img src="img/ajax-loader.gif"></center>');
+		$.ajax({
+			url: new_table_url_now,
+			method: 'GET',
+			dataType: 'html',
+			success: showTableData
+		});
+		$("#selection").text('');
 	});
 
 
@@ -166,20 +238,15 @@ $(document).ready( function ()  {
 		success: newPlotData
 	});
 	
+	var table_url_now = table_base_url + '&' + escape(table_url_time_start_param) + '=' + escape($('#dimension-ts_min_start').val()) + '&' + escape(table_url_time_end_param)  + '=' + escape($('#dimension-ts_min_end').val());
 	$.ajax({
-		url: table_dataurl,
+		url: table_url_now,
 		method: 'GET',
 		dataType: 'html',
 		success: showTableData
 	})
 
 });
-
-function showTableData(data) {
-	tableDiv = document.getElementById('report_table');
-	tableDiv.innerHTML = data;
-	prettyPrint();
-}
 
 </script>
 

@@ -1,7 +1,4 @@
 <?php
-
-require "QueryTableParser.php";
-
 /**
  * class QueryExplain
  * rough utility class to get query explain plan and extract table names from 
@@ -39,12 +36,13 @@ require "QueryTableParser.php";
  * Sharing connection objects would be advantageous if you want to explain many queries
  * which could be from the same database; but that's not needed for it's current use case.
  * 
- * @package QueryExplain
  * @author Gavin Towey <gavin@box.com>
  * @created 2012-01-01
  * 
  *  
  */
+
+require "QueryTableParser.php";
 class QueryExplain {
 
     private $get_connection_func;
@@ -94,7 +92,7 @@ class QueryExplain {
         }
         
 
-        $tables = $this->get_tables_from_query($this->query());
+        $tables = $this->get_tables_from_query($this->query);
         if (!is_array($tables)) {
             return $tables;
         }
@@ -146,7 +144,7 @@ class QueryExplain {
             return null;
         }
 
-        if (!preg_match("/^\s*SELECT/i", $this->query)) {
+        if (!preg_match("/^\s*(EXPLAIN)?\s*SELECT/i", $this->query)) {
             return null;
         }
 
@@ -204,6 +202,10 @@ class QueryExplain {
      * @return MySQLi_Result    the result handle 
      */
     private function explain_query() {
+		if (preg_match("/^\s*EXPLAIN/i", $this->query))
+		{
+			return $this->mysqli->query($this->query);
+		}
         return $this->mysqli->query("EXPLAIN " . $this->query);
     }
 
