@@ -1,5 +1,4 @@
 <?php
-
 /**
  * class QueryTableParser
  * 
@@ -12,7 +11,6 @@
  * 
  * This probably doesn't handle table names with a space in it like `table name`
  * 
- * @package QueryTableParser
  * @author Gavin Towey <gavin@box.com>
  * @created 2012-01-01
  * @license Please contact the author for licensing

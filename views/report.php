@@ -8,7 +8,7 @@
 		$('.combobox').combobox();
 		prettyPrint();
 	});
-	</script>
+</script>
 
 <div class="row">
 	<form action="<?php echo site_url()."?action=report"; ?>" method="GET" class="form-inline">

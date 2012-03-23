@@ -13,7 +13,6 @@ require "MySQLTableReport.php";
  * 
  * Public method represent controller actions, callable through the index.php
  * 
- * @package Anemometer
  * @author Gavin Towey <gavin@box.com> and Geoff Anderson <geoff@box.com>
  * @created 2012-01-01
  * @license please contact the authors for licensing information
@@ -116,14 +115,21 @@ class Anemometer {
         $_GET['table_fields'][] = get_var('plot_field');
         if (get_var('dimension-pivot-hostname_max')) {
             $_GET['dimension-pivot-hostname_max'] = get_var('plot_field');
+            $data['dimension_pivot_hostname_max'] = get_var('plot_field');
         }
+        
         $data['ajax_request_url'] = site_url() . '?action=api&output=json2&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
-
+        $data['graph_permalink'] = site_url() . '?action=graph_search&datasource=' . $data['datasource'] . '&plot_field='.get_var('plot_field').'&'.$this->report_obj->get_search_uri();
         // now go get a url for the table results
         $this->init_report();
-        $this->set_search_defaults('report_defaults', array('dimension-ts_min_start', 'dimension-ts_min_end'));
-        $data['ajax_request_url_table'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
-
+        $this->set_search_defaults('report_defaults', array('dimension-ts_min_start', 'dimension-ts_min_end','checksum'));
+//        $data['ajax_request_url_table'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
+        
+        $data['ajax_table_request_url_base'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource']. '&' . $this->report_obj->get_search_uri();
+        $data['table_url_time_start_param'] = 'dimension-ts_min_start';
+        $data['table_url_time_end_param'] = 'dimension-ts_min_end';
+        
+        
         // display the page
         $this->load->view("graph_search", $data);
         $this->footer();
@@ -133,7 +139,6 @@ class Anemometer {
      * show the index page where users can select the datasource.  If there's only
      * one, just redirect to the default report
      * 
-     * @return none
      */
     public function index() {
         $this->header();
@@ -166,14 +171,11 @@ class Anemometer {
         $checksum = get_var('checksum');
         $exists = $this->data_model->checksum_exists($checksum);
         if (!$exists) {
-            alert("Unknown checksum: {$checksum}");
+            $this->alert("Unknown checksum: {$checksum}");
             return;
         }
         header("Location: " . site_url() . "?action=show_query&datasource={$datasource}&checksum={$checksum}");
         return;
-        print '<script type="text/javascript">'
-                . 'window.location = "' . site_url() . "?action=show_query&datasource={$datasource}&checksum={$checksum}" . '"'
-                . '</script>';
     }
     
     /**
@@ -196,6 +198,7 @@ class Anemometer {
             $this->report_obj->set_pivot_values('dimension-pivot-hostname_max', $data['hosts']);
 
             //		$data['fields = $this->report_obj->get_form_fields();
+            // @todo remove
             $data['tables'] = $this->report_obj->get_tables();
             foreach ($data['tables'] as $t) {
                 $data['table_fields'][$t] = $this->report_obj->get_table_fields($t);
@@ -249,7 +252,6 @@ class Anemometer {
     /**
      * Display a specific query from its checksum value
      * 
-     * @return none
      */
     public function show_query() {
         $this->header();
@@ -257,7 +259,7 @@ class Anemometer {
         $checksum = get_var('checksum');
         $exists = $this->data_model->checksum_exists($checksum);
         if (!$exists) {
-            alert("Unknown checksum: {$checksum}");
+            $this->alert("Unknown checksum: {$checksum}");
             return;
         }
 
@@ -289,7 +291,7 @@ class Anemometer {
         $this->report_obj->process_form_data();
         $_GET['table_fields'][] = get_var('plot_field');
         $_GET['fact-checksum'] = $checksum;
-        $data['ajax_request_url'] = site_url() . '?action=api&output=json2&noheader=1&datasource=' . $datasource . '&' . $this->report_obj->get_search_uri();
+        $data['ajax_request_url'] = site_url() . '?action=api&output=json2&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
 
         $this->load->view("show_query", $data);
 
@@ -307,7 +309,6 @@ class Anemometer {
     /**
      * Update the review and comments for a query by its checksum
      * 
-     * @return none
      */
     public function upd_query() {
         $checksum = get_var('checksum');
@@ -383,7 +384,7 @@ class Anemometer {
 
         if (!get_var('noheader')) {
             $this->load->view("header");
-            $this->load->view("navbar", array( 'datasources' => $datasource, 'datasource' => $datasource ));
+            $this->load->view("navbar", array( 'datasources' => $datasources, 'datasource' => $datasource ));
         }
         
         $this->header_printed = true;
