@@ -32,7 +32,7 @@
 					<option value="<?php echo $f ?>" <?php if (get_var('plot_field') == $f) { echo "SELECTED"; } ?>><?php echo $f ?></option>
 				<?php } ?>
 				</optgroup>
-	
+
 				<?php foreach (array_keys($table_fields) as $table)  { ?>
 					<optgroup label="<?php echo $table; ?>">
 						<?php foreach ($table_fields[$table] as $f)  { ?>
@@ -53,23 +53,23 @@
 				<?php } ?>
 			</select>
 		</div>
-		
+
 		<div class="span4" >
 			<input type="checkbox" name="dimension-pivot-hostname_max" value='ts_cnt'<?php echo (isset($dimension_pivot_hostname_max) ? ' CHECKED ' : '') ?>> Show each host as a separate series
-			
+
 		</div>
-		
+
 		<div class="span4">
-			
+
 				<input type="submit" class="btn-primary btn-large" name="submit" value="Search">
-			
+
 		</div>
 	</div>
-	
+
 	</form>
 </div>
 <hr>
-		
+
 <div class="row">
 	<div id="theplot" class="span12" style="height: 300px;"></div>
 </div>
@@ -85,17 +85,14 @@
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
 <script>
-// Temporarily commenting out all graphing JS code due to browser crashes.
-
-//var dataurl = "http://dba1001.ve.box.net:90/weatherstation/index.php?action=api&datasource=Live&dimension-ts_min_start=2012-03-06+21%3A16%3A00&dimension-ts_min_end=2012-03-07+21%3A16%3A00&fact-first_seen=&table_fields%5B%5D=hour_ts&table_fields%5B%5D=Query_time_sum&dimension-hostname_max=&fact-group=hour_ts&fact-order=hour_ts&fact-having=&fact-limit=999&submit=Search&fact-where=&fact-sample=&fact-checksum=&output=json2&noheader=1"
-//var dataurl = "http://dba1001.ve.box.net:90/weatherstation/index.php?action=api&datasource=Live&dimension-ts_min_start=2012-03-06+21%3A16%3A00&dimension-ts_min_end=2012-03-07+21%3A16%3A00&fact-first_seen=&table_fields%5B%5D=hour_ts&table_fields%5B%5D=Query_time_sum&table_fields%5B%5D=ts_cnt&dimension-hostname_max=&fact-group=hour_ts&fact-order=hour_ts&fact-having=&fact-limit=999&submit=Search&fact-where=&fact-sample=&fact-checksum=&output=json2&noheader=1"
 // url to retrieve JSON from
-var dataurl = "<?php echo $ajax_request_url ?>";
+var graph_data_url = "<?php echo $ajax_request_url ?>";
 var table_base_url = "<?php echo $ajax_table_request_url_base ?>"
 var table_url_time_start_param = "<?php echo $table_url_time_start_param ?>"
 var table_url_time_end_param = "<?php echo $table_url_time_end_param ?>"
+
 // Setup options for the plot
-var thefreakingoptions = {
+var flot_opts = {
 	series: {
 		lines: { show: true },
 		points: { show: true},
@@ -123,7 +120,7 @@ function newPlotData(data) {
 	}
 	var theplot = $("#theplot");
 	thedamndata = data;
-	the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, thefreakingoptions);
+	the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, flot_opts);
 	setupSelection(theplot);
 }
 
@@ -148,7 +145,6 @@ function leftPadThisThingYo(padThis, padding, amount)
 
 function getMeAGoodDamnDate(d)
 {
-	
 	thedate = d.getFullYear();
 	thedate += '-';
 	thedate += leftPadThisThingYo(d.getMonth()+1, '0', 2);
@@ -167,7 +163,7 @@ function setupSelection(theplot) {
 	// Add event handlers to the plot div that allow interactive selection of data
 	theplot.bind("plotselected", function (event, ranges) {
 		//$("#selection").text(ranges.xaxis.from.toFixed(1) + " to " + ranges.xaxis.to.toFixed(1));
-		plot = $.plot(theplot, thedamndata, $.extend ( true, {}, thefreakingoptions, {
+		plot = $.plot(theplot, thedamndata, $.extend ( true, {}, flot_opts, {
 			xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
 		}));
 
@@ -212,12 +208,12 @@ $(document).ready( function ()  {
 	var theplot = $("#theplot");
 
 	// Create the plot!
-	var the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, thefreakingoptions);
+	var the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, flot_opts);
 
 	// If the clear button is hit, reset the plot with the new values
 	$("#clear_selection").click(function () {
-		//the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot($("#theplot"), thedamndata, thefreakingoptions);
-		the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot($("#theplot"), thedamndata, thefreakingoptions);
+		//the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot($("#theplot"), thedamndata, flot_opts);
+		the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot($("#theplot"), thedamndata, flot_opts);
 		the_freaking_plot_with_freaking_lasers_on_its_freaking_head.clearSelection();
 		var new_table_url_now = table_base_url + '&' + escape(table_url_time_start_param) + '=' + escape($('#dimension-ts_min_start').val()) + '&' + escape(table_url_time_end_param)  + '=' + escape($('#dimension-ts_min_end').val());
 		$('#report_table').html('<center><img src="img/ajax-loader.gif"></center>');
@@ -232,12 +228,12 @@ $(document).ready( function ()  {
 
 
 	$.ajax({
-		url: dataurl,
+		url: graph_data_url,
 		method: 'GET',
 		dataType: 'json',
 		success: newPlotData
 	});
-	
+
 	var table_url_now = table_base_url + '&' + escape(table_url_time_start_param) + '=' + escape($('#dimension-ts_min_start').val()) + '&' + escape(table_url_time_end_param)  + '=' + escape($('#dimension-ts_min_end').val());
 	$.ajax({
 		url: table_url_now,

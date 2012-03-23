@@ -87,7 +87,7 @@
  * 
  * @author Gavin Towey <gavin@box.com>
  * @created 2012-01-01
- * @license contact the author for details and permissions
+ * @license Apache 2.0 license.  See LICENSE document for more info
  * 
  * @todo create a base class
  * @todo create a pear package out of this 
