@@ -1,8 +1,3 @@
-<script>
-	$(function() {
-	});
-</script>
-
 <div class="row">
 	<form action="<?php echo site_url() ?>" method="GET" class="form-inline">
 	<input type="hidden" name="action" value="graph_search">
@@ -75,8 +70,8 @@
 </div>
 <div class="row">
 	<p>You selected: <span id="selection"></span></p>
-	<p><a id="clear_selection" value="Clear selection" class="btn" href="#"><i class="icon-fire"></i> Reset Selection</a>
-		<a class="btn" href="<?php echo $graph_permalink; ?>"><i class="icon-magnet"></i> Graph Permalink</a></p>
+	<p><a id="reset_selection" value="Clear selection" class="btn" href="#"><i class="icon-fire"></i> Reset Selection</a>
+		<a id="permalink_btn" class="btn" href="#"><i class="icon-magnet"></i> Graph Permalink</a></p>
 </div>
 <hr>
 	</div></div>
@@ -85,31 +80,35 @@
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
 <script>
-// url to retrieve JSON from
-var graph_data_url = "<?php echo $ajax_request_url ?>";
-var table_base_url = "<?php echo $ajax_table_request_url_base ?>"
-var table_url_time_start_param = "<?php echo $table_url_time_start_param ?>"
-var table_url_time_end_param = "<?php echo $table_url_time_end_param ?>"
+// urls to retrieve data from
+var GRAPH_DATA_URL = "<?php echo $ajax_request_url ?>";
+var GRAPH_PERMALINK_URL = "<?php echo $graph_permalink; ?>";
+var TABLE_BASE_URL = "<?php echo $ajax_table_request_url_base ?>"
+var TABLE_URL_TIME_START_PARAM = "<?php echo $table_url_time_start_param ?>"
+var TABLE_URL_TIME_END_PARAM = "<?php echo $table_url_time_end_param ?>"
 
 // Setup options for the plot
-var flot_opts = {
+var FLOT_OPTS = {
 	series: {
-		lines: { show: true },
-		points: { show: true},
+		lines: { show: true }, // line graphs!
+		points: { show: true}, // draw individual data points
 	},
 	legend: { noColumns: 2 },
 	xaxis: { tickDecimals: 0, mode: "time" },
 	yaxis: { min: 0 },
-	selection: { mode: "x" },
+	selection: { mode: "x" }, // any mouse selections should be along x axis
 };
 
 // Placeholder for data to plot
-var thedamndata = [];
+var DATA = [];
 
 
-// Callback function for drawing the graph after data is retrieved from an AJAX call
-function newPlotData(data) {
-	// convert the timestamp from seconds to milliseconds
+/**
+ * Callback function for drawing the graph after data is retrieved from an AJAX call
+ * @param data 	The array of objects containing time series data to plot.
+ */
+function new_plot_data(data) {
+	// flot requires millseconds, so convert the timestamp from seconds to milliseconds
 	for ( var i = 0; i < data.length; i++ )
 	{
 		for ( var j = 0; j < data[i].data.length; j++ )
@@ -118,80 +117,109 @@ function newPlotData(data) {
 			data[i].data[j][0] = data[i].data[j][0] - (60*60*7*1000);
 		}
 	}
-	var theplot = $("#theplot");
-	thedamndata = data;
-	the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, flot_opts);
-	setupSelection(theplot);
+	var theplot = $("#theplot"); // get the graph div
+	DATA = data;
+	plot_obj = $.plot(theplot, DATA, FLOT_OPTS);
+	setup_selection(theplot);
 }
 
-function leftPadThisThingYo(padThis, padding, amount)
+/**
+ * Function to left pad a value (needed for date padding)
+ * @param pad_this 	the data to pad (this will be converted to a string)
+ * @param padding 	a string of what to left pad the data with
+ * @param amount 	how much padding to apply.
+ */
+function left_pad(pad_this, padding, amount)
 {
-	s = String(padThis);
-	returnStr = '';
+	var s = String(pad_this);
+	var padded_str = '';
 	if(s.length < amount)
 	{
 		for ( var i = 1; i < amount; i++)
 		{
-			returnStr += padding;
+			padded_str += padding;
 		}
-		returnStr += padThis;
+		padded_str += pad_this;
 	}
 	else
 	{
-		returnStr += padThis;
+		padded_str += pad_this;
 	}
-	return returnStr;
+	return padded_str;
 }
 
-function getMeAGoodDamnDate(d)
+/**
+ * convert a date object to an ANSI-compliant date string (e.g. YYYY-mm-dd HH:MM:ss)
+ * @param d 	the javascript Date object
+ */
+function to_sql_date(d)
 {
-	thedate = d.getFullYear();
-	thedate += '-';
-	thedate += leftPadThisThingYo(d.getMonth()+1, '0', 2);
-	thedate += '-';
-	thedate += leftPadThisThingYo(d.getDate(), '0', 2);
-	thedate += ' ';
-	thedate += leftPadThisThingYo(d.getHours(), '0', 2);
-	thedate += ':';
-	thedate += leftPadThisThingYo(d.getMinutes(), '0', 2);
-	thedate += ':';
-	thedate += leftPadThisThingYo(d.getSeconds(), '0', 2);
-	return thedate;
+	// put the year together in the form of YYYY-MM-DD
+	ansi_date = d.getFullYear() + '-' + left_pad(d.getMonth()+1, '0', 2) + '-' + left_pad(d.getDate(), '0', 2);
+	ansi_date += ' ';
+	// put the time together as HH:MM:ss and append to the year
+	ansi_date += left_pad(d.getHours(), '0', 2) + ':' + left_pad(d.getMinutes(), '0', 2) + ':' + left_pad(d.getSeconds(), '0', 2);
+	return ansi_date;
 }
 
-function setupSelection(theplot) {
-	// Add event handlers to the plot div that allow interactive selection of data
+/**
+ * Register an event listener on the div with the flot graph so selection events
+ * from the mouse can be registered for "zoom in" functionality.
+ * @param theplot 	a JQuery object of the div containing the flot graph.
+*/
+function setup_selection(theplot) {
 	theplot.bind("plotselected", function (event, ranges) {
-		//$("#selection").text(ranges.xaxis.from.toFixed(1) + " to " + ranges.xaxis.to.toFixed(1));
-		plot = $.plot(theplot, thedamndata, $.extend ( true, {}, flot_opts, {
+		var plot = $.plot(theplot, DATA, $.extend ( true, {}, FLOT_OPTS, {
 			xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
 		}));
 
+		// need a date object to shove timestamp into for conversion to ANSI-type date string
 		d = new Date();
+
+		// get start datetime for selected fields
 		d.setTime(Math.floor(ranges.xaxis.from + (60*60*7*1000)));
-		//startTime = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-		startTime = getMeAGoodDamnDate(d);
+		start_time = to_sql_date(d);
+
+		// get end datetime for selected fields
 		d.setTime(Math.floor(ranges.xaxis.to + (60*60*7*1000)));
-		//endTime = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-		endTime = getMeAGoodDamnDate(d);
-		var new_table_data_url = table_base_url + '&' + escape(table_url_time_start_param) + '=' + escape(startTime) + '&' + escape(table_url_time_end_param)  + '=' + escape(endTime);
+		end_time = to_sql_date(d);
+
+		// construct a url with the new time frame the graph is focused on to populate the table on the page.
+		var new_url_start_end_params = '&' + escape(TABLE_URL_TIME_START_PARAM) + '=' + escape(start_time) + '&' + escape(TABLE_URL_TIME_END_PARAM)  + '=' + escape(end_time);
+		var new_table_data_url = TABLE_BASE_URL + new_url_start_end_params;
+
+		// Plop a shiny loading spinner in place of the table until the AJAX call finishes :)
 		$('#report_table').html('<center><img src="img/ajax-loader.gif"></center>');
+
+		// Update the permalink button
+		$('#permalink_btn').attr('href', GRAPH_PERMALINK_URL + new_url_start_end_params);
+
+		// Get the data for the table and re-populate it!
 		$.ajax({
 			url: new_table_data_url,
 			method: 'GET',
 			dataType: 'html',
-			success: showTableData
+			success: show_table_data
 		});
-		$("#selection").text(startTime + " to " + endTime);
+
+		// Throw the selected time values just under the graph for clarity
+		$('#selection').text(start_time + " to " + end_time);
+		$('#dimension-ts_min_start').val(start_time);
+		$('#dimension-ts_min_end').val(end_time);
 	});
+
 	theplot.bind("plotunselected", function (event) {
 		$("#selection").text("");
 	});
 }
 
-function showTableData(data) {
-	tableDiv = document.getElementById('report_table');
-	tableDiv.innerHTML = data;
+/**
+ * Insert new table data into the appropriate div on the page
+ * @param data	HTML to insert at the report_table dive on the page
+ */
+function show_table_data(data) {
+	var report_table = $('#report_table');
+	report_table.html(data);
 	prettyPrint();
 }
 
@@ -204,45 +232,55 @@ $(document).ready( function ()  {
 	$('.combobox').combobox();
 	prettyPrint();
 
-	// div to plot within
+	// div to insert the flot graph in
 	var theplot = $("#theplot");
 
-	// Create the plot!
-	var the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, flot_opts);
+	// initialize the empty flot graph
+	var plot_obj = $.plot(theplot, DATA, FLOT_OPTS);
+
+	// Store references to the initial start/end times for graph resets.
+	var initial_start_time = $('#dimension-ts_min_start').val();
+	var initial_end_time = $('#dimension-ts_min_end').val();
+
+	// URL to get data for the table using the base time values on the page. This is also used to 'reset' the table.
+	var url_start_end_params = '&' + escape(TABLE_URL_TIME_START_PARAM) + '=' + escape(initial_start_time) + '&' + escape(TABLE_URL_TIME_END_PARAM)  + '=' + escape(initial_end_time);
+	var table_url_now = TABLE_BASE_URL + url_start_end_params;
+
+	// Set the permlink button to have a link to the initial graph plot.
+	$('#permalink_btn').attr('href', GRAPH_PERMALINK_URL + url_start_end_params);
 
 	// If the clear button is hit, reset the plot with the new values
-	$("#clear_selection").click(function () {
-		//the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot($("#theplot"), thedamndata, flot_opts);
-		the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot($("#theplot"), thedamndata, flot_opts);
-		the_freaking_plot_with_freaking_lasers_on_its_freaking_head.clearSelection();
-		var new_table_url_now = table_base_url + '&' + escape(table_url_time_start_param) + '=' + escape($('#dimension-ts_min_start').val()) + '&' + escape(table_url_time_end_param)  + '=' + escape($('#dimension-ts_min_end').val());
+	$("#reset_selection").click(function () {
+		plot_obj = $.plot($("#theplot"), DATA, FLOT_OPTS);
+		plot_obj.clearSelection();
+
 		$('#report_table').html('<center><img src="img/ajax-loader.gif"></center>');
 		$.ajax({
-			url: new_table_url_now,
+			url: table_url_now,
 			method: 'GET',
 			dataType: 'html',
-			success: showTableData
+			success: show_table_data
 		});
 		$("#selection").text('');
+		$('#dimension-ts_min_start').val(initial_start_time);
+		$('#dimension-ts_min_end').val(initial_end_time);
+		$('#permalink_btn').attr('href', GRAPH_PERMALINK_URL + url_start_end_params);
 	});
 
-
+	// kick off the initial AJAX call to get the data to plot for the graph
 	$.ajax({
-		url: graph_data_url,
+		url: GRAPH_DATA_URL + url_start_end_params,
 		method: 'GET',
 		dataType: 'json',
-		success: newPlotData
+		success: new_plot_data
 	});
 
-	var table_url_now = table_base_url + '&' + escape(table_url_time_start_param) + '=' + escape($('#dimension-ts_min_start').val()) + '&' + escape(table_url_time_end_param)  + '=' + escape($('#dimension-ts_min_end').val());
+	// kick off the initial AJAX call to get the data for the table below the graph
 	$.ajax({
 		url: table_url_now,
 		method: 'GET',
 		dataType: 'html',
-		success: showTableData
+		success: show_table_data
 	})
-
 });
-
 </script>
-

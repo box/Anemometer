@@ -920,10 +920,11 @@ class MySQLTableReport {
 
     /**
      * return a urlencoded string of parameters that were used in this report.
-     * 
+     *
+     * @param array	 $exceptions		List of variables names not to append
      * @return string   The url string
      */
-    public function get_search_uri() {
+    public function get_search_uri($exceptions = null) {
         $this->process_form_data();
         
         $run_funcs = array('date_range');
@@ -935,6 +936,11 @@ class MySQLTableReport {
                 $var_name = "{$alias}-{$field}";
                 $col_name = "{$alias}.{$field}";
                 $value = get_var($var_name);
+				
+				if (isset($exceptions) and in_array($var_name, $exceptions))
+				{
+					continue;
+				}
 
                 // we have to execute some of the functions here because
                 // the actual form fields may differ from the defined field name
