@@ -32,7 +32,7 @@
  * one you want to report on.
  *
  */
-$conf['datasources']['locahost'] = array(
+$conf['datasources']['localhost'] = array(
 	'host'	=> 'localhost',
 	'port'	=> 3306,
 	'db'	=> 'slow_query_log',
