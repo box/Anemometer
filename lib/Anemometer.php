@@ -5,18 +5,18 @@ require "MySQLTableReport.php";
 
 /**
  * class Anemometer
- * 
+ *
  * This is the controller class for the Box Anemometer web application.
- * 
+ *
  * It is designed to closely resemble Codeigniter, so it can be easily added to
  * a CI installation (untested.)
- * 
+ *
  * Public method represent controller actions, callable through the index.php
- * 
+ *
  * @author Gavin Towey <gavin@box.com> and Geoff Anderson <geoff@box.com>
  * @created 2012-01-01
  * @license Apache 2.0 license.  See LICENSE document for more info
- *  
+ *
  */
 class Anemometer {
 
@@ -27,8 +27,8 @@ class Anemometer {
 
     /**
      * Constructor.  Pass in the global configuration object
-     * 
-     * @param type $conf 
+     *
+     * @param type $conf
      */
     function __construct($conf)
     {
@@ -37,9 +37,9 @@ class Anemometer {
         {
             return;
         }
-        
+
         $this->conf = $conf;
-        $this->data_model = new AnemometerModel($conf);        
+        $this->data_model = new AnemometerModel($conf);
         $datasource = get_var('datasource');
         if (isset($datasource)) {
             $this->data_model->set_data_source($datasource);
@@ -49,12 +49,12 @@ class Anemometer {
         $this->init_report();
         session_start();
     }
-    
+
     /**
      * main method for getting report results.  This method can be called as an
      * ajax callback and return the raw data in json format, or it can display
      * a table or graph directly.  All other methods that get report results use this
-     * either directly or as an ajax call. 
+     * either directly or as an ajax call.
      */
     public function api()
     {
@@ -94,12 +94,12 @@ class Anemometer {
         }
     }
 
-    
+
     /**
      *  Search by using a graph.  A brief search form is shown to allow a graph to
      * be built.  Html table results that corespond to the time range of the graph is
      * displayed below.  Regions can be selected in the graph directly which will
-     * update the table results with the new time range. 
+     * update the table results with the new time range.
      */
     public function graph_search()
     {
@@ -127,28 +127,28 @@ class Anemometer {
             $_GET['dimension-pivot-hostname_max'] = get_var('plot_field');
             $data['dimension_pivot_hostname_max'] = get_var('plot_field');
         }
-        
+
         $data['ajax_request_url'] = site_url() . '?action=api&output=json2&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri(array( 'dimension-ts_min' ));
         $data['graph_permalink'] = site_url() . '?action=graph_search&datasource=' . $data['datasource'] . '&plot_field='.get_var('plot_field').'&'.$this->report_obj->get_search_uri(array( 'dimension-ts_min' ));
         // now go get a url for the table results
         $this->init_report();
         $this->set_search_defaults('report_defaults', array('dimension-ts_min_start', 'dimension-ts_min_end','checksum'));
 //        $data['ajax_request_url_table'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
-        
+
         $data['ajax_table_request_url_base'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource']. '&' . $this->report_obj->get_search_uri(array( 'dimension-ts_min' ));
         $data['table_url_time_start_param'] = 'dimension-ts_min_start';
         $data['table_url_time_end_param'] = 'dimension-ts_min_end';
-        
-        
+
+
         // display the page
         $this->load->view("graph_search", $data);
         $this->footer();
     }
-    
+
     /**
      * show the index page where users can select the datasource.  If there's only
      * one, just redirect to the default report
-     * 
+     *
      */
     public function index()
     {
@@ -171,18 +171,18 @@ class Anemometer {
         $this->load->view('index', array('datasources' => $datasources));
         $this->footer();
     }
-    
+
     public function noconfig()
     {
         $this->header();
         $this->load->view("noconfig");
         $this->footer();
     }
-    
-    /** 
+
+    /**
      * Search for a checksum value.  Redirect to show_query if it's found
      * or display an error message
-     * 
+     *
      */
     public function quicksearch() {
         $datasource = get_var('datasource');
@@ -195,17 +195,17 @@ class Anemometer {
         header("Location: " . site_url() . "?action=show_query&datasource={$datasource}&checksum={$checksum}");
         return;
     }
-    
+
     /**
      * Display the search form, and the report results (by default as a html table)
-     *  
+     *
      */
     public function report() {
         $this->header();
 
         $this->set_search_defaults('report_defaults');
         $hide_form = get_var('hide_search_form');
-        
+
         if (!isset($hide_form)) {
             $data = array();
 
@@ -236,10 +236,10 @@ class Anemometer {
         $this->api();
         $this->footer();
     }
-    
+
     /**
      * Show query samples for a specific checksum
-     *  
+     *
      */
     public function samples() {
         $this->header();
@@ -265,11 +265,11 @@ class Anemometer {
         ));
         $this->footer();
     }
-    
-    
+
+
     /**
      * Display a specific query from its checksum value
-     * 
+     *
      */
     public function show_query() {
         $this->header();
@@ -315,7 +315,7 @@ class Anemometer {
 
         // Show the history for this query
         // just set some form fields and call report
-        // maybe convert to ajax call ... 
+        // maybe convert to ajax call ...
         $this->init_report();
         $this->set_search_defaults('history_defaults', array());
         $_GET['fact-checksum'] = $checksum;
@@ -326,7 +326,7 @@ class Anemometer {
 
     /**
      * Update the review and comments for a query by its checksum
-     * 
+     *
      */
     public function upd_query() {
         $checksum = get_var('checksum');
@@ -361,10 +361,10 @@ class Anemometer {
         $datasource = get_var('datasource');
         header("Location: " . site_url() . "?action=show_query&datasource={$datasource}&checksum={$checksum}");
     }
-    
+
     /**
      * display a message in a formatted div element
-     * 
+     *
      * @param string $string    The message to display
      * @param string $level     The div class to use (default alert-warning)
      */
@@ -372,22 +372,22 @@ class Anemometer {
         $this->header();
         print "<div class=\"alert {$level}\">{$string}</div>";
     }
-    
+
     /**
-     * display the global web application footer 
+     * display the global web application footer
      */
     private function footer() {
         $this->load->view("footer");
     }
 
     /**
-     * return the current username.  First from any .htaccess login if set, or 
+     * return the current username.  First from any .htaccess login if set, or
      * from the session if possible.
      */
     private function get_auth_user() {
         return isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : $_SESSION['current_review_user'];
     }
-    
+
     /**
      * display the web application header
      * @return boolean  return true if the header was actually printed
@@ -406,13 +406,13 @@ class Anemometer {
             $this->load->view("header");
             $this->load->view("navbar", array( 'datasources' => $datasources, 'datasource' => $datasource ));
         }
-        
+
         $this->header_printed = true;
     }
-    
+
     /**
      * sets up or resets the report object
-     *  
+     *
      */
     private function init_report() {
         $datasource = get_var('datasource');
@@ -427,12 +427,12 @@ class Anemometer {
             );
         }
     }
-    
+
     /**
      * set default values for the search form
-     * 
+     *
      * @param type $type
-     * @param type $override 
+     * @param type $override
      */
     private function set_search_defaults($type = 'report_defaults', $override = null) {
         $defaults = $this->data_model->get_report_defaults($type);

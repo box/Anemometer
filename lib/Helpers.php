@@ -11,12 +11,12 @@
 /**
  * search global request variables $_POST and $_GET in that order and return
  * the first defined value for the given key
- * 
+ *
  * @param string $name
- * @return mixed    the value of the variable name (if any) or null. 
+ * @return mixed    the value of the variable name (if any) or null.
  */
 function get_var($name)
-{	
+{
     $sources = array($_POST, $_GET);
     foreach ($sources as $s)
     {
@@ -30,7 +30,7 @@ function get_var($name)
 
 /**
  * return the full URL for the base page of the site.
- * 
+ *
  * @return string
  */
 function site_url()
@@ -41,8 +41,8 @@ function site_url()
 
 /**
  * wrap html pre tags around the given string, with class="prettyprint"
- * 
- * @param string $string 
+ *
+ * @param string $string
  */
 function prettyprint($string)
 {
@@ -54,9 +54,9 @@ function prettyprint($string)
 
 /**
  * die with the error message if the given result handle or mysqli object has an error
- * 
+ *
  * @param MySQLi_Result $result
- * @param MySQLi $mysqli 
+ * @param MySQLi $mysqli
  */
 function check_mysql_error($result, $mysqli)
 {
