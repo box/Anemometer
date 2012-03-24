@@ -6,6 +6,7 @@ This is the Box Anemometer, the MySQL Slow Query Monitor.  This tool is used to 
 ### Quickstart ###
 
 If you're just completely itching to start using this tool, here's what you need:
+
 1.	a MySQL database to store query analysis data in.
 2.	[pt-query-digest](http://www.percona.com/doc/percona-toolkit/pt-query-digest.html).
 	*	You may as well just get the whole [Percona Toolkit](http://www.percona.com/doc/percona-toolkit) while you're at it :)
@@ -167,7 +168,7 @@ Now, navigate to the web root of your apache server and snag a copy of the Box A
     $ cp sample.config.inc.php config.inc.php 
 
 
-The sample config explains every setting you may want to change in it.  At the very least, make sure you set the Datasource to the MySQL database you're story the analyzed digest information in:
+The sample config explains every setting you may want to change in it.  At the very least, make sure you set the Datasource to the MySQL database you're storing the analyzed digest information in:
 
     $conf['datasources']['locahost'] = array(
     	'host'	=> 'db.example.com',
