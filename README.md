@@ -6,11 +6,11 @@ This is the Box Anemometer, the MySQL Slow Query Monitor.  This tool is used to 
 ### Quickstart ###
 
 If you're just completely itching to start using this tool, here's what you need:
-*	a MySQL database to store query analysis data in.
-*	[pt-query-digest](http://www.percona.com/doc/percona-toolkit/pt-query-digest.html).
+1.	a MySQL database to store query analysis data in.
+2.	[pt-query-digest](http://www.percona.com/doc/percona-toolkit/pt-query-digest.html).
 	*	You may as well just get the whole [Percona Toolkit](http://www.percona.com/doc/percona-toolkit) while you're at it :)
-*	a slow query log from a MySQL server (see [The Slow Query Log](http://dev.mysql.com/doc/refman/5.5/en/slow-query-log.html) for info on getting one)
-*	a webserver with PHP
+3.	a slow query log from a MySQL server (see [The Slow Query Log](http://dev.mysql.com/doc/refman/5.5/en/slow-query-log.html) for info on getting one)
+4.	a webserver with PHP
 
 
 #### Setup DB ####
