@@ -32,6 +32,7 @@ First up, you should connect to the MySQL database you're looking to store the a
       `reviewed_by` varchar(20) DEFAULT NULL,
       `reviewed_on` datetime DEFAULT NULL,
       `comments` text,
+      `reviewed_status` varchar(24) DEFAULT NULL,
       PRIMARY KEY (`checksum`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     
@@ -138,7 +139,10 @@ First up, you should connect to the MySQL database you're looking to store the a
       `Filesort_sum` float DEFAULT NULL,
       `Disk_filesort_cnt` float DEFAULT NULL,
       `Disk_filesort_sum` float DEFAULT NULL,
-      PRIMARY KEY (`checksum`,`ts_min`,`ts_max`)
+      UNIQUE KEY `hostname` (`hostname`,`checksum`,`ts_min`,`ts_max`),
+      UNIQUE KEY `hostname_max` (`hostname_max`,`checksum`,`ts_min`,`ts_max`),
+      KEY `ts_min` (`ts_min`),
+      KEY `checksum` (`checksum`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     
     -- Create the user that Box anemmometer will use.
@@ -150,7 +154,7 @@ First up, you should connect to the MySQL database you're looking to store the a
 Next, grab that slow query log file you have (mine's called "slow.log"!), and run pt-query-digest on it:
 **NOTE:** I'm using a BASH 3.0 shell here on my MySQL database server! This is so the "$HOSTNAME" variable properly replaces with "db.example.com")
 
-    $ pt-query-digest --review h=db.example.com,D=slow_query_log,t=global_query_review --review-history h=db.example.com,D=slow_query_log,t=global_query_review_history --no-report --limit=0% --filter=" \$event->{Bytes} = length(\$event->{arg}) and \$event->{hostname}=\"$HOSTNAME\"" /var/lib/mysql/db.example.com-slow.log
+    $ pt-query-digest --user=anemometer --password=superSecurePass --review h=db.example.com,D=slow_query_log,t=global_query_review --review-history h=db.example.com,D=slow_query_log,t=global_query_review_history --no-report --limit=0% --filter=" \$event->{Bytes} = length(\$event->{arg}) and \$event->{hostname}=\"$HOSTNAME\"" /var/lib/mysql/db.example.com-slow.log
     Pipeline process 11 (aggregate fingerprint) caused an error: Argument "57A" isn't numeric in numeric gt (>) at (eval 40) line 6, <> line 27.
     Pipeline process 11 (aggregate fingerprint) caused an error: Argument "57B" isn't numeric in numeric gt (>) at (eval 40) line 6, <> line 28.
     Pipeline process 11 (aggregate fingerprint) caused an error: Argument "57C" isn't numeric in numeric gt (>) at (eval 40) line 6, <> line 29.
