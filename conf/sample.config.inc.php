@@ -5,7 +5,7 @@
  * edit other files.
  * 
  * @author Gavin Towey <gavin@box.com>
- * @license please contact the author for licensing
+ * @license Apache 2.0 license.  See LICENSE document for more info
  * @created 2012-01-01
  * 
  **/
