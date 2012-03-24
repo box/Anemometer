@@ -1,22 +1,22 @@
 <?php
 /**
  * class QueryExplain
- * rough utility class to get query explain plan and extract table names from 
+ * rough utility class to get query explain plan and extract table names from
  * abitrary sql so we can run show create table on them.
- * 
+ *
  * This class needs a user defined method to find the database connection info
  * from the query and a bit of other data stored with the query_review_history table
- * 
+ *
  * The class is used as follows:
- * 
+ *
  * $result = $mysqli->query("SELECT sample, hostname_max, database_max FROM query_review_history WHERE checksum=1");
  * $row = $result->fetch_assoc();
- * 
+ *
  * $explainer = new QueryExplain($callback, $row);
  * print $explainer->explain();
- * 
+ *
  * where $callback might look like:
- * $callback = function(array $sample) 
+ * $callback = function(array $sample)
  * {
  *      return array(
  *          'host'  => $sample['hostname_max'],
@@ -28,18 +28,18 @@
  *
  * The callback funtion will always take one array argument, and it needs to return
  * and array with the following keys defined: host,db,user,password; and optionally: port
- * 
+ *
  * Because the object takes data associated with one query to return the db connection
  * info, that means a QueryExplain object will always only be valid for one query,
  * and will maintain its own connection
- * 
+ *
  * Sharing connection objects would be advantageous if you want to explain many queries
  * which could be from the same database; but that's not needed for it's current use case.
- * 
+ *
  * @author Gavin Towey <gavin@box.com>
  * @created 2012-01-01
  * @license Apache 2.0 license.  See LICENSE document for more info
- *  
+ *
  */
 
 require "QueryTableParser.php";
@@ -49,13 +49,13 @@ class QueryExplain {
     private $mysqli;
     private $conf;
     private $query;
-    
+
     private static $CONNECT_TIMEOUT = 1;
 
-    
+
     /**
      * Constructor.  See class documentation for explaination of the parameters
-     * 
+     *
      * @param callback $get_connection_func     The callback function
      * @param array $sample     array of information about the query
      * @throws Exception  if a database connection cannot be made
@@ -72,8 +72,8 @@ class QueryExplain {
 
     /**
      * Try to parse the real table names out of a sql query
-     * 
-     * @return array the list of tables in the query 
+     *
+     * @return array the list of tables in the query
      */
     public function get_tables_from_query() {
         $parser = new QueryTableParser();
@@ -83,14 +83,14 @@ class QueryExplain {
     /**
      * Extract the table names from a query, and return the result of
      * SHOW CREATE TABLE tablename;
-     * 
-     * @return string  the create table statements, or an error message 
+     *
+     * @return string  the create table statements, or an error message
      */
     public function get_create() {
         if (!isset($this->mysqli)) {
             return null;
         }
-        
+
 
         $tables = $this->get_tables_from_query($this->query);
         if (!is_array($tables)) {
@@ -108,10 +108,10 @@ class QueryExplain {
     }
 
     /**
-     * Extract the table names and the return the result of 
+     * Extract the table names and the return the result of
      * SHOW TABLE STATUS LIKE 'tablename' for each table;
-     * 
-     * @return null 
+     *
+     * @return null
      */
     public function get_table_status() {
         if (!isset($this->mysqli)) {
@@ -136,7 +136,7 @@ class QueryExplain {
 
     /**
      * If the given query is a SELECT statement, return the explain plan
-     * 
+     *
      * @return null|string The explain plan, or an error message
      */
     public function explain() {
@@ -166,7 +166,7 @@ class QueryExplain {
     /**
      * Attempt to connect to the connection info returned from the callback function
      * used to construct the object.
-     * 
+     *
      * @return boolean  true if successful
      * @throws Exception    throws errors on connect to the database
      */
@@ -199,7 +199,7 @@ class QueryExplain {
 
     /**
      * Execute EXPLAIN $query and return the result
-     * @return MySQLi_Result    the result handle 
+     * @return MySQLi_Result    the result handle
      */
     private function explain_query() {
 		if (preg_match("/^\s*EXPLAIN/i", $this->query))

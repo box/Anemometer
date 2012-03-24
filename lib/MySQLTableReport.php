@@ -5,22 +5,22 @@
  * Generic reporting class.  Given a configuration file, that describes the tables
  * and fields to be searched, and information to connect to a database, take form data
  * and generate an SQL query to run.
- * 
+ *
  * The report object is made to address a certain class of reports:  Time series data,
  * to aggregate by some arbitrary column and return the SUM/MIN/MAX/AVG/etc of other
  * columns.
- * 
+ *
  * Basic usage:
  * <code>
  * $report = new MySQLTableReport( $datasource, $tables, $report);
- *  
+ *
  * // run the query and get the result and header data
  * $result  = $report->execute($sql);
  * $columns = $report->get_column_names();
- * 
+ *
  * // ... display as desired.
  * </code>
- * 
+ *
  * the parameters above have the following forms:
  * <code>
  * $datasource = array(
@@ -30,34 +30,34 @@
  *      'password' => $pass, // the password for the user
  *      'db'    => $db, // the database name
  * );
- * 
+ *
  * $tables = array(
  *      'fact_table_name'       => 'fact',      // table_name => alias
  *      'dimension_table_name'  =>  'dimension', // table_name => alias
  * );
  * </code>
- * 
- * The aliases used for tables are mostly anything you choose *except* that one 
+ *
+ * The aliases used for tables are mostly anything you choose *except* that one
  * table must have the alias 'fact'.  This is considered the root table to which
  * any additional tables can be joined. There can be only one fact table, but you can
  * have any number of dimension tables as long as each have unique aliases
  *
  * <code>
  * $report = array(
- * 
+ *
  *      // the JOIN clause for any dimension tables.  Specify the exact clause used
  *      // for each table alias
  *      'join'      => array(
- *          'dimension'     =>  "USING (id)",       
+ *          'dimension'     =>  "USING (id)",
  *      ),
- * 
+ *
  *      // fields for the tables; defined by the table's alias and not the real table name
  *      // this allows the exact same report to be used on tables with the same structure
  *      // but different names
- *      'fields'    => array( 
+ *      'fields'    => array(
  *          'fact'  => array(
  *              'name'      => 'clear|where',
- * 
+ *
  *              // note that these aren't field names in the table, but we need
  *              // a place to put them for the form processor to handle them
  *              // the filters here will make sure the data gets added to the right
@@ -67,30 +67,30 @@
  *		'having'    => 'having',
  *		'limit'     => 'limit',
  *          ),
- * 
+ *
  *          'dimension' => array(
  *              'date'      => 'date_range|clear|where',
  *              'price'     => 'ge|clear|where'
  *          )
- * 
+ *
  *      ), // end fields
- * 
- *      // custom fields are allowed as well     
+ *
+ *      // custom fields are allowed as well
  *      'custom_fields' => array(
  *              'epoch'     =>  'FROM_UNIXTIME(date)',
  *              'snippet'   =>  'LEFT(info,15)'
  *      )
  * );
  * </code>
- * 
- * @todo describe the config format in more detail 
- * 
+ *
+ * @todo describe the config format in more detail
+ *
  * @author Gavin Towey <gavin@box.com>
  * @created 2012-01-01
  * @license Apache 2.0 license.  See LICENSE document for more info
- * 
+ *
  * @todo create a base class
- * @todo create a pear package out of this 
+ * @todo create a pear package out of this
  * @todo abstract aggregate function handling (or move to the config)
  */
 class MySQLTableReport {
@@ -102,7 +102,7 @@ class MySQLTableReport {
     private $pivot = array();
     private $form_data_processed = false;
     private $sql;
-    
+
     private $select;
     private $from;
     private $join;
@@ -111,15 +111,15 @@ class MySQLTableReport {
     private $order;
     private $limit;
     private $raw_where;
-    
+
     private static $CONNECT_TIMEOUT = 5;
-    
+
 
     /**
-     * create a new instance, pass configuration information describing the datasource 
+     * create a new instance, pass configuration information describing the datasource
      * and the report tables and fields.
-     * 
-     * 
+     *
+     *
      * @param array $datasource  Database connection information required :host,user,password,db; optional: port
      * @param array $tables Tables to use for this report.  format is array( 'table_name'   => 'alias' )  there must be at least one "fact" table, and optionally a "dimension" table
      * @param array $report config array describing the table structure and other options
@@ -134,17 +134,17 @@ class MySQLTableReport {
         if ($datasource != null) {
             $this->connect_to_datasource();
         }
-        
+
         // check for some basic validity; this will throw an exception if there
         // is no fact table defined.
         $this->get_table_by_alias('fact');
-        
+
         $this->init_report();
     }
 
     /**
      * reset internal variables
-     *  
+     *
      */
     private function init_report()
     {
@@ -159,11 +159,11 @@ class MySQLTableReport {
         $this->raw_where = null;
         $this->form_data_processed = false;
     }
-    
+
     /**
-     * pivot operations require some setup -- this defines the list of values to turn into 
+     * pivot operations require some setup -- this defines the list of values to turn into
      * additional columns when we ask the report to pivot a column.
-     * 
+     *
      * @param string $col_name  the name of the column to pivot
      * @param array $values the list of values
      */
@@ -173,9 +173,9 @@ class MySQLTableReport {
 
     /**
      * return the list of values for a given pivot column
-     * 
+     *
      * @param string $col_name  the name of the pivot column
-     * @return array    the list of values defined by set_pivot_values 
+     * @return array    the list of values defined by set_pivot_values
      */
     public function get_pivot_values($col_name) {
         return $this->pivot[$col_name];
@@ -183,15 +183,15 @@ class MySQLTableReport {
 
     /**
      * make a connection to the database, die with an error if this doesn't work
-     * 
-     * @todo add a timeout 
+     *
+     * @todo add a timeout
      */
     private function connect_to_datasource() {
         $ds = $this->datasource;
         $this->mysqli = new mysqli();
         $this->mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, self::$CONNECT_TIMEOUT);
         $this->mysqli->real_connect($ds['host'], $ds['user'], $ds['password'], $ds['db'], $ds['port']);
-        
+
         if ($this->mysqli->connect_errno) {
             throw new Exception($this->mysqli->connect_error);
         }
@@ -199,16 +199,16 @@ class MySQLTableReport {
 
     /**
      * returns the list of table names, not the aliases
-     * 
+     *
      * @return array
      */
     public function get_tables() {
         return array_keys($this->tables);
     }
-    
+
     /**
      * gets the concrete name of a table for the given alias
-     * 
+     *
      * @param string $alias     The alias name to fetch the table for
      * @return string   The real table name
      * @throws Exception if the alias doesn't exist
@@ -228,7 +228,7 @@ class MySQLTableReport {
     /**
      * return the list of form fields defined by the configuration parameters used
      *  to construct this object.  Field names are prefixed by the table *alias*
-     * 
+     *
      * so if the configuration section looked like :
      * 'fields' => array(
      *      'fact'  => array(
@@ -237,12 +237,12 @@ class MySQLTableReport {
      *      'dimension' => array(
      *          'hostname'  => '...',
      *      ),
-     * 
+     *
      * The result would be an array with the values ('fact-checksum', 'dimension-hostname').
-     * 
+     *
      * These are the form field names that will be checked to build the search parameters.
-     * 
-     * @return array the form fields 
+     *
+     * @return array the form fields
      */
     public function get_form_fields() {
         $fields = array();
@@ -263,8 +263,8 @@ class MySQLTableReport {
      * Custom fields are additional columns that can be used in the SELECT clause,
      * but not as WHERE or other conditions.  They are defined in the configuration
      * used to create the object
-     * 
-     * @return array the custom field list 
+     *
+     * @return array the custom field list
      */
     public function get_custom_fields() {
         return array_keys($this->report['custom_fields']);
@@ -272,9 +272,9 @@ class MySQLTableReport {
 
     /**
      * select the field names for the report tables from the database.
-     * 
+     *
      * @param string $table_name optional table name.  If none is provided,  all tables defined in the report will be queried.
-     * @return array the list of columns defined in the database tables. 
+     * @return array the list of columns defined in the database tables.
      */
     public function get_table_fields($table_name = null) {
         // now find all colums from the tables
@@ -312,10 +312,10 @@ class MySQLTableReport {
      * given a table and column, find all the unique values.  This is a utility
      * method often used when building dropdown lists on a search form, or getting
      * values for pivot operations.
-     * 
+     *
      * @param string $table the table name
      * @param string $colname the column name
-     * @return array  the list of unique values  
+     * @return array  the list of unique values
      */
     public function get_distinct_values($table, $colname) {
         //print "getting distinct $colname from $table<br>";
@@ -329,8 +329,8 @@ class MySQLTableReport {
 
     /**
      * return an associate array with form_field_name => value for all fields.
-     * 
-     * @return array  the array of field names and values 
+     *
+     * @return array  the array of field names and values
      */
     public function get_form_field_values() {
         $fields = $this->get_form_fields();
@@ -346,7 +346,7 @@ class MySQLTableReport {
      * @param string $field the field name
      * @param string $alias the field alias
      * @param string $aggregate how to optionally aggregate values in this column
-     * @return \MySQLTableReport 
+     * @return \MySQLTableReport
      */
     public function select($field, $alias, $aggregate) {
         $this->select[] = array($field, $alias, $aggregate);
@@ -355,9 +355,9 @@ class MySQLTableReport {
 
     /**
      * define the primary table to select from
-     * 
-     * @param array $table  The table to select from; the format is array(table_name, alias) 
-     * @return \MySQLTableReport 
+     *
+     * @param array $table  The table to select from; the format is array(table_name, alias)
+     * @return \MySQLTableReport
      */
     public function from(array $table) {
         $this->from = $table;
@@ -366,9 +366,9 @@ class MySQLTableReport {
 
     /**
      * add a table to the JOIN clause
-     * 
+     *
      * @param array $table  The table to join; the format is array(table_name, alias)
-     * @return \MySQLTableReport 
+     * @return \MySQLTableReport
      */
     public function join(array $table) {
         $this->join[] = $table;
@@ -377,12 +377,12 @@ class MySQLTableReport {
 
     /**
      * add a condition to the WHERE clause.
-     * 
+     *
      * @param string $key   the full column name including table alias
      * @param string $var_name  the name of the form variable for this column
      * @param string $value the form value
      * @param string $op    the conditional operator to use; default =
-     * @return \MySQLTableReport 
+     * @return \MySQLTableReport
      */
     public function where($key, $var_name, $value, $op = null) {
         if ($op == null) {
@@ -394,11 +394,11 @@ class MySQLTableReport {
 
     /**
      * set the GROUP BY expression
-     * 
+     *
      * @param string $col_name      the name of the form field as a column
      * @param string $var_name        the form variable name
      * @param string $expression    the group by expression
-     * @return \MySQLTableReport 
+     * @return \MySQLTableReport
      */
     public function group($col_name, $var_name, $expression) {
         //print "called group with $expression<br>";
@@ -408,11 +408,11 @@ class MySQLTableReport {
 
     /**
      * set the ORDER BY clause
-     * 
+     *
      * @param string $col_name      the name of the form field as a column
      * @param string $var_name        the form variable name
      * @param string $expression    the order by expression
-     * @return \MySQLTableReport 
+     * @return \MySQLTableReport
      */
     public function order($key, $field, $expression) {
         $this->order = $expression;
@@ -421,11 +421,11 @@ class MySQLTableReport {
 
     /**
      * set the LIMIT clause
-     * 
+     *
      * @param string $col_name      the name of the form field as a column
      * @param string $var_name        the form variable name
      * @param string $expression    the limit expression
-     * @return \MySQLTableReport 
+     * @return \MySQLTableReport
      */
     public function limit($key, $field, $expression) {
         $this->limit = $expression;
@@ -434,11 +434,11 @@ class MySQLTableReport {
 
     /**
      * set the HAVING clause
-     * 
+     *
      * @param string $col_name      the name of the form field as a column
      * @param string $var_name      the form variable name
      * @param string $expression    the havin expression
-     * @return \MySQLTableReport 
+     * @return \MySQLTableReport
      */
     public function having($key, $field, $expression) {
         $this->having = $expression;
@@ -447,7 +447,7 @@ class MySQLTableReport {
 
     /**
      * raw_where is an unprocessed string that is added to the WHERE clause
-     * 
+     *
      * @param string $key   ignored
      * @param string $field ignored
      * @param string $expression    The raw WHERE expression
@@ -460,35 +460,35 @@ class MySQLTableReport {
      * preform a pivot on a column.  Get the unique list of values
      * and return  them as a conditional aggregate expression to be added to the
      * select clause.  Right now only one aggregate type is supported: SUM
-     * Also a little black magic is used to get the column name from the synthetic 
+     * Also a little black magic is used to get the column name from the synthetic
      * column name needed here.  The column in the form and config should be called:
      * pivot-{$column_name} and it's value should be the column to return when the expression is true.
-     * 
-     * For example, if you have a hostname column with a count of signups, and you want to 
+     *
+     * For example, if you have a hostname column with a count of signups, and you want to
      * pivot on the hostname and return the aggregate signups for each host as its own column,
      * then the form field should look like:
-     * 
+     *
      * <input type="checkbox" name="dimension-pivot-hostname" value="signups" />  Count signups per-host
-     * 
+     *
      * The report object config would look like:
-     * 
+     *
      * 'fields' => array(
      *      'dimension' => array(
      *          'pivot-hostname'    => 'pivot|select',
      *      )
      * )
-     * 
+     *
      * Then remember to set the unique list of value for this pivot operation:
-     * 
+     *
      * $report = new MySQLTableReport( ... );
      * $hosts = $report->get_distinct_values('dimension','hostname');
      * $report->set_pivot_values('dimension-pivot-hostname', $hosts);
-     * 
-     * 
+     *
+     *
      * @param string $col_name      The name of the pivot column
      * @param string $var_name      The field variable name
      * @param string $expression    The column to return in the IF($col_name}='value' ... ) expression
-     * @return \MySQLTableReport|string 
+     * @return \MySQLTableReport|string
      */
     public function pivot($col_name, $var_name, $expression) {
         if (!isset($expression)) {
@@ -512,31 +512,31 @@ class MySQLTableReport {
     /**
      * look for a range of date values for the given column, and return
      * values to be added to the WHERE clause
-     * 
+     *
      * This is used when you have a column like "invoice_date" in the report,
-     * but what you really want to search for is a range of dates bewteen a given 
+     * but what you really want to search for is a range of dates bewteen a given
      * start and end date.
-     * 
+     *
      * To do that, create form fields with _start and _end added to the name,
-     * and pass the column to this processor.  It will search for the appropriate 
+     * and pass the column to this processor.  It will search for the appropriate
      * form fields and build the range.
-     * 
+     *
      * <input type="text" name="dimension-invoice_date_start">
      * <input type="text" name="dimension-invoice_date_end">
-     * 
+     *
      * The config settings would look like:
-     * 
+     *
      * 'fields' => array(
      *      'dimension' => array(
      *          'invoice_date'  =>  'date_range|clear|where',
      *      )
      * )
-     * 
-     * 
+     *
+     *
      * @param string $col_name  the base column name
      * @param string $var_name  the base field variable name
      * @param string $expression    ignored
-     * @return array        the list of expressions to pass to the where function 
+     * @return array        the list of expressions to pass to the where function
      */
     public function date_range($col_name, $var_name, $expression) {
         return array(
@@ -547,22 +547,22 @@ class MySQLTableReport {
 
     /**
      * Remove blank strings as values in form fields.
-     * 
+     *
      * Most cases, the forms you create can have empty fields which mean those
      * conditions should be omitted from the WHERE clause.  However, the form
-     * will send and empty string.  When you want an empty field to be removed from 
+     * will send and empty string.  When you want an empty field to be removed from
      * the WHERE clause, pass it through the clear filter first.
-     * 
+     *
      * 'fields' => array(
      *      'dimension' => array(
      *          'hostname'  =>  'clear|where', // if hostname is blank, do not include it in the query.
      *      )
      * )
-     * 
+     *
      * @param string $col_name      the name of the form field as a column
      * @param string $var_name      the form variable name
      * @param string $expression    the value of the field
-     * @return \MySQLTableReport 
+     * @return \MySQLTableReport
      */
     public function clear($col_name, $var_name, $expression, $op = null) {
         if ($expression == '') {
@@ -574,23 +574,23 @@ class MySQLTableReport {
     /**
      * apply a "greater than or equal to" operator to a WHERE condition, instead
      * of the default equality matching
-     * 
+     *
      * By default a configuration section like this would produce equality matching:
-     * 
+     *
      * 'fields' => array(
      *      'dimension' => array(
      *          'price'  =>  'clear|where', // generates SQL such as: WHERE price = <some value>
      *      )
      * )
-     * 
+     *
      * If you need a range of values, include the appropriate operator as a filter:
-     * 
+     *
      * 'fields' => array(
      *      'dimension' => array(
      *          'price'  =>  'clear|ge|where', // generates SQL such as: WHERE price >= <some value>
      *      )
      * )
-     * 
+     *
      * @param string $col_name  The column name
      * @param string $var_name  The field variable name
      * @param string $expression    The field value
@@ -661,18 +661,18 @@ class MySQLTableReport {
      * colname_cnt
      * colname_max
      * colname_avg
-     * 
+     *
      * It checks the last letters after an underscore and returns an aggregate function that most
      * closely matches.  Supported types are:
      *  _sum _cnt = SUM
      *  _avg, _median = AVG
      *  _min, _95, _stddev = MIN
      * _max = MAX
-     * 
-     * 
+     *
+     *
      * @todo make this a plugin / configurable
      * @param type $name
-     * @return null|string 
+     * @return null|string
      */
     private function get_column_aggregate_function($name) {
         if (!preg_match("/_([^_]+)$/", $name, $regs)) {
@@ -700,7 +700,7 @@ class MySQLTableReport {
     /**
      * Read all form data and process values. This will be called automatically
      * by query() and execute() methods.
-     * 
+     *
      */
     public function process_form_data() {
         if ($this->form_data_processed) {
@@ -787,8 +787,8 @@ class MySQLTableReport {
 
     /**
      * generate the SQL query and return it as a string.
-     * 
-     * @return string  the SQL query build by this report object 
+     *
+     * @return string  the SQL query build by this report object
      */
     public function query() {
         $this->process_form_data();
@@ -871,8 +871,8 @@ class MySQLTableReport {
     /**
      * retuns a list of all column names.  These will be exactly the same as
      * the columns returned by the query.
-     * 
-     * @return srray    the list of column names 
+     *
+     * @return srray    the list of column names
      */
     public function get_column_names() {
         return array_map(function ($k) {
@@ -883,7 +883,7 @@ class MySQLTableReport {
     /**
      * Execute the generated query on the configured databse and return
      * a result handle
-     * 
+     *
      * @param string $sql   optional sql to execute.
      * @return array    array that contains the result set
      * @throws Exception if there is an error executing the query
@@ -906,7 +906,7 @@ class MySQLTableReport {
 
     /**
      * check the result of a mysqli query and throw and excepton if there was an error
-     * 
+     *
      * @param MySQLi_Result $result  handle to the result set
      * @throws Exception if there was a query error
      */
@@ -926,7 +926,7 @@ class MySQLTableReport {
      */
     public function get_search_uri($exceptions = null) {
         $this->process_form_data();
-        
+
         $run_funcs = array('date_range');
         $params = array();
         // loop through the tables and fields
@@ -936,7 +936,7 @@ class MySQLTableReport {
                 $var_name = "{$alias}-{$field}";
                 $col_name = "{$alias}.{$field}";
                 $value = get_var($var_name);
-				
+
 				if (isset($exceptions) and in_array($var_name, $exceptions))
 				{
 					continue;
