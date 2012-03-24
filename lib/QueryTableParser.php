@@ -1,20 +1,20 @@
 <?php
 /**
  * class QueryTableParser
- * 
+ *
  * Very rough class to extract table names from a SQL query.
- * 
+ *
  * This class simply looks for specific tokens like FROM, JOIN, UPDATE, INTO
  * and collects a list of the very next token after those words.
- * 
+ *
  * It doesn't attempt to parse aliases, or any other query structure.
- * 
+ *
  * This probably doesn't handle table names with a space in it like `table name`
- * 
+ *
  * @author Gavin Towey <gavin@box.com>
  * @created 2012-01-01
  * @license Apache 2.0 license.  See LICENSE document for more info
- * 
+ *
  * @todo handle table names with spaces wrapped in backticks or quotes
  * @todo stop parsing early if possible -- after the JOIN clause (if any)
  * @todo ignore token values inside string literals or backticks
@@ -33,9 +33,9 @@ class QueryTableParser {
 
     /**
      * parse a query and return an array of table names from it.
-     * 
+     *
      * @param string $query     the sql query
-     * @return array    the list of table names. 
+     * @return array    the list of table names.
      */
     public function parse($query) {
         $this->query = preg_replace("/\s+/s", " ", $query);
@@ -70,7 +70,7 @@ class QueryTableParser {
      * @return boolean true if there are more tokens to read
      */
     private function has_next_token() {
-        // at end 
+        // at end
         if ($this->pos >= $this->len) {
             return false;
         }
@@ -79,7 +79,7 @@ class QueryTableParser {
 
     /**
      * returns the next whitespace separated string of characters
-     * @return string   the token value 
+     * @return string   the token value
      */
     private function get_next_token() {
         // get the pos of the next token boundary

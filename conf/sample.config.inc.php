@@ -3,11 +3,11 @@
  * This is the configuration file for the Anemometer application.  All of your
  * evironment specific settings will go here, and there should not be any need
  * edit other files.
- * 
+ *
  * @author Gavin Towey <gavin@box.com>
  * @license Apache 2.0 license.  See LICENSE document for more info
  * @created 2012-01-01
- * 
+ *
  **/
 
 /**
@@ -165,24 +165,24 @@ $conf['graph_defaults'] = array(
  * will use the same connection information extracted by the explain callback
  * plugin.  If a valid database connection can't be made from the result of the
  * explain plugin, then these sections will not be displayed.
- * 
+ *
  */
 $conf['plugins'] = array(
-	
+
 	'visual_explain' => '/usr/bin/pt-visual-explain',
 	'query_advisor'	=> '/usr/bin/pt-query-advisor',
-	
+
 	'show_create'	=> true,
 	'show_status'	=> true,
-	
+
 	'explain'	=>	function ($sample) {
 		$conn = array();
-		
+
 		if (strlen($sample['hostname_max']) < 5)
 		{
 			return;
 		}
-		
+
 		$pos = strpos($sample['hostname_max'], ':');
 		if ($pos === false)
 		{
@@ -195,12 +195,12 @@ $conf['plugins'] = array(
 			$conn['host'] = $parts[0];
 			$conn['port'] = $parts[1];
 		}
-		
+
 		if ($sample['db_max'] != '')
 		{
 			$conn['db'] = $sample['db_max'];
 		}
-		
+
 		$conn['user'] = 'root';
 		$conn['password'] = '';
 
@@ -220,7 +220,7 @@ $conf['reports']['slow_query_log'] = array(
 	'join'	=> array (
 		'dimension'	=> 'USING (`checksum`)'
 	),
-	
+
 	// form fields
 	// these are the fields that the report object looks for to build the query
 	// they are defined by the table *alias* and not the name.
@@ -236,7 +236,7 @@ $conf['reports']['slow_query_log'] = array(
 			'sample'	=> 'clear|like|where',
 			'checksum'	=>	'clear|where',
 			'reviewed_status' => 'clear|where',
-			
+
 		),
 
 		'dimension' => array(
@@ -256,7 +256,7 @@ $conf['reports']['slow_query_log'] = array(
 		'index_ratio' =>'ROUND(SUM(Rows_examined_sum)/SUM(rows_sent_sum),2)',
 		'query_time_avg' => 'SUM(Query_time_sum) / SUM(ts_cnt)',
 		'rows_sent_avg' => 'ROUND(SUM(Rows_sent_sum)/SUM(ts_cnt),0)',
-		
+
 	),
 
 );

@@ -4,11 +4,11 @@ require "QueryExplain.php";
 
 /**
  * class AnemometerModel
- * 
+ *
  * handle getting values from the conf file such as datasources
  * and selecting and updating queries from the query_review table
- * 
- * 
+ *
+ *
  * @author Gavin Towey <gavin@box.com> and Geoff Anderson <geoff@box.com>
  * @created 2012-01-01
  * @license Apache 2.0 license.  See LICENSE document for more info
@@ -23,7 +23,7 @@ class AnemometerModel {
 
     /**
      * Constructor.  Initialize the model object
-     * 
+     *
      * @param array $conf   The global config information
      */
     function __construct($conf) {
@@ -32,7 +32,7 @@ class AnemometerModel {
 
     /**
      * return the default report action name; usually either report or graph_search
-     * @return string       the action name 
+     * @return string       the action name
      */
     public function get_default_report_action() {
         return $this->conf['default_report_action'];
@@ -40,7 +40,7 @@ class AnemometerModel {
 
     /**
      * get the default search values for the specified report type
-     * 
+     *
      * @param string $type      The name of the report type
      * @return array    The default values for the search form
      */
@@ -51,8 +51,8 @@ class AnemometerModel {
     /**
      * return the list of review types.  This is a configurable list of short text
      * statuses that can describe the query.
-     * 
-     * @return array    the list of review status types 
+     *
+     * @return array    the list of review status types
      */
     public function get_review_types() {
         return $this->conf['review_types'];
@@ -60,7 +60,7 @@ class AnemometerModel {
 
     /**
      * Get the list of names for the configured data sources
-     * @return array    List of strings that describe the data sources 
+     * @return array    List of strings that describe the data sources
      */
     public function get_data_source_names() {
         if (is_array($this->conf['datasources'])) {
@@ -71,9 +71,9 @@ class AnemometerModel {
 
     /**
      * Given a data source name, get the properties for it.
-     * 
+     *
      * @param string $name      The datasource name
-     * @return mixed    array of properties, or null if the datasource doesn't exist 
+     * @return mixed    array of properties, or null if the datasource doesn't exist
      */
     public function get_data_source($name) {
         if (is_array($this->conf['datasources'][$name])) {
@@ -84,7 +84,7 @@ class AnemometerModel {
 
     /**
      * sets the currently active datasource.
-     * 
+     *
      * @param string $name  The name of the datasource
      */
     public function set_data_source($name) {
@@ -102,7 +102,7 @@ class AnemometerModel {
      * set the current fact and dimension table.  That is the query_review and
      * query_review_history tables.  This is used when we select samples or update
      * a query by its checksum.
-     * 
+     *
      * @param string $fact  The name of the fact table
      * @param string $dimension The name of the dimension table
      */
@@ -113,9 +113,9 @@ class AnemometerModel {
 
     /**
      * get the field names for the given report
-     * 
+     *
      * @param string $name  The report name
-     * @return array    the table alias and field names 
+     * @return array    the table alias and field names
      */
     public function get_form_fields($name) {
         return $this->conf['reports'][$name]['fields'];
@@ -123,9 +123,9 @@ class AnemometerModel {
 
     /**
      * get the full config information for the given report.
-     * 
+     *
      * @param string $name      The report name
-     * @return array        The configuration information 
+     * @return array        The configuration information
      */
     public function get_report($name) {
         return $this->conf['reports'][$name];
@@ -133,8 +133,8 @@ class AnemometerModel {
 
     /**
      * Return a list of reviewers defined by the config file
-     * 
-     * @return array    The list of reviewers 
+     *
+     * @return array    The list of reviewers
      */
     public function get_reviewers() {
         return $this->conf['reviewers'];
@@ -142,7 +142,7 @@ class AnemometerModel {
 
     /**
      * Query the database and return true if a given checksum exists
-     * 
+     *
      * @param string $checksum      The checksum to check
      * @return boolean      true if it exists, otherwise false
      */
@@ -157,9 +157,9 @@ class AnemometerModel {
 
     /**
      * Preform an update query on the given checksum
-     * 
+     *
      * @param string $checksum      The checksum to update
-     * @param array $fields         Array of Key => Value pairs to update 
+     * @param array $fields         Array of Key => Value pairs to update
      */
     public function update_query($checksum, $fields) {
         $mysqli = $this->mysqli;
@@ -182,9 +182,9 @@ class AnemometerModel {
 
     /**
      * given a checksum, return the full database row from the fact table for it.
-     * 
+     *
      * @param string $checksum      The checksum to retrieve
-     * @return mixed        The row of data, or null 
+     * @return mixed        The row of data, or null
      */
     public function get_query_by_checksum($checksum) {
         $result = $this->mysqli->query("SELECT * FROM {$this->fact_table} WHERE checksum={$checksum}");
@@ -197,11 +197,11 @@ class AnemometerModel {
 
     /**
      * Retrieve query samples from the history table, ordered from most recent
-     * 
+     *
      * @param string $checksum      The checksum to look up
      * @param int $limit            The number of sample to get (default 1)
      * @param int $offset           The starting record number
-     * @return MySQLi_Result        The result handle 
+     * @return MySQLi_Result        The result handle
      */
     public function get_query_samples($checksum, $limit = 1, $offset = 0) {
         $sql = "SELECT ts_min, ts_max, hostname_max, sample FROM {$this->dimension_table} WHERE checksum=$checksum ORDER BY ts_max DESC LIMIT {$limit} OFFSET {$offset}";
@@ -210,7 +210,7 @@ class AnemometerModel {
 
     /**
      * Try to connect to the datasource,  throw an exception on failure
-     * @throws Exception 
+     * @throws Exception
      */
     public function connect_to_datasource() {
         $ds = $this->conf['datasources'][$this->datasource_name];
@@ -224,32 +224,32 @@ class AnemometerModel {
 
     /**
      * Create a new query explainer object for the given query sample
-     * 
+     *
      * @param array $sample     The qeury sample
      */
     public function init_query_explainer(array $sample) {
         try
         {
-            $this->explainer = new QueryExplain($this->conf['plugins']['explain'], $sample);    
+            $this->explainer = new QueryExplain($this->conf['plugins']['explain'], $sample);
         }
         catch (Exception $e)
         {
             // ignore it
         }
-        
+
     }
 
     /**
      * try to get the explain plan for a query
-     * 
+     *
      * @param array $sample     The query sample row data
-     * @return mixed        Either a string with the explain plan, an error message or null 
+     * @return mixed        Either a string with the explain plan, an error message or null
      */
     public function get_explain_for_sample(array $sample) {
         if (!isset($this->conf['plugins']['explain']) or !is_callable($this->conf['plugins']['explain'])) {
             return null;
         }
-        
+
         if (!isset($this->explainer)) {
             return null;
         }
@@ -260,10 +260,10 @@ class AnemometerModel {
     /**
      * Open a two-way communication with an external script.  Used to send
      * data to the program on STDIN and collect output on STDOUT.
-     * 
+     *
      * @param string $script        The script to invoke
      * @param string $input         The input to send to the script on STDIN
-     * @return string   The output from the script 
+     * @return string   The output from the script
      */
     private function exec_external_script($script, $input) {
         $descriptorspec = array(
@@ -287,9 +287,9 @@ class AnemometerModel {
 
     /**
      * invoke pt-visual-explain and get its output
-     * 
+     *
      * @param string $explain_plan      The explain plan to feed the script
-     * @return string       The visual explain output 
+     * @return string       The visual explain output
      */
     public function get_visual_explain($explain_plan) {
         if (!isset($this->conf['plugins']['visual_explain'])) {
@@ -304,9 +304,9 @@ class AnemometerModel {
 
     /**
      * invoke pt-query-advisor and get its output
-     * 
+     *
      * @param string $query  The query to feed the script
-     * @return string       The script output 
+     * @return string       The script output
      */
     public function get_query_advisor($query) {
         if (!isset($this->conf['plugins']['query_advisor'])) {
@@ -323,7 +323,7 @@ class AnemometerModel {
     /**
      * Get the create table definitions for the query
      * @param string $query     the query to process
-     * @return string   The create table statements 
+     * @return string   The create table statements
      */
     public function get_create_table($query) {
         if (!isset($this->conf['plugins']['show_create']) or !$this->conf['plugins']['show_create']) {
@@ -340,7 +340,7 @@ class AnemometerModel {
     /**
      * Get the table status info for the given query
      * @param string $query     The query to process
-     * @return string       The table status info 
+     * @return string       The table status info
      */
     public function get_table_status($query) {
         if (!isset($this->conf['plugins']['show_status']) or !$this->conf['plugins']['show_status']) {
