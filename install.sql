@@ -1,7 +1,8 @@
--- Create the database needed for the Box Anemometer
+DROP SCHEMA slow_query_log;
 CREATE DATABASE slow_query_log;
 
--- Create the global query review table
+USE slow_query_log;
+
 CREATE TABLE `global_query_review` (
   `checksum` bigint(20) unsigned NOT NULL,
   `fingerprint` text NOT NULL,
@@ -15,8 +16,9 @@ CREATE TABLE `global_query_review` (
   PRIMARY KEY (`checksum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Create the historical query review table
 CREATE TABLE `global_query_review_history` (
+  `hostname` varchar(128) NOT NULL,
+  `hostname_max` varchar(128) NOT NULL,
   `checksum` bigint(20) unsigned NOT NULL,
   `sample` text NOT NULL,
   `ts_min` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -71,22 +73,12 @@ CREATE TABLE `global_query_review_history` (
   `InnoDB_IO_r_ops_median` float DEFAULT NULL,
   `InnoDB_IO_r_bytes_min` float DEFAULT NULL,
   `InnoDB_IO_r_bytes_max` float DEFAULT NULL,
-  `InnoDB_IO_r_bytes_pct_95` float DEFAULT NULL,
-  `InnoDB_IO_r_bytes_stddev` float DEFAULT NULL,
   `InnoDB_IO_r_bytes_median` float DEFAULT NULL,
   `InnoDB_IO_r_wait_min` float DEFAULT NULL,
   `InnoDB_IO_r_wait_max` float DEFAULT NULL,
   `InnoDB_IO_r_wait_pct_95` float DEFAULT NULL,
-  `InnoDB_IO_r_ops_stddev` float DEFAULT NULL,
-  `InnoDB_IO_r_ops_median` float DEFAULT NULL,
-  `InnoDB_IO_r_bytes_min` float DEFAULT NULL,
-  `InnoDB_IO_r_bytes_max` float DEFAULT NULL,
   `InnoDB_IO_r_bytes_pct_95` float DEFAULT NULL,
   `InnoDB_IO_r_bytes_stddev` float DEFAULT NULL,
-  `InnoDB_IO_r_bytes_median` float DEFAULT NULL,
-  `InnoDB_IO_r_wait_min` float DEFAULT NULL,
-  `InnoDB_IO_r_wait_max` float DEFAULT NULL,
-  `InnoDB_IO_r_wait_pct_95` float DEFAULT NULL,
   `InnoDB_IO_r_wait_stddev` float DEFAULT NULL,
   `InnoDB_IO_r_wait_median` float DEFAULT NULL,
   `InnoDB_rec_lock_wait_min` float DEFAULT NULL,
