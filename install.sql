@@ -19,7 +19,6 @@ CREATE TABLE `global_query_review` (
 
 -- Create the historical query review table
 CREATE TABLE `global_query_review_history` (
-  `hostname` varchar(64) NOT NULL,
   `hostname_max` varchar(64) NOT NULL,
   `checksum` bigint(20) unsigned NOT NULL,
   `sample` text NOT NULL,
@@ -112,7 +111,6 @@ CREATE TABLE `global_query_review_history` (
   `Filesort_sum` float DEFAULT NULL,
   `Disk_filesort_cnt` float DEFAULT NULL,
   `Disk_filesort_sum` float DEFAULT NULL,
-  UNIQUE KEY `hostname` (`hostname`,`checksum`,`ts_min`,`ts_max`),
   UNIQUE KEY `hostname_max` (`hostname_max`,`checksum`,`ts_min`,`ts_max`),
   KEY `ts_min` (`ts_min`),
   KEY `checksum` (`checksum`)
