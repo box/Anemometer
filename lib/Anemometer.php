@@ -70,8 +70,17 @@ class Anemometer {
         // process the form data, and get the query result
         $data = array();
         $data['datasource'] = get_var('datasource');
-        $data['sql'] = $this->report_obj->query();
-        $data['result'] = $this->report_obj->execute();
+        try
+        {
+            $data['sql'] = $this->report_obj->query();
+            $data['result'] = $this->report_obj->execute();    
+        }
+        catch (Exception $e)
+        {
+            $this->alert($e->getMessage(),'alert-error');
+            prettyprint($data['sql']);
+        }
+        
         $data['columns'] = $this->report_obj->get_column_names();
         $data['permalink'] = site_url() . '?action=report&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
 

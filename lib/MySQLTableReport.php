@@ -854,8 +854,8 @@ class MySQLTableReport {
         // GROUP / ORDER / HAVING / LIMIT
         $aditional_clauses = array(
             'GROUP BY' => $this->group,
+			'HAVING' => $this->having,
             'ORDER BY' => $this->order,
-            'HAVING' => $this->having,
             'LIMIT' => $this->limit
         );
         foreach ($aditional_clauses as $clause => $value) {
