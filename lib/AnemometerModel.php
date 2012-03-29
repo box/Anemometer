@@ -317,7 +317,7 @@ class AnemometerModel {
             return "can't find query advisor at " . $this->conf['plugins']['query_advisor'];
         }
 
-        return $this->exec_external_script($this->conf['plugins']['query_advisor'], $explain_plan);
+        return $this->exec_external_script($this->conf['plugins']['query_advisor'], $query);
     }
 
     /**
