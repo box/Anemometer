@@ -305,7 +305,14 @@ class Anemometer {
 
         // get explain plan and extra info
         // TODO convert to ajax calls, just get the url
-        $this->data_model->init_query_explainer($data['sample']);
+	try
+	{
+        	$this->data_model->init_query_explainer($data['sample']);
+	}
+	catch ( Exception $e )
+	{
+		$data['explain_plan_error'] = $e->getMessage();
+	}
         $data['explain_plan'] = $this->data_model->get_explain_for_sample($data['sample']);
         $data['visual_explain'] = $this->data_model->get_visual_explain($data['explain_plan']);
         $sample = $data['sample']['sample'];
