@@ -204,7 +204,7 @@ class AnemometerModel {
      * @return MySQLi_Result        The result handle
      */
     public function get_query_samples($checksum, $limit = 1, $offset = 0) {
-        $sql = "SELECT ts_min, ts_max, hostname_max, sample FROM {$this->dimension_table} WHERE checksum=$checksum ORDER BY ts_max DESC LIMIT {$limit} OFFSET {$offset}";
+        $sql = "SELECT ts_min, ts_max, db_max, hostname_max, sample FROM {$this->dimension_table} WHERE checksum=$checksum ORDER BY ts_max DESC LIMIT {$limit} OFFSET {$offset}";
         return $this->mysqli->query($sql);
     }
 
@@ -228,15 +228,7 @@ class AnemometerModel {
      * @param array $sample     The qeury sample
      */
     public function init_query_explainer(array $sample) {
-        try
-        {
-            $this->explainer = new QueryExplain($this->conf['plugins']['explain'], $sample);
-        }
-        catch (Exception $e)
-        {
-            // ignore it
-        }
-
+        $this->explainer = new QueryExplain($this->conf['plugins']['explain'], $sample);
     }
 
     /**

@@ -126,6 +126,9 @@ $(document).ready( function ()  {
 				</tr>
 				</table>
 				<pre class="prettyprint lang-sql"><?php echo $sample['sample']; ?></pre>
+		<?php if (isset($explain_plan_error)) { ?>
+			<div class="alert"><strong>Error in Query Explain Plugin:</strong> <?php echo $explain_plan_error; ?></div>
+		<?php } ?>
 		<div class="accordion" id="accordion2">
 			<?php if (isset($explain_plan)) { ?>
 			<div class="accordion-group">
