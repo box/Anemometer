@@ -63,6 +63,19 @@ The sample config explains every setting you may want to change in it.  At the v
     	)
     );
 
+In addition, the "explain" plugin is enabled by default in the current release and you'll need to configure the username and password it uses.  To do this, scroll down in the sample config to the section containing the plugins configuration and change the 'user' and 'password' parameters to the appropriate values for your environment:
+
+    $conf['plugins'] = array(
+            ...
+        'explain'       =>      function ($sample) {
+            $conn['user'] = 'anemometer';
+            $conn['password'] = 'superSecurePass';
+            
+            return $conn;
+        },
+    );
+
+
 
 Now you should be able to navigate to your webserver in a browser and see Box Anemometer in action!
 
