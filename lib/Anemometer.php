@@ -165,7 +165,6 @@ class Anemometer {
         $datasources = $this->data_model->get_data_source_names();
 
         if (count($datasources) == 0) {
-            $this->header();
             $this->alert("No Datasources defined.  Edit config.inc.php", 'alert-error');
             return;
         } elseif (count($datasources) == 1) {
