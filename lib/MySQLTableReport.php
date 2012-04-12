@@ -685,9 +685,9 @@ class MySQLTableReport {
                 return 'SUM';
             case 'avg':
             case 'median':
+            case '95':
                 return 'AVG';
             case 'min':
-            case '95':
             case 'stddev':
                 return 'MIN';
             case 'max':
