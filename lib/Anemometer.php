@@ -144,7 +144,7 @@ class Anemometer {
         $this->set_search_defaults('report_defaults', array('dimension-ts_min_start', 'dimension-ts_min_end','checksum'));
 //        $data['ajax_request_url_table'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
 
-	$_GET['fact-order'] = get_var('plot_field');
+	$_GET['fact-order'] = get_var('plot_field') . ' DESC';
         $data['ajax_table_request_url_base'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource']. '&' . $this->report_obj->get_search_uri(array( 'dimension-ts_min' ));
         $data['table_url_time_start_param'] = 'dimension-ts_min_start';
         $data['table_url_time_end_param'] = 'dimension-ts_min_end';

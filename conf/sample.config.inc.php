@@ -117,7 +117,7 @@ $conf['graph_defaults'] = array(
 	'table_fields' => array('hour_ts'),
 	// hack ... fix is to make query builder select the group and order fields,
 	// then table fields only has to contain the plot_field
-	'plot_field' => 'ts_cnt',
+	'plot_field' => 'Query_time_sum',
 );
 
 /**
