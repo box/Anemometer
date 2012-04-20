@@ -150,8 +150,8 @@ class QueryExplain {
 
         try {
             $result = $this->explain_query($this->query);
-            if ($this->mysqli->mysql_errno) {
-                return $this->mysqli->mysql_error . " (" . $this->mysqli->mysql_errno . ")";
+            if ($this->mysqli->errno) {
+                return $this->mysqli->error . " (" . $this->mysqli->errno . ")";
             }
 
             if (!$result) {
