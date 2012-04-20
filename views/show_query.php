@@ -139,7 +139,7 @@ $(document).ready( function ()  {
               </div>
               <div id="collapseZero" class="accordion-body collapse out">
                 <div class="accordion-inner">
-					<pre class="prettyprint lang-sql"><?php echo $explain_plan; ?></pre>
+					<pre class="prettyprint lang-sql nowrap"><?php echo $explain_plan; ?></pre>
                 </div>
               </div>
 			  <?php } ?>

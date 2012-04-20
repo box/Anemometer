@@ -30,6 +30,10 @@
       .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
     </style>
 
+    <style>
+	pre.prettyprint { font-size: 90%; !important; }
+	.nowrap { white-space: pre; overflow: scroll; }
+    </style>
   
     <!-- typahead -->
     <script src="js/bootstrap-typeahead.js"></script>
