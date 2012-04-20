@@ -144,7 +144,7 @@ class QueryExplain {
             return null;
         }
 
-        if (!preg_match("/^\s*(EXPLAIN)?\s*SELECT/i", $this->query)) {
+        if (!preg_match("/^\s*\(?\s*(EXPLAIN)?\s*SELECT/i", $this->query)) {
             return null;
         }
 
