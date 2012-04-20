@@ -7,7 +7,7 @@ USE slow_query_log;
 CREATE TABLE `global_query_review` (
   `checksum` bigint(20) unsigned NOT NULL,
   `fingerprint` text NOT NULL,
-  `sample` text NOT NULL,
+  `sample` longtext NOT NULL,
   `first_seen` datetime DEFAULT NULL,
   `last_seen` datetime DEFAULT NULL,
   `reviewed_by` varchar(20) DEFAULT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE `global_query_review_history` (
   `hostname_max` varchar(64) NOT NULL,
   `db_max` varchar(64) DEFAULT NULL,
   `checksum` bigint(20) unsigned NOT NULL,
-  `sample` text NOT NULL,
+  `sample` longtext NOT NULL,
   `ts_min` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ts_max` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ts_cnt` float DEFAULT NULL,
