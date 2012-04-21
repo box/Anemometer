@@ -122,7 +122,7 @@ $conf['graph_defaults'] = array(
 
 /**
  * Plugins are optional extra information that can be displayed, but often
- * relies on information specific to you system, and has to be set manually.
+ * relies on information specific to your system, and has to be set manually.
  *
  * This includes the explain plan information, percona toolkit plugins like
  * visual explain and query advisor output, and the table structure and status

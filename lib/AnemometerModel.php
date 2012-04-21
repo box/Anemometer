@@ -261,6 +261,7 @@ class AnemometerModel {
         $descriptorspec = array(
             0 => array("pipe", "r"), // stdin is a pipe that the child will read from
             1 => array("pipe", "w"), // stdout is a pipe that the child will write to
+            2 => array("pipe", "w"), // stderr pipe to check for errors
         );
 
         $process = proc_open($script, $descriptorspec, $pipes, "/tmp");
@@ -268,8 +269,9 @@ class AnemometerModel {
             fwrite($pipes[0], $input);
             fclose($pipes[0]);
 
-            $result = stream_get_contents($pipes[1]);
+            $result = stream_get_contents($pipes[1]).stream_get_contents($pipe[2]);
             fclose($pipes[1]);
+            fclose($pipes[2]);
 
             $ret_val = proc_close($process);
             return $result;
