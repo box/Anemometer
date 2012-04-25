@@ -231,7 +231,7 @@ $conf['reports']['slow_query_log'] = array(
 			'order'		=> 'order',
 			'having'	=> 'having',
 			'limit'		=> 'limit',
-			'first_seen'=> 'clear|ge|where',
+			'first_seen'=> 'clear|reldate|ge|where',
 			'where'		=>	'raw_where',
 			'sample'	=> 'clear|like|where',
 			'checksum'	=>	'clear|where',
@@ -242,7 +242,7 @@ $conf['reports']['slow_query_log'] = array(
 		'dimension' => array(
 			'extra_fields' 	=> 	'where',
 			'hostname_max'	=> 'clear|where',
-			'ts_min'	=>	'date_range|clear|where',
+			'ts_min'	=>	'date_range|reldate|clear|where',
 			'pivot-hostname_max' => 'clear|pivot|select',
 		),
 	),

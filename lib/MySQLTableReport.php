@@ -184,7 +184,6 @@ class MySQLTableReport {
     /**
      * make a connection to the database, die with an error if this doesn't work
      *
-     * @todo add a timeout
      */
     private function connect_to_datasource() {
         $ds = $this->datasource;
@@ -543,6 +542,16 @@ class MySQLTableReport {
             array($col_name, "{$var_name}_start", get_var("{$var_name}_start"), '>='),
             array($col_name, "{$var_name}_end", get_var("{$var_name}_end"), '<=')
         );
+    }
+
+    public function reldate($col_name, $var_name, $expression, $op) {
+		if (substr(strtolower($expression),0,3) == 'now') {
+			$expression = date("Y-m-d H:i:s");
+		}
+		if (preg_match('/^\s*([+-])?(\d+)\s(\w+)$/', $expression, $match)) {
+			$expression = date("Y-m-d H:i:s", strtotime( $expression));
+		}
+		return array( array($col_name, $var_name, $expression, $op) );
     }
 
     /**
