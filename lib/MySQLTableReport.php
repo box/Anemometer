@@ -490,21 +490,36 @@ class MySQLTableReport {
      * @return \MySQLTableReport|string
      */
     public function pivot($col_name, $var_name, $expression) {
-        if (!isset($expression)) {
+        if (!isset($expression))
+		{
             return $this;
         }
 
         //print "in pivot values ($col_name) ($var_name) ($expression)<br>\n";
         $columns = array();
-        if (!isset($expression)) {
-            $expression = '1';
-        }
         $col_name = preg_replace("/pivot-/", "", $col_name);
         $values = $this->get_pivot_values($var_name);
-        //print_r($values);
-        foreach ($values as $v) {
-            $columns[] = array("IF({$col_name}='" . addslashes($v) . "',{$expression},0)", $v, 'SUM');
-        }
+
+		foreach ($values as $v) {
+			
+			if (isset($this->report['custom_fields'][$expression]))
+			{
+				// for custom fields, we need to do some regex trickery.  This should work in many cases
+				// but there might be some strange situations where it doesn't.
+				// mostly where it doesn't work is where a pivot doesn't make sense.
+				$field = preg_replace("/(SUM|MIN|MAX|AVG|COUNT)\(([\.\w]+)\)/", "\\1(IF({$col_name}='".addslashes($v)."',\\2,0))" ,$this->report['custom_fields'][$expression]);
+				if ($field)
+				{
+					$columns[] = array($field, $v, null);
+				}
+			}
+			else
+			{
+				// default behavior for most columns
+				$columns[] = array("IF({$col_name}='" . addslashes($v) . "',{$expression},0)", $v, 'SUM');
+			}
+		}
+
         return $columns;
     }
 
