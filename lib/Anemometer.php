@@ -90,8 +90,7 @@ class Anemometer {
             'json' => "report_json",
             'json2' => "report_json2",
             'print_r' => "report_printr",
-            'table' => "report_result",
-            'graph' => "flot_test"
+            'table' => "report_result"
         );
 
         $output = get_var('output');

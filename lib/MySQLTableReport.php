@@ -856,7 +856,7 @@ class MySQLTableReport {
 
         // WHERE
         $this->filter_where();
-        if (count($this->where) >= 0) {
+        if (count($this->where) > 0) {
             $sql .= " WHERE " . join("\n  AND ", array_map(
                                     function ($x) {
                                         return $x[0] . ' ' . $x[2] . ' "' . $x[1] . '"';
