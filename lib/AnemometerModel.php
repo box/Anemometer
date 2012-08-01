@@ -45,7 +45,30 @@ class AnemometerModel {
      * @return array    The default values for the search form
      */
     public function get_report_defaults($type = 'report_defaults') {
-        return $this->conf[$type];
+        if (!isset($this->datasource_name))
+        {
+            throw new Exception("Cannot get report default values without a datasource defined");
+        }
+        $source_type = $this->conf['datasources'][$this->datasource_name]['source_type'];
+        
+        // for backwards compatability with conf files.
+        if (array_key_exists($type, $this->conf) and array_key_exists($source_type, $this->conf[$type]))
+        {
+            return $this->conf[$type][$source_type];
+        }
+        else
+        {
+            return $this->conf[$type];
+        }
+    }
+    
+    public function get_source_type()
+    {
+        if (isset($this->datasource_name) and array_key_exists('source_type', $this->conf['datasources'][$this->datasource_name]))
+        {
+            return $this->conf['datasources'][$this->datasource_name]['source_type'];
+        }
+        return 'default';
     }
 
     /**
@@ -96,6 +119,24 @@ class AnemometerModel {
                 $this->dimension_table = $key;
             }
         }
+        
+        if (array_key_exists('source_type', $this->conf['datasources'][$name]) and $this->conf['datasources'][$name]['source_type'] == 'performance_schema')
+        {
+            // check for correct mysql version with performance schema source type
+            $this->connect_to_datasource();
+            $result = $this->mysqli->query("SELECT @@version");
+            $version = 'unknown';
+            if (is_object($result))
+            {
+                $row = $result->fetch_assoc();
+                if ($row['@@version'] >= '5.6')
+                {
+                    return true;
+                }
+                $version = $row['@@version'];
+            }
+            throw new Exception("Datasource {$name} has a source_type of performance_schema which requires mysql version >= 5.6.  Found version: {$version}");
+        }
     }
 
     /**
@@ -128,7 +169,11 @@ class AnemometerModel {
      * @return array        The configuration information
      */
     public function get_report($name) {
-        return $this->conf['reports'][$name];
+        if (isset($name))
+        {
+            return $this->conf['reports'][$name];
+        }
+        return $this->conf['reports']['slow_query_log'];
     }
 
     /**
@@ -147,7 +192,9 @@ class AnemometerModel {
      * @return boolean      true if it exists, otherwise false
      */
     public function checksum_exists($checksum) {
-        $result = $this->mysqli->query("SELECT checksum FROM {$this->fact_table} WHERE checksum='" . $this->mysqli->real_escape_string($checksum) . "'");
+        $checksum_field_name = $this->get_field_name('checksum');
+        $query = "SELECT {$checksum_field_name} FROM {$this->fact_table} WHERE {$checksum_field_name}='" . $this->mysqli->real_escape_string($checksum) . "'";
+        $result = $this->mysqli->query($query);
         check_mysql_error($result, $this->mysqli);
         if ($result->num_rows) {
             return true;
@@ -163,6 +210,7 @@ class AnemometerModel {
      */
     public function update_query($checksum, $fields) {
         $mysqli = $this->mysqli;
+        $checksum_field_name = $this->get_field_name('checksum');
         $sql = "UPDATE {$this->fact_table} SET ";
         $sql .= join(
                 ',', array_map(
@@ -174,7 +222,7 @@ class AnemometerModel {
                         }, array_keys($fields), array_values($fields)
                 )
         );
-        $sql .= " WHERE checksum='" . $this->mysqli->real_escape_string($checksum) . "'";
+        $sql .= " WHERE {$checksum_field_name}='" . $this->mysqli->real_escape_string($checksum) . "'";
         $res = $this->mysqli->query($sql);
         // @todo ... fix this by making it a local method
         check_mysql_error($res, $this->mysqli);
@@ -187,7 +235,8 @@ class AnemometerModel {
      * @return mixed        The row of data, or null
      */
     public function get_query_by_checksum($checksum) {
-        $result = $this->mysqli->query("SELECT * FROM {$this->fact_table} WHERE checksum={$checksum}");
+        $checksum_field_name = $this->get_field_name('checksum');
+        $result = $this->mysqli->query("SELECT * FROM {$this->fact_table} WHERE {$checksum_field_name}='{$checksum}'");
         check_mysql_error($result, $this->mysqli);
         if ($row = $result->fetch_assoc()) {
             return $row;
@@ -204,7 +253,9 @@ class AnemometerModel {
      * @return MySQLi_Result        The result handle
      */
     public function get_query_samples($checksum, $limit = 1, $offset = 0) {
-        $sql = "SELECT ts_min, ts_max, db_max, hostname_max, sample FROM {$this->dimension_table} WHERE checksum=$checksum ORDER BY ts_max DESC LIMIT {$limit} OFFSET {$offset}";
+        $checksum_field_name = $this->get_field_name('checksum');
+        $time_field_name = $this->get_field_name('time');
+        $sql = "SELECT * FROM {$this->dimension_table} WHERE {$checksum_field_name}='{$checksum}' ORDER BY {$time_field_name} DESC LIMIT {$limit} OFFSET {$offset}";
         return $this->mysqli->query($sql);
     }
 
@@ -347,7 +398,31 @@ class AnemometerModel {
 
         return $this->explainer->get_table_status($query);
     }
-
+    
+    public function get_field_name($type)
+    {
+        if (!isset($this->datasource_name))
+        {
+            throw new Exception("Cannot get report special field names without a datasource defined");
+        }
+        $source_type = $this->conf['datasources'][$this->datasource_name]['source_type'];
+        
+        if (array_key_exists('special_field_names', $this->conf['reports'][$source_type]))
+        {
+            return $this->conf['reports'][$source_type]['special_field_names'][$type];
+        }
+        
+        // backwards compatability
+        switch ($type)
+        {
+            case 'time':
+                return 'ts_min';
+            case 'hostname':
+                return 'hostname_max';
+            case 'checksum':
+                return 'checksum';
+        }
+    }
 }
 
 ?>

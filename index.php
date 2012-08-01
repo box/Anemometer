@@ -12,7 +12,7 @@ set_include_path( get_include_path() . PATH_SEPARATOR . "./lib");
 require "Helpers.php";
 require "Anemometer.php";
 
-error_reporting(E_ERROR);
+error_reporting(E_ALL);
 $action = isset($_GET['action']) ? $_GET['action'] : 'index';
 
 $conf = array();
