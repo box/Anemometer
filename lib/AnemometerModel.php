@@ -421,6 +421,10 @@ class AnemometerModel {
                 return 'hostname_max';
             case 'checksum':
                 return 'checksum';
+	    case 'sample':
+		return 'sample';
+	    default:
+		return $type;
         }
     }
 }
