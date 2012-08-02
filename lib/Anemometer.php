@@ -147,7 +147,6 @@ class Anemometer {
         // now go get a url for the table results
         $this->init_report();
         $this->set_search_defaults('report_defaults', array('dimension-'.$time.'_start', 'dimension-'.$time.'_end', $data['checksum_field_name']));
-//        $data['ajax_request_url_table'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
 
 	    $_GET['fact-order'] = get_var('plot_field') . ' DESC';
         $data['ajax_table_request_url_base'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource']. '&' . $this->report_obj->get_search_uri(array( 'dimension-'.$data['time_field_name']));
@@ -227,10 +226,13 @@ class Anemometer {
             $data['datasource'] = get_var('datasource');
             $data['tables'] = $this->report_obj->get_tables();
 	    
-		    $fieldname = $this->data_model->get_field_name('hostname');
-		    $data['hosts'] = $this->report_obj->get_distinct_values($data['tables'][1], $fieldname);
-		    $data[$fieldname] = get_var('dimension-'.$fieldname);
-		    $this->report_obj->set_pivot_values('dimension-pivot-'.$fieldname, $data['hosts']);
+            if ('performance_schema' != $this->data_model->get_source_type())
+            {
+                $fieldname = $this->data_model->get_field_name('hostname');
+                $data['hosts'] = $this->report_obj->get_distinct_values($data['tables'][1], $fieldname);
+                $data[$fieldname] = get_var('dimension-'.$fieldname);
+                $this->report_obj->set_pivot_values('dimension-pivot-'.$fieldname, $data['hosts']);
+            }
 
             //		$data['fields = $this->report_obj->get_form_fields();
             // @todo remove
