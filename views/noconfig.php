@@ -18,7 +18,7 @@
 		  <p><br></p>
 		  <p>Please find the sample config file at <code>conf/sample.config.inc.php</code>, rename it to <code>conf/config.inc.php</code> and follow its instructions to set up your enviroment</p>
 		  <p><br></p>
-		  <p>Download  / Documentation link </p>
+		  <p><a href="https://github.com/box/Anemometer">Github Project Page</a>  / <a href="https://github.com/box/Anemometer/blob/master/README.md">Documentation</a> </p>
 		  <!--
 		  <p>Anemometer is a tool used to measure wind speed -- since database queries in flight often seem invisible, it is difficult to focus your effort optimizing queries that need it most.</p>
 		  <p>Get a handle on which way the wind is blowing with Anemometer</p>
