@@ -17,11 +17,11 @@ If you're just completely itching to start using this tool, here's what you need
 
 The setup page
 
-![First view](screenshots/first view.png)
+![First view](https://raw.github.com/bahamas10/Anemometer/dave-screenshots-1/screenshots/first%20view.png)
 
 The main page
 
-![Main Page](screenshots/main.png)
+![Main Page](https://raw.github.com/bahamas10/Anemometer/dave-screenshots-1/screenshots/main.png)
 
 #### Setup DB ####
 
