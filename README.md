@@ -13,6 +13,15 @@ If you're just completely itching to start using this tool, here's what you need
 3.	a slow query log from a MySQL server (see [The Slow Query Log](http://dev.mysql.com/doc/refman/5.5/en/slow-query-log.html) for info on getting one)
 4.	a webserver with PHP
 
+#### Screenshots ####
+
+The setup page
+
+![First view](screenshots/first view.png)
+
+The main page
+
+![Main Page](screenshots/main.png)
 
 #### Setup DB ####
 
