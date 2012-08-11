@@ -19,7 +19,7 @@ If you're just completely itching to start using this tool, here's what you need
 First up, you should connect to the MySQL database you're looking to store the analysis data in and issue the following command:
 
     $ mysql -h db.example.com < install.sql
-    $ mysql -h db.example.com -e "grant ALL ON `slow_query_log`.* to 'anemometer'@'%' IDENTIFIED BY 'superSecurePass';"
+    $ mysql -h db.example.com -e "grant ALL ON slow_query_log.* to 'anemometer'@'%' IDENTIFIED BY 'superSecurePass';"
 
 #### Put some data in the DB ####
 
