@@ -41,8 +41,46 @@ $conf['datasources']['localhost'] = array(
 	'tables' => array(
 		'global_query_review' => 'fact',
 		'global_query_review_history' => 'dimension'
-	)
+	),
+	'source_type' => 'slow_query_log'
 );
+
+/**
+ * If you're using Anemometer with MySQL 5.6's performance schema,
+ * then use this datasource
+ * 
+$conf['datasources']['mysql56'] = array(
+	'host'	=> 'localhost',
+	'port'	=> 3306,
+	'db'	=> 'performance_schema',
+	'user'	=> 'root',
+	'password' => '',
+	'tables' => array(
+		'events_statements_summary_by_digest' => 'fact',
+	),
+	'source_type' => 'performance_schema'
+);
+*/
+
+/**
+ *  if you're collecting history form the performance_schema table and
+ *  saving it, then use this datasource which will allow you to see graphs
+ *  and query details.  By using an additional process to save performance schema
+ *  data, you can insert it into a table structure similar to that used by
+ *  pt-query-digest.
+$conf['datasources']['localhost_history'] = array(
+	'host'	=> 'localhost',
+	'port'	=> 3306,
+	'db'	=> 'slow_query_log',
+	'user'	=> 'root',
+	'password' => '',
+	'tables' => array(
+		'events_statements' => 'fact',
+		'events_statements_history' => 'dimension'
+	),
+	'source_type' => 'performance_schema_history'
+);
+**/
 
 
 /**
@@ -120,6 +158,46 @@ $conf['graph_defaults'] = array(
 	'plot_field' => 'Query_time_sum',
 );
 
+// these are the default values for mysql 5.6 performance schema datasources
+$conf['report_defaults']['performance_schema'] = array(
+	'fact-order'	=> 'SUM_TIMER_WAIT DESC',
+	'fact-limit' => '20',
+	'table_fields' => array( 'DIGEST', 'snippet', 'index_ratio', 'COUNT_STAR', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' ) 
+);
+
+// these are the default values for using performance schema to save your own
+// query history in a table structure similar to percona's pt-query-digest format
+$conf['report_defaults']['performance_schema_history'] = array(
+	'fact-group'	=> 'DIGEST',
+	'fact-order'	=> 'SUM_TIMER_WAIT DESC',
+	'fact-limit' => '20',
+	'dimension-FIRST_SEEN_start' => date("Y-m-d H:i:s", strtotime( '-1 day')),
+	'dimension-FIRST_SEEN_end'	=> date("Y-m-d H:i:s"),
+	'table_fields' => array( 'DIGEST', 'snippet', 'index_ratio', 'COUNT_STAR', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' ) 
+);
+
+$conf['graph_defaults']['performance_schema_history'] = array(
+	'fact-group'	=> 'hour_ts',
+	'fact-order'	=> 'hour_ts',
+	'fact-limit' => '',
+	'dimension-FIRST_SEEN_start' => date("Y-m-d H:i:s", strtotime( '-7 day')),
+	'dimension-FIRST_SEEN_end'	=> date("Y-m-d H:i:s"),
+	'table_fields' => array('hour_ts'),
+	// hack ... fix is to make query builder select the group and order fields,
+	// then table fields only has to contain the plot_field
+	'plot_field' => 'SUM_TIMER_WAIT',
+	'dimension-pivot-hostname_max' => null
+);
+
+$conf['history_defaults']['performance_schema_history'] = array(
+	'output'		=> 'table',
+	'fact-group'	=> 'date',
+	'fact-order'	=> 'date DESC',
+	'fact-limit' => '90',
+	'dimension-FIRST_SEEN_start' => date("Y-m-d H:i:s", strtotime( '-90 day')),
+	'dimension-FIRST_SEEN_end'	=> date("Y-m-d H:i:s"),
+	'table_fields' => array( 'date', 'snippet', 'index_ratio', 'COUNT_STAR', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' ) 
+);
 /**
  * Plugins are optional extra information that can be displayed, but often
  * relies on information specific to your system, and has to be set manually.
@@ -259,6 +337,75 @@ $conf['reports']['slow_query_log'] = array(
 
 	),
 
+);
+
+$conf['reports']['performance_schema'] = array(
+	// form fields
+	'fields'	=> array(
+		'fact' => array(
+			//'group'		=> 'group',
+			'order'		=> 'order',
+			'having'	=> 'having',
+			'limit'		=> 'limit',
+			'first_seen'	=> 'date_range|reldate|clear|where',
+			'where'		=> 'raw_where',
+			'DIGEST'	=> 'clear|where',
+			'DIGEST_TEXT' => 'clear|like|where',
+		),
+	),
+	// custom fields
+	'custom_fields'	=> array(
+		'snippet' => 'LEFT(fact.DIGEST_TEXT,20)',
+		'index_ratio' =>'ROUND(SUM_ROWS_EXAMINED/SUM_ROWS_SENT,2)',
+		'rows_sent_avg' => 'ROUND(SUM_ROWS_SENT/COUNT_STAR,0)',
+
+	),
+);
+
+$conf['reports']['performance_schema_history'] = array(
+	// joins
+	'join'	=> array (
+		'dimension'	=> 'USING (`DIGEST`)'
+	),
+
+	// form fields
+	'fields'	=> array(
+		'fact' => array(
+			'group'		=> 'group',
+			'order'		=> 'order',
+			'having'	=> 'having',
+			'limit'		=> 'limit',
+			'first_seen'=> 'clear|reldate|ge|where',
+			'where'		=>	'raw_where',
+			'DIGEST_TEXT'	=> 'clear|like|where',
+			'DIGEST'	=>	'clear|where',
+			'reviewed_status' => 'clear|where',
+
+		),
+
+		'dimension' => array(
+			'extra_fields' 	=> 	'where',
+			'hostname'	=> 'clear|where',
+			'FIRST_SEEN'	=>	'date_range|reldate|clear|where',
+			'pivot-hostname' => 'clear|pivot|select',
+		),
+	),
+	// custom fields
+	'custom_fields'	=> array(
+		'date'	=> 'DATE(fact.FIRST_SEEN)',
+		'snippet' => 'LEFT(fact.DIGEST_TEXT,20)',
+		'index_ratio' =>'ROUND(SUM_ROWS_EXAMINED/SUM_ROWS_SENT,2)',
+		'rows_sent_avg' => 'ROUND(SUM_ROWS_SENT/COUNT_STAR,0)',
+		'hour'	=> 'substring(dimension.FIRST_SEEN,1,13)',
+		'hour_ts'	=> 'unix_timestamp(substring(dimension.FIRST_SEEN,1,13))',
+	),
+	
+	'special_field_names' => array(
+		'time'	 	=> 'FIRST_SEEN',
+		'checksum'	=> 'DIGEST',
+		'hostname'	=> 'hostname',
+		'sample'	=> 'DIGEST_TEXT'
+	)
 );
 
 /**

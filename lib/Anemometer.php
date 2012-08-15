@@ -60,11 +60,12 @@ class Anemometer {
     {
         // special case for optional pivot on hostname
         // mainly used to graph each host as a series
-        if (get_var('dimension-pivot-hostname_max') != null)
+        $hostname_field =  $this->data_model->get_field_name('hostname');
+        if (get_var('dimension-pivot-'.$hostname_field) != null)
         {
             $dimension_table = $this->report_obj->get_table_by_alias('dimension');
-            $hosts = $this->report_obj->get_distinct_values($dimension_table, 'hostname_max');
-            $this->report_obj->set_pivot_values('dimension-pivot-hostname_max', $hosts);
+            $hosts = $this->report_obj->get_distinct_values($dimension_table, $hostname_field);
+            $this->report_obj->set_pivot_values('dimension-pivot-'.$hostname_field, $hosts);
         }
 
         // process the form data, and get the query result
@@ -114,13 +115,18 @@ class Anemometer {
         $this->header();
         $this->set_search_defaults('graph_defaults');
         $data['datasource'] = get_var('datasource');
+        
+        $data['time_field_name'] = $time = $this->data_model->get_field_name('time');
+        $data['hostname_field_name'] = $this->data_model->get_field_name('hostname');
+        $data['checksum_field_name'] = $this->data_model->get_field_name('checksum');
 
         // get table and hostname data for search form
         $data['tables'] = $this->report_obj->get_tables();
         $dimension_table = $this->report_obj->get_table_by_alias('dimension');
-        $data['hosts'] = $this->report_obj->get_distinct_values($dimension_table, 'hostname_max');
-        $data['hostname_max'] = get_var('dimension-hostname_max');
-        $this->report_obj->set_pivot_values('dimension-pivot-hostname_max', $data['hosts']);
+        $data['hosts'] = $this->report_obj->get_distinct_values($dimension_table, $data['hostname_field_name']);
+        // check
+        $data[$data['hostname_field_name']] = get_var($data['hostname_field_name']);
+        $this->report_obj->set_pivot_values('dimension-pivot-'.$data['hostname_field_name'], $data['hosts']);
 
         // get custom fields for search form
         foreach ($data['tables'] as $t) {
@@ -131,23 +137,21 @@ class Anemometer {
         // process the form data so we can get the ajax url
         $this->report_obj->process_form_data();
         $_GET['table_fields'][] = get_var('plot_field');
-        if (get_var('dimension-pivot-hostname_max')) {
-            $_GET['dimension-pivot-hostname_max'] = get_var('plot_field');
+        if (get_var('dimension-pivot-'.$data['hostname_field_name'])) {
+            $_GET['dimension-pivot-'.$data['hostname_field_name']] = get_var('plot_field');
             $data['dimension_pivot_hostname_max'] = get_var('plot_field');
         }
 
-        $data['ajax_request_url'] = site_url() . '?action=api&output=json2&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri(array( 'dimension-ts_min' ));
-        $data['graph_permalink'] = site_url() . '?action=graph_search&datasource=' . $data['datasource'] . '&plot_field='.get_var('plot_field').'&'.$this->report_obj->get_search_uri(array( 'dimension-ts_min' ));
+        $data['ajax_request_url'] = site_url() . '?action=api&output=json2&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri(array( 'dimension-'.$time));
+        $data['graph_permalink'] = site_url() . '?action=graph_search&datasource=' . $data['datasource'] . '&plot_field='.get_var('plot_field').'&'.$this->report_obj->get_search_uri(array( 'dimension-'.$time ));
         // now go get a url for the table results
         $this->init_report();
-        $this->set_search_defaults('report_defaults', array('dimension-ts_min_start', 'dimension-ts_min_end','checksum'));
-//        $data['ajax_request_url_table'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
+        $this->set_search_defaults('report_defaults', array('dimension-'.$time.'_start', 'dimension-'.$time.'_end', $data['checksum_field_name']));
 
-	$_GET['fact-order'] = get_var('plot_field') . ' DESC';
-        $data['ajax_table_request_url_base'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource']. '&' . $this->report_obj->get_search_uri(array( 'dimension-ts_min' ));
-        $data['table_url_time_start_param'] = 'dimension-ts_min_start';
-        $data['table_url_time_end_param'] = 'dimension-ts_min_end';
-
+	    $_GET['fact-order'] = get_var('plot_field') . ' DESC';
+        $data['ajax_table_request_url_base'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource']. '&' . $this->report_obj->get_search_uri(array( 'dimension-'.$data['time_field_name']));
+        $data['table_url_time_start_param'] = 'dimension-'.$data['time_field_name'].'_start';
+        $data['table_url_time_end_param'] = 'dimension-'.$data['time_field_name'].'_end';
 
         // display the page
         $this->load->view("graph_search", $data);
@@ -221,9 +225,14 @@ class Anemometer {
 
             $data['datasource'] = get_var('datasource');
             $data['tables'] = $this->report_obj->get_tables();
-            $data['hosts'] = $this->report_obj->get_distinct_values($data['tables'][1], 'hostname_max');
-            $data['hostname_max'] = get_var('dimension-hostname_max');
-            $this->report_obj->set_pivot_values('dimension-pivot-hostname_max', $data['hosts']);
+	    
+            if ('performance_schema' != $this->data_model->get_source_type())
+            {
+                $fieldname = $this->data_model->get_field_name('hostname');
+                $data['hosts'] = $this->report_obj->get_distinct_values($data['tables'][1], $fieldname);
+                $data[$fieldname] = get_var('dimension-'.$fieldname);
+                $this->report_obj->set_pivot_values('dimension-pivot-'.$fieldname, $data['hosts']);
+            }
 
             //		$data['fields = $this->report_obj->get_form_fields();
             // @todo remove
@@ -238,8 +247,7 @@ class Anemometer {
             $data['review_types'] = $this->data_model->get_review_types();
             $data['reviewers'] = $this->data_model->get_reviewers();
 
-
-            $this->load->view("report", $data);
+            $this->display_report_form($data);
         }
 
         // just call the api to process and display report
@@ -294,7 +302,8 @@ class Anemometer {
         $data = array();
         $data['checksum'] = $checksum;
         $data['datasource'] = get_var('datasource');
-
+        $sample_field_name = $this->data_model->get_field_name('sample');
+        
         // query and most recent sample
         $data['row'] = $this->data_model->get_query_by_checksum($checksum);
         $data['sample'] = $this->data_model->get_query_samples($checksum, 1)->fetch_assoc();
@@ -304,22 +313,33 @@ class Anemometer {
         $data['reviewers'] = $this->data_model->get_reviewers();
         $data['current_auth_user'] = $this->get_auth_user();
 
+        $sample = $data['sample'][$sample_field_name];
         // get explain plan and extra info
         // TODO convert to ajax calls, just get the url
-	try
-	{
-        	$this->data_model->init_query_explainer($data['sample']);
-	}
-	catch ( Exception $e )
-	{
-		$data['explain_plan_error'] = $e->getMessage();
-	}
-        $data['explain_plan'] = $this->data_model->get_explain_for_sample($data['sample']);
-        $data['visual_explain'] = $this->data_model->get_visual_explain($data['explain_plan']);
-        $sample = $data['sample']['sample'];
-        $data['query_advisor'] = $this->data_model->get_query_advisor($sample);
-        $data['create_table'] = $this->data_model->get_create_table($sample);
-        $data['table_status'] = $this->data_model->get_table_status($sample);
+        $source_type = $this->data_model->get_source_type();
+        
+        $data['show_samples'] = true;
+        if ($source_type == 'performance_schema_history')
+        {
+            $data['show_samples'] = false;
+            $data['row']['fingerprint'] = $sample;
+        }
+        else
+        {
+            try
+            {
+                    $this->data_model->init_query_explainer($data['sample']);
+            }
+            catch ( Exception $e )
+            {
+                $data['explain_plan_error'] = $e->getMessage();
+            }
+            $data['explain_plan'] = $this->data_model->get_explain_for_sample($data['sample']);
+            $data['visual_explain'] = $this->data_model->get_visual_explain($data['explain_plan']);
+            $data['query_advisor'] = $this->data_model->get_query_advisor($sample);
+            $data['create_table'] = $this->data_model->get_create_table($sample);
+            $data['table_status'] = $this->data_model->get_table_status($sample);
+        }
 
         // graph
         $this->set_search_defaults('graph_defaults');
@@ -328,6 +348,12 @@ class Anemometer {
         $_GET['fact-checksum'] = $checksum;
         $data['ajax_request_url'] = site_url() . '?action=api&output=json2&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
 
+        $data['sample_field_name'] = $this->data_model->get_field_name('sample');
+        $data['hostname_field_name'] =$this->data_model->get_field_name('hostname');
+        $data['time_field_name'] =$this->data_model->get_field_name('time');
+        
+        
+        
         $this->load->view("show_query", $data);
 
         // Show the history for this query
@@ -389,6 +415,29 @@ class Anemometer {
         $this->header();
         print "<div class=\"alert {$level}\">{$string}</div>";
     }
+    
+    private function display_report_form($data)
+    {
+        $data['hostname_field_name'] = $this->data_model->get_field_name('hostname');
+        $data['checksum_field_name'] = $this->data_model->get_field_name('checksum');
+        $data['time_field_name'] = $this->data_model->get_field_name('time');
+        $data['sample_field_name'] = $this->data_model->get_field_name('sample');
+        if (!is_object($this->data_model))
+        {
+            throw new Exception("No datasource defined");
+        }
+        
+        $source_type = $this->data_model->get_source_type();
+        switch ($source_type)
+        {
+            case 'performance_schema':
+                $this->load->view("report-performance_schema", $data);
+                break;
+            default:
+            $this->load->view("report", $data);
+            break;
+        }
+    }
 
     /**
      * display the global web application footer
@@ -402,7 +451,17 @@ class Anemometer {
      * from the session if possible.
      */
     private function get_auth_user() {
-        return isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : $_SESSION['current_review_user'];
+        if (array_key_exists('PHP_AUTH_USER', $_SERVER))
+        {
+            return $_SERVER['PHP_AUTH_USER'];
+            
+        }
+        else if (array_key_exists('current_review_user', $_SESSION))
+        {
+            return $_SESSION['current_review_user'];
+        }
+        
+        return null;
     }
 
     /**
@@ -413,15 +472,19 @@ class Anemometer {
         if ($this->header_printed) {
             return false;
         }
+        $datasources = null;
+        $datasource = null;
+        $source_type = null;
         if (is_object($this->data_model))
         {
             $datasources = $this->data_model->get_data_source_names();
             $datasource = get_var('datasource');
+            $source_type = $this->data_model->get_source_type();
         }
 
         if (!get_var('noheader')) {
             $this->load->view("header");
-            $this->load->view("navbar", array( 'datasources' => $datasources, 'datasource' => $datasource ));
+            $this->load->view("navbar", array( 'datasources' => $datasources, 'datasource' => $datasource, 'source_type' => $source_type ));
         }
 
         $this->header_printed = true;
@@ -433,6 +496,7 @@ class Anemometer {
      */
     private function init_report() {
         $datasource = get_var('datasource');
+        
         if (isset($datasource)) {
             $conf = $this->data_model->get_data_source($datasource);
 
@@ -440,7 +504,7 @@ class Anemometer {
             $this->report_obj = new MySQLTableReport(
                             $conf,
                             $conf['tables'],
-                            $this->data_model->get_report('slow_query_log')
+                            $this->data_model->get_report($conf['source_type'])
             );
         }
     }
