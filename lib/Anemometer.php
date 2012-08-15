@@ -152,6 +152,7 @@ class Anemometer {
         $data['ajax_table_request_url_base'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource']. '&' . $this->report_obj->get_search_uri(array( 'dimension-'.$data['time_field_name']));
         $data['table_url_time_start_param'] = 'dimension-'.$data['time_field_name'].'_start';
         $data['table_url_time_end_param'] = 'dimension-'.$data['time_field_name'].'_end';
+        $data['timezone_offset'] = timezone_offset_get( new DateTimeZone( ini_get('date.timezone' )), new DateTime());
 
         // display the page
         $this->load->view("graph_search", $data);

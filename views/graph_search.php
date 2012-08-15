@@ -86,6 +86,7 @@ var GRAPH_PERMALINK_URL = "<?php echo $graph_permalink; ?>";
 var TABLE_BASE_URL = "<?php echo $ajax_table_request_url_base ?>"
 var TABLE_URL_TIME_START_PARAM = "<?php echo $table_url_time_start_param ?>"
 var TABLE_URL_TIME_END_PARAM = "<?php echo $table_url_time_end_param ?>"
+var TIMEZONE_OFFSET = <?php echo $timezone_offset; ?> * 1000;
 
 // Setup options for the plot
 var FLOT_OPTS = {
@@ -115,7 +116,7 @@ function new_plot_data(data) {
 		for ( var j = 0; j < data[i].data.length; j++ )
 		{
 			data[i].data[j][0] = data[i].data[j][0] * 1000;
-			data[i].data[j][0] = data[i].data[j][0] - (60*60*7*1000);
+			data[i].data[j][0] = data[i].data[j][0] + (TIMEZONE_OFFSET);
 		}
 	}
 	var theplot = $("#theplot"); // get the graph div
@@ -178,11 +179,11 @@ function setup_selection(theplot) {
 		d = new Date();
 
 		// get start datetime for selected fields
-		d.setTime(Math.floor(ranges.xaxis.from + (60*60*7*1000)));
+		d.setTime(Math.floor(ranges.xaxis.from - (TIMEZONE_OFFSET)));
 		start_time = to_sql_date(d);
 
 		// get end datetime for selected fields
-		d.setTime(Math.floor(ranges.xaxis.to + (60*60*7*1000)));
+		d.setTime(Math.floor(ranges.xaxis.to - (TIMEZONE_OFFSET)));
 		end_time = to_sql_date(d);
 
 		// construct a url with the new time frame the graph is focused on to populate the table on the page.
@@ -253,7 +254,7 @@ $("#theplot").bind("plothover", function (event, pos, item) {
 			var x = item.datapoint[0].toFixed(2),
 				y = item.datapoint[1].toFixed(2);
 			
-			var theDate = new Date(x*1000);
+			var theDate = new Date(x-TIMEZONE_OFFSET);
 			showTooltip(item.pageX, item.pageY,
 						item.series.label + "<br/>\n" + theDate + " = " + y);
 		}
