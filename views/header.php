@@ -7,6 +7,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+
     <!-- Le styles -->
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
   	<script src="js/jquery-1.7.1.min.js"></script>
