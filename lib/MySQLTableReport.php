@@ -178,7 +178,11 @@ class MySQLTableReport {
      * @return array    the list of values defined by set_pivot_values
      */
     public function get_pivot_values($col_name) {
-        return $this->pivot[$col_name];
+        if (array_key_exists($col_name, $this->pivot))
+        {
+            return $this->pivot[$col_name];
+        }
+        return array();
     }
 
     /**
@@ -317,11 +321,13 @@ class MySQLTableReport {
      * @return array  the list of unique values
      */
     public function get_distinct_values($table, $colname) {
-        //print "getting distinct $colname from $table<br>";
         $result = $this->mysqli->query("SELECT DISTINCT `{$colname}` FROM `{$table}`");
         $values = array();
-        while ($row = $result->fetch_array()) {
-            $values[] = $row[0];
+        if (is_object($result))
+        {
+            while ($row = $result->fetch_array()) {
+                $values[] = $row[0];
+            }
         }
         return $values;
     }
@@ -699,11 +705,29 @@ class MySQLTableReport {
      * @return null|string
      */
     private function get_column_aggregate_function($name) {
-        if (!preg_match("/_([^_]+)$/", $name, $regs)) {
+        
+        if (!preg_match("/^([^_]+)_?.*_([^_]+)$/", $name, $regs)) {
             return null;
         }
 
-        switch ($regs[1]) {
+        //print $regs[1].":". $regs[2]."<br>\n";
+        switch ($regs[1])
+        {
+            case 'SUM':
+            case 'COUNT':
+                return 'SUM';
+            case 'AVG':
+                return 'AVG';
+            case 'MIN':
+            case 'FIRST':
+                return 'MIN';
+            case 'MAX':
+            case 'LAST':
+                return 'MAX';
+        }
+        
+    
+        switch ($regs[2]) {
             case 'sum':
             case 'cnt':
                 return 'SUM';
@@ -736,12 +760,20 @@ class MySQLTableReport {
 
         // SELECT
         $select = array();
-        foreach (get_var('table_fields') as $f) {
-            if (isset($this->report['custom_fields'][$f])) {
-                $select[$f] = array($this->report['custom_fields'][$f], $f, null);
-            } else {
-                $select[$f] = array($f, null, $this->get_column_aggregate_function($f));
+        $fields = get_var('table_fields');
+        if (isset($fields) and is_array($fields) and count($fields) > 0)
+        {
+            foreach ($fields as $f) {
+                if (isset($this->report['custom_fields'][$f])) {
+                    $select[$f] = array($this->report['custom_fields'][$f], $f, null);
+                } else {
+                    $select[$f] = array($f, null, $this->get_column_aggregate_function($f));
+                }
             }
+        }
+        else
+        {
+            throw new Exception("No fields selected");
         }
 
         foreach ($select as $field => $spec) {

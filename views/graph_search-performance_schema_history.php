@@ -6,7 +6,7 @@
 		<div class="span3">
 			From<br>
 			<div class="input-append">
-				<input type="text" class="span2" name="dimension-<?php echo $time_field_name ?>_start" id="dimension-ts_min_start" value="<?php echo get_var("dimension-{$time_field_name}_start"); ?>">
+				<input type="text" class="span2" name="dimension-ts_min_start" id="dimension-ts_min_start" value="<?php echo get_var('dimension-ts_min_start'); ?>">
 				<span class="add-on"><i class="icon-calendar" id="dp"></i></span>
 			</div>
 		</div>
@@ -14,7 +14,7 @@
 		<div class="span4">
 			To<br>
 			<div class="input-append">
-				<input type="text" class="span2" name="dimension-<?php echo $time_field_name ?>_end" id="dimension-ts_min_end" value="<?php echo get_var("dimension-{$time_field_name}_end"); ?>">
+				<input type="text" class="span2" name="dimension-ts_min_end" id="dimension-ts_min_end" value="<?php echo get_var('dimension-ts_min_end'); ?>">
 				<span class="add-on"><i class="icon-calendar" id="dp"></i></span>
 			</div>
 		</div>
@@ -41,16 +41,16 @@
 	<div class="row">
 		<div class="span3" >
 				Filter By Host<br>
-			<select name="dimension-<?php echo $hostname_field_name ?>" class="span3 combobox">
+			<select name="dimension-hostname_max" class="span3 combobox">
 				<option value=""></option>
 				<?php foreach ($hosts as $h) { ?>
-					<option value="<?php echo $h ?>" <?php if (get_var("dimension-{$hostname_field_name}")!=null AND get_var("dimension-{$hostname_field_name}") == $h ) { echo "SELECTED"; } ?>><?php echo $h ?></option>
+					<option value="<?php echo $h ?>" <?php if (isset($hostname_max) AND $hostname_max == $h ) { echo "SELECTED"; } ?>><?php echo $h ?></option>
 				<?php } ?>
 			</select>
 		</div>
 
 		<div class="span4" >
-			<input type="checkbox" name="<?php echo "dimension-pivot-{$hostname_field_name}" ?>" value='<?php echo $time_field_name ?>'<?php echo (isset($dimension_pivot_hostname_max) ? ' CHECKED ' : '') ?>> Show each host as a separate series
+			<input type="checkbox" name="dimension-pivot-hostname_max" value='ts_cnt'<?php echo (isset($dimension_pivot_hostname_max) ? ' CHECKED ' : '') ?>> Show each host as a separate series
 
 		</div>
 

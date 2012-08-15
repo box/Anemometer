@@ -104,10 +104,12 @@ $(document).ready( function ()  {
 	<div class="row">
 		<div class="span12">		
 			<!-- <div class="alert alert-info"> -->
+			<?php if ($show_samples) { ?>
+			
 				<table width="100%">
 				<tr>
 					<td>
-						<strong>Last Sample</strong> on host <strong><?php echo $sample['hostname_max']; ?></strong> at <strong><?php echo $sample['ts_max']; ?></strong>
+						<strong>Last Sample</strong> on host <strong><?php echo $sample[$hostname_field_name]; ?></strong> at <strong><?php echo $sample[$time_field_name]; ?></strong>
 					</td>
 					<td>
 						<!-- dropdown button for more samples with counts -->
@@ -125,7 +127,9 @@ $(document).ready( function ()  {
 					</td>
 				</tr>
 				</table>
-				<pre class="prettyprint lang-sql"><?php echo $sample['sample']; ?></pre>
+				<pre class="prettyprint lang-sql"><?php echo $sample[$sample_field_name]; ?></pre>
+				<?php } ?>
+				
 		<?php if (isset($explain_plan_error)) { ?>
 			<div class="alert"><strong>Error in Query Explain Plugin:</strong> <?php echo $explain_plan_error; ?></div>
 		<?php } ?>
