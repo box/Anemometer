@@ -93,6 +93,7 @@ var FLOT_OPTS = {
 		lines: { show: true }, // line graphs!
 		points: { show: true}, // draw individual data points
 	},
+	grid: { hoverable: true, clickable: true },
 	legend: { noColumns: 2 },
 	xaxis: { tickDecimals: 0, mode: "time" },
 	yaxis: { min: 0 },
@@ -223,7 +224,45 @@ function show_table_data(data) {
 	prettyPrint();
 }
 
+function showTooltip(x, y, contents) {
+        $('<div id="tooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            padding: '2px',
+			'border-radius': '4px',
+			'background-color': 'black',
+			color: 'white',
+            opacity: 0.80
+	}).appendTo("body").fadeIn(200);
+}
 
+var previousPoint = null;
+$("#theplot").bind("plothover", function (event, pos, item) {
+	/*
+	$("#x").text(pos.x.toFixed(2));
+	$("#y").text(pos.y.toFixed(2));
+	*/
+
+	if (item) {
+		if (previousPoint != item.dataIndex) {
+			previousPoint = item.dataIndex;
+			
+			$("#tooltip").remove();
+			var x = item.datapoint[0].toFixed(2),
+				y = item.datapoint[1].toFixed(2);
+			
+			var theDate = new Date(x*1000);
+			showTooltip(item.pageX, item.pageY,
+						item.series.label + "<br/>\n" + theDate + " = " + y);
+		}
+	}
+	else {
+		$("#tooltip").remove();
+		previousPoint = null;            
+	}
+});
 
 $(document).ready( function ()  {
 	// Setup the search widget stuff!
