@@ -65,7 +65,7 @@
 	
 	<div class="span4">
 		Filter By Host<br>
-		<select name="dimension-<?php echo $host_field_name; ?>" class="span3 combobox">
+		<select name="dimension-<?php echo $hostname_field_name; ?>" class="span3 combobox">
 			<option value=""></option>
 			<?php foreach ($hosts as $h) { ?>
 				<option value="<?php echo $h ?>" <?php if (get_var('dimension-'.$hostname_field_name) == $h ) { echo "SELECTED"; } ?>><?php echo $h ?></option>
