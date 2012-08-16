@@ -183,7 +183,7 @@ class Anemometer {
         $this->header();
 
         // for multiple datasources, choose one
-        $this->load->view('index', array('datasources' => $datasources));
+        $this->load->view('index', array('datasources' => $datasources, 'datasource' => get_var('datasource')));
         $this->footer();
     }
 
