@@ -30,6 +30,8 @@
       .ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
       .ui-timepicker-div td { font-size: 90%; }
       .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+	  tr.weekend td { background-color: #fcf8e3; }
+	  table.table.table-striped.table-bordered.table-condensed tbody tr.weekend td { background-color: #fcf8e3; }
     </style>
 
     <style>

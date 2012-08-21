@@ -95,12 +95,18 @@ class Anemometer {
         );
 
         $output = get_var('output');
-        if (key_exists($output, $output_types))
+        if (!key_exists($output, $output_types))
         {
-            $this->load->view($output_types[$output], $data);
-        } else {
-            $this->load->view($output_types['table'], $data);
+            $output = 'table';
         }
+
+        $source_type = $this->data_model->get_source_type();
+        if (key_exists('callbacks', $this->conf['reports'][$source_type]) && key_exists($output, $this->conf['reports'][$source_type]['callbacks']))
+        {
+            $data['callbacks'] =  $this->conf['reports'][$source_type]['callbacks'][$output];
+        }
+
+        $this->load->view($output_types[$output], $data);
     }
 
 

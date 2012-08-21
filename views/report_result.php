@@ -39,7 +39,19 @@ $( function ()  {
 			</tr>
 		</thead>
 		<?php foreach ($result as $row)  { ?>
-			<tr>
+			<?php
+				$row_class = array();
+				if (isset($callbacks)) {
+					foreach ($callbacks as $fxname => $fx) {
+						if (array_key_exists($fxname, $row)) {
+							$result = $fx($row[$fxname]);
+							$row[$fxname] = $result[0];
+							$row_class[] = $result[1];
+						}
+					}
+				}
+			?>
+			<tr class="<?php echo join(" ", $row_class); ?>">
 				<?php foreach ($columns as $c ) { ?>
 					<?php if ($c == 'checksum') { ?>
 						<td><a href="<?php echo site_url()."?action=show_query&datasource={$datasource}&checksum=".$row[$c]; ?>"><?php echo $row[$c]; ?></a></td>
