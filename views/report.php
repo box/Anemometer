@@ -14,6 +14,7 @@
 	<form action="<?php echo site_url()."?action=report"; ?>" method="GET" class="form-inline">
 	<input type="hidden" name="action" value="report">
 	<input type="hidden" name="datasource" value="<?php echo $datasource; ?>">
+
 	<div class="row">
 		<div class="span3">
 			From<br>
@@ -33,14 +34,15 @@
 			</div>
 		</div>
 
-	<div class="span4">
-		Query first seen since<br>
-		<div class="input-append">
-			<input type="text" class="span2" name="fact-first_seen" id="fact-first_seen" value="<?php echo get_var('fact-first_seen'); ?>">
-			<span class="add-on"><i class="icon-calendar" id="dp"></i></span>
+		<div class="span4">
+			Query first seen since<br>
+			<div class="input-append">
+				<input type="text" class="span2" name="fact-first_seen" id="fact-first_seen" value="<?php echo get_var('fact-first_seen'); ?>">
+				<span class="add-on"><i class="icon-calendar" id="dp"></i></span>
+			</div>
 		</div>
 	</div>
-</div>
+
 	<hr>
 <div class="row">
 	<div class="span3">
