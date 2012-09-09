@@ -10,15 +10,12 @@
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
 
     <!-- Le styles -->
-  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-  	<script src="js/jquery-1.7.1.min.js"></script>
-	<script src="js/jquery.ui.core.js"></script>
-	<script src="js/jquery.ui.widget.js"></script>
-	<script src="js/jquery.ui.datepicker.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+    <link  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
     <link href="css/bootstrap.css" rel="stylesheet">
     
     <!-- addon timepicker to date -->
-    <script src="js/jquery-ui-1.8.16.custom.min.js"></script>
     <script src="js/jquery-ui-timepicker-addon.js"></script>
     <script src="js/jquery-ui-sliderAccess.js"></script>
     
@@ -51,7 +48,6 @@
     <script src="js/bootstrap-tab.js"></script>
     <script src="js/bootstrap-combobox.js"></script>
     <link href="css/bootstrap-combobox.css" media="screen" rel="stylesheet" type="text/css">
-    
     
     <style>
       body {
