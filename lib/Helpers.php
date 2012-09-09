@@ -75,4 +75,18 @@ function check_mysql_error($result, $mysqli)
     }
 }
 
+function flatten_array($array)
+{
+	$return = array();
+	foreach ($array as $key => $value) {
+		if (is_array($value)) {
+			$value = flatten_array($value);
+			$return = array_merge($return, $value);
+		}
+		else
+			$return[] = $value;
+	}
+	return $return;
+}
+
 ?>
