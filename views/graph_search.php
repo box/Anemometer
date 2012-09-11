@@ -70,9 +70,19 @@
 	<div id="theplot" class="span12" style="height: 300px;"></div>
 </div>
 <div class="row">
-	<p>You selected: <span id="selection"></span></p>
-	<p><a id="reset_selection" value="Clear selection" class="btn" href="#"><i class="icon-fire"></i> Reset Selection</a>
-		<a id="permalink_btn" class="btn" href="#"><i class="icon-magnet"></i> Graph Permalink</a></p>
+	<div class="span4">
+		<p align="center"><a id="reset_selection" value="Clear selection" class="btn" href="#"><i class="icon-fire"></i> Reset Selection</a>
+			<a id="permalink_btn" class="btn" href="#"><i class="icon-magnet"></i> Graph Permalink</a></p>
+	</div>
+	<div class="span4">
+		<p align="center"><span id="selection">click and drag on graph to zoom to selection</span></p>
+	</div>
+	<div class="span4">
+		<p align="center">
+			<input type="checkbox" id="autoscale_y" onclick="toggle_autoscale_y()"/> Auto-scale Y-axis on zoom
+		</p>
+	</div>
+
 </div>
 <hr>
 	</div></div>
@@ -101,7 +111,7 @@ var FLOT_OPTS = {
 	yaxis: { min: 0 },
 	selection: { mode: "x" }, // any mouse selections should be along x axis
 };
-
+var autoscale_y_on_zoom = false; // default behavior is backwards compatable
 // Placeholder for data to plot
 var DATA = [];
 
@@ -165,6 +175,32 @@ function to_sql_date(d)
 	return ansi_date;
 }
 
+
+function find_y_maxmin(data, xmin, xmax)
+{
+	ymax = null;
+	ymin = null;
+	for ( var i = 0; i < data.length; i++ )
+	{
+		for ( var j = 0; j < data[i].data.length; j++ )
+		{
+			if ( data[i].data[j][0] >= xmin && data[i].data[j][0] <= xmax)
+			{
+				newval = parseInt(data[i].data[j][1]);
+				if (ymax == null || ymax < newval)
+				{
+					ymax = newval;
+				}
+				
+				if (ymin == null || ymin > newval)
+				{
+					ymin = newval;
+				}				
+			}
+		}
+	}
+	return new Array(ymin, ymax);
+}
 /**
  * Register an event listener on the div with the flot graph so selection events
  * from the mouse can be registered for "zoom in" functionality.
@@ -172,9 +208,17 @@ function to_sql_date(d)
 */
 function setup_selection(theplot) {
 	theplot.bind("plotselected", function (event, ranges) {
-		var plot = $.plot(theplot, DATA, $.extend ( true, {}, FLOT_OPTS, {
-			xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
-		}));
+		console.log(ranges);
+		
+		var new_plot_opts = {
+				xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+		};
+		
+		if ( autoscale_y_on_zoom ) {
+			yrange = find_y_maxmin(DATA, ranges.xaxis.from, ranges.xaxis.to);
+			new_plot_opts['yaxis'] = { min: yrange[0], max: yrange[1]* 1.2 };
+		} 
+		var plot = $.plot(theplot, DATA, $.extend ( true, {}, FLOT_OPTS, new_plot_opts));
 
 		// need a date object to shove timestamp into for conversion to ANSI-type date string
 		d = new Date();
@@ -266,6 +310,11 @@ $("#theplot").bind("plothover", function (event, pos, item) {
 	}
 });
 
+function toggle_autoscale_y()
+{
+	autoscale_y_on_zoom =  $('#autoscale_y').attr('checked');
+}
+
 $(document).ready( function ()  {
 	// Setup the search widget stuff!
 	$("#dimension-ts_min_start").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
@@ -323,5 +372,7 @@ $(document).ready( function ()  {
 		dataType: 'html',
 		success: show_table_data
 	})
+	
+	
 });
 </script>
