@@ -1,6 +1,6 @@
 <script>
 	$(function() {
-		dbFields = [ <?php echo "'".join("','", $table_fields) ."'" ?> ];
+		dbFields = <?php echo json_encode(flatten_array($table_fields)); ?>;
 		$("#dimension-ts_min_start").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
 		$("#dimension-ts_min_end").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
 		$("#fact-first_seen").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
