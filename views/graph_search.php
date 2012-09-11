@@ -47,11 +47,12 @@
 					<option value="<?php echo $h ?>" <?php if (get_var("dimension-{$hostname_field_name}")!=null AND get_var("dimension-{$hostname_field_name}") == $h ) { echo "SELECTED"; } ?>><?php echo $h ?></option>
 				<?php } ?>
 			</select>
+			<input type="checkbox" name="<?php echo "dimension-pivot-{$hostname_field_name}" ?>" value='<?php echo $time_field_name ?>'<?php echo (isset($dimension_pivot_hostname_max) ? ' CHECKED ' : '') ?>> Show each host as a separate series
 		</div>
 
 		<div class="span4" >
-			<input type="checkbox" name="<?php echo "dimension-pivot-{$hostname_field_name}" ?>" value='<?php echo $time_field_name ?>'<?php echo (isset($dimension_pivot_hostname_max) ? ' CHECKED ' : '') ?>> Show each host as a separate series
-
+			Checksum<br>
+			<input name="fact-<?php echo $checksum_field_name ?>" class="span4 typeahead" value="<?php echo get_var('fact-'.$checksum_field_name) ?>">
 		</div>
 
 		<div class="span4">

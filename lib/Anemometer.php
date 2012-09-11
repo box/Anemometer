@@ -120,6 +120,21 @@ class Anemometer {
     {
         $this->header();
         $this->set_search_defaults('graph_defaults');
+        
+        $data = $this->setup_data_for_graph_search();
+
+        // display the page
+        $this->load->view("graph_search", $data);
+        $this->footer();
+    }
+    
+    private function setup_data_for_graph_search($data=null)
+    {
+        if (!isset($data))
+        {
+            $data = array();
+        }
+        
         $data['datasource'] = get_var('datasource');
         
         $data['time_field_name'] = $time = $this->data_model->get_field_name('time');
@@ -159,10 +174,8 @@ class Anemometer {
         $data['table_url_time_start_param'] = 'dimension-'.$data['time_field_name'].'_start';
         $data['table_url_time_end_param'] = 'dimension-'.$data['time_field_name'].'_end';
         $data['timezone_offset'] = timezone_offset_get( new DateTimeZone( ini_get('date.timezone' )), new DateTime());
-
-        // display the page
-        $this->load->view("graph_search", $data);
-        $this->footer();
+        
+        return $data;
     }
 
     /**
@@ -306,7 +319,8 @@ class Anemometer {
             return;
         }
 
-        $data = array();
+//        $data = $this->setup_data_for_graph_search();
+        
         $data['checksum'] = $checksum;
         $data['datasource'] = get_var('datasource');
         $sample_field_name = $this->data_model->get_field_name('sample');
@@ -349,8 +363,29 @@ class Anemometer {
         }
 
         // graph
-        $this->set_search_defaults('graph_defaults');
+        $data['time_field_name'] = $time = $this->data_model->get_field_name('time');
+        $data['hostname_field_name'] = $this->data_model->get_field_name('hostname');
+        $data['checksum_field_name'] = $this->data_model->get_field_name('checksum');
+        
+        $data['timezone_offset'] = timezone_offset_get( new DateTimeZone( ini_get('date.timezone' )), new DateTime());
+        
+        $data['tables'] = $this->report_obj->get_tables();
+        $dimension_table = $this->report_obj->get_table_by_alias('dimension');
+        $data['hosts'] = $this->report_obj->get_distinct_values($dimension_table, $data['hostname_field_name']);
+        // check
+        $data[$data['hostname_field_name']] = get_var($data['hostname_field_name']);
+        $this->report_obj->set_pivot_values('dimension-pivot-'.$data['hostname_field_name'], $data['hosts']);
+
+        // get custom fields for search form
+        foreach ($data['tables'] as $t) {
+            $data['table_fields'][$t] = $this->report_obj->get_table_fields($t);
+        }
+        $data['custom_fields'] = $this->report_obj->get_custom_fields();
+        
+        $this->set_search_defaults('graph_defaults');        
         $this->report_obj->process_form_data();
+        //$data = $this->setup_data_for_graph_search($data);
+        
         $_GET['table_fields'][] = get_var('plot_field');
         $_GET['fact-checksum'] = $checksum;
         $data['ajax_request_url'] = site_url() . '?action=api&output=json2&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
@@ -358,8 +393,6 @@ class Anemometer {
         $data['sample_field_name'] = $this->data_model->get_field_name('sample');
         $data['hostname_field_name'] =$this->data_model->get_field_name('hostname');
         $data['time_field_name'] =$this->data_model->get_field_name('time');
-        
-        
         
         $this->load->view("show_query", $data);
 

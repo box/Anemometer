@@ -1,26 +1,102 @@
 <p><center><h2><a href="<?php echo site_url()."?action=show_query&datasource={$datasource}&checksum={$checksum}"; ?>">Query <?php echo $checksum; ?></a></h2></center></p>
 
-<form action="<?php echo site_url() ."?action=upd_query&datasource={$datasource}&checksum={$checksum}"; ?>" method="POST" >
-	<div class="row">
-		 
-		<div class="span4 offset3"><strong>First Seen</strong>: <?php echo $row['first_seen']; ?></div>
-		<div class="span4"><strong>Last Seen</strong>: <?php echo $row['last_seen']; ?></div>
-	</div>
-		<hr>
-			<div class="row">
-		<div id="theplot" class="span12" style="height: 300px;"></div>
-</div>
 <div class="row">
-	<!-- <p>You selected: <span id="selection"></span></p>
-	<p><a id="clear_selection" value="Clear selection" class="btn"/ href="#"><i class="icon-fire"></i> Reset Selection</a></p> -->
+	<div class="span4 offset3"><strong>First Seen</strong>: <?php echo $row['first_seen']; ?></div>
+	<div class="span4"><strong>Last Seen</strong>: <?php echo $row['last_seen']; ?></div>
 </div>
 
-			<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
-<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
-<script>
+<hr>
+	
+	<div class="row" style="padding-bottom: 10px">
+		<div class="span12">
+			<a href="#" class="btn" data-toggle="collapse" data-target="#graph" id="graph-btn"><i class="icon-plus"></i> Show Graph Options</a><br/>
+		</div>
+	</div>
+		
+		<div class="collapse out" id="graph">
+	
+			<form action="<?php echo site_url() ?>" method="GET" class="form-inline">
+				<input type="hidden" name="action" value="show_query">
+				<input type="hidden" name="datasource" value="<?php echo $datasource; ?>">
+				<input type="hidden" name="checksum" value="<?php echo $checksum; ?>">
+				<input type="hidden" name="show_form" value="1">
+					
+				<div class="row">
+					<div class="span3">
+						From<br>
+						<div class="input-append">
+							<input type="text" class="span2" name="dimension-<?php echo $time_field_name ?>_start" id="dimension-ts_min_start" value="<?php echo get_var("dimension-{$time_field_name}_start"); ?>">
+							<span class="add-on"><i class="icon-calendar" id="dp"></i></span>
+						</div>
+					</div>
+			
+					<div class="span4">
+						To<br>
+						<div class="input-append">
+							<input type="text" class="span2" name="dimension-<?php echo $time_field_name ?>_end" id="dimension-ts_min_end" value="<?php echo get_var("dimension-{$time_field_name}_end"); ?>">
+							<span class="add-on"><i class="icon-calendar" id="dp"></i></span>
+						</div>
+					</div>
+			
+				<div class="span4">
+					Column to plot<br>
+					<select name="plot_field" class="span3">
+							<optgroup label="Custom Fields">
+							<?php foreach ($custom_fields as $f)  { ?>
+								<option value="<?php echo $f ?>" <?php if (get_var('plot_field') == $f) { echo "SELECTED"; } ?>><?php echo $f ?></option>
+							<?php } ?>
+							</optgroup>
+			
+							<?php foreach (array_keys($table_fields) as $table)  { ?>
+								<optgroup label="<?php echo $table; ?>">
+									<?php foreach ($table_fields[$table] as $f)  { ?>
+										<option value="<?php echo $f ?>" <?php if (get_var('plot_field') == $f) { echo "SELECTED"; } ?>><?php echo $f ?></option>
+									<?php } ?>
+								</optgroup>
+							<?php } ?>
+						</select>
+				</div>
+				</div>
+				<div class="row">
+					<div class="span3" >
+							Filter By Host<br>
+						<select name="dimension-<?php echo $hostname_field_name ?>" class="span3 combobox">
+							<option value=""></option>
+							<?php foreach ($hosts as $h) { ?>
+								<option value="<?php echo $h ?>" <?php if (get_var("dimension-{$hostname_field_name}")!=null AND get_var("dimension-{$hostname_field_name}") == $h ) { echo "SELECTED"; } ?>><?php echo $h ?></option>
+							<?php } ?>
+						</select>
+						<input type="checkbox" name="<?php echo "dimension-pivot-{$hostname_field_name}" ?>" value='<?php echo $time_field_name ?>'<?php echo (isset($dimension_pivot_hostname_max) ? ' CHECKED ' : '') ?>> Show each host as a separate series
+					</div>
+			
+					<div class="span4" >
+						Checksum<br>
+						<input name="fact-<?php echo $checksum_field_name ?>" class="span4 typeahead" value="<?php echo get_var('fact-'.$checksum_field_name) ?>">
+					</div>
+			
+					<div class="span4">
+						<input type="submit" class="btn-primary btn-large" name="submit" value="Search">
+					</div>
+				</div>
+			
+			</form>
+		</div>
+	
+
+	
+	<div class="row">
+		<div id="theplot" class="span12" style="height: 300px;"></div>
+	</div>
+	<div class="row">
+	</div>
+
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
+	<script>
 
 // url to retrieve JSON from
 var dataurl = "<?php echo $ajax_request_url ?>"
+var TIMEZONE_OFFSET = <?php echo $timezone_offset; ?> * 1000;
 
 // Setup options for the plot
 var thefreakingoptions = {
@@ -28,6 +104,7 @@ var thefreakingoptions = {
 		lines: { show: true },
 		points: { show: true},
 	},
+	grid: { hoverable: true, clickable: true },
 	legend: { noColumns: 2},
 	xaxis: { tickDecimals: 0, mode: "time" },
 	yaxis: { min: 0 },
@@ -68,6 +145,46 @@ function setupSelection(theplot) {
 	console.debug(thefreakingoptions);
 }
 
+function showTooltip(x, y, contents) {
+        $('<div id="tooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            padding: '2px',
+			'border-radius': '4px',
+			'background-color': 'black',
+			color: 'white',
+            opacity: 0.80
+	}).appendTo("body").fadeIn(200);
+}
+
+var previousPoint = null;
+$("#theplot").bind("plothover", function (event, pos, item) {
+	/*
+	$("#x").text(pos.x.toFixed(2));
+	$("#y").text(pos.y.toFixed(2));
+	*/
+
+	if (item) {
+		if (previousPoint != item.dataIndex) {
+			previousPoint = item.dataIndex;
+			
+			$("#tooltip").remove();
+			var x = item.datapoint[0].toFixed(2),
+				y = item.datapoint[1].toFixed(2);
+			
+			var theDate = new Date(x-TIMEZONE_OFFSET);
+			showTooltip(item.pageX, item.pageY,
+						item.series.label + "<br/>\n" + theDate + " = " + y);
+		}
+	}
+	else {
+		$("#tooltip").remove();
+		previousPoint = null;            
+	}
+});
+
 $(document).ready( function ()  {
 	// div to plot within
 	var theplot = $("#theplot");
@@ -88,6 +205,9 @@ $(document).ready( function ()  {
 		dataType: 'json',
 		success: newPlotData
 	});
+	
+	$("#dimension-ts_min_start").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
+	$("#dimension-ts_min_end").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
 
 
 });
@@ -213,7 +333,7 @@ $(document).ready( function ()  {
 		</div>
 	</div>
 		
-	
+<form action="<?php echo site_url() ."?action=upd_query&datasource={$datasource}&checksum={$checksum}"; ?>" method="POST" >
 	<div class="row">
 		<div class="span12">
 			<?php if ($row['reviewed_by'] != '') { ?>
@@ -262,5 +382,19 @@ $(document).ready( function ()  {
 	// $("#dimension-ts_min_end").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
 		$('.combobox').combobox();
 		prettyPrint();
+		
+		$('#graph').on('hidden', function () {
+			el = document.getElementById('graph-btn');
+			el.innerHTML = '<i class="icon-plus"></i> Show Graph Options'
+		});
+		$('#graph').on('show', function () {
+		  el = document.getElementById('graph-btn');
+		  el.innerHTML = '<i class="icon-minus"></i> Hide Graph Options'
+		});
+		
+		show_graph = <?php echo get_var('show_form') ? 'true' : 'false' ?>;
+		if (show_graph) {
+		  $("#graph-btn").trigger("click");
+		} 
 	});
 </script>
