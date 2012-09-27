@@ -9,7 +9,7 @@
 	
 	<div class="row" style="padding-bottom: 10px">
 		<div class="span12">
-			<a href="#" class="btn" data-toggle="collapse" data-target="#graph" id="graph-btn"><i class="icon-plus"></i> Show Graph Options</a><br/>
+			<a href="javascript:void(0);" class="btn" data-toggle="collapse" data-target="#graph" id="graph-btn"><i class="icon-plus"></i> Show Graph Options</a><br/>
 		</div>
 	</div>
 		
@@ -234,8 +234,8 @@ $(document).ready( function ()  {
 					<td>
 						<!-- dropdown button for more samples with counts -->
 						<div class="btn-group">
-							<a class="btn" href="#">More Samples</a>
-							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+							<a class="btn" href="javascript:void(0);">More Samples</a>
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
 							  <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
@@ -339,7 +339,7 @@ $(document).ready( function ()  {
 			<?php if ($row['reviewed_by'] != '') { ?>
 				<strong>Reviewed</strong> by <strong><?php echo $row['reviewed_by']?></strong> on <strong><?php echo $row['reviewed_on'] ?></strong> with status <strong><?php echo $row['reviewed_status']; ?></strong><br>
 			<?php } else { ?>
-				 <!-- <a class="btn" href="#" data-toggle="collapse" data-target="#new_review" ><i class="icon-plus"></i> Add Review </a> <strong>Not reviewed</strong> -->
+				 <!-- <a class="btn" href="javascript:void(0);" data-toggle="collapse" data-target="#new_review" ><i class="icon-plus"></i> Add Review </a> <strong>Not reviewed</strong> -->
 				<!-- <span class="label label-info">Not Reviewed</span> -->
 			<?php } ?>
 			<div id="new_review" class="collapse in">

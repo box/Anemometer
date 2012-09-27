@@ -36,11 +36,11 @@
 	<div class="span4">
 	Displaying samples <strong><?php echo $start+1; ?> - <?php echo $start+$limit; ?> </strong>
 	<?php if (isset($start) and $start > 0) { ?> 
-		<a href="#" class="btn">&larr; Newer</a>
+		<a href="<?php echo site_url()."?action=samples&datasource={$datasource}&checksum={$checksum}&rpp={$rpp}&start=".($start - $rpp); ?>"class="btn">&larr; Newer</a>
 	<?php } ?>
 	
 	  <?php if ($num_rows > $limit) { ?> 
-		<a href="#" class="btn">Older &rarr;</a>
+		<a href="<?php echo site_url()."?action=samples&datasource={$datasource}&checksum={$checksum}&rpp={$rpp}&start=".($start + $rpp); ?>" class="btn">Older &rarr;</a>
 	  <?php } ?>
 	</div>
 </div>

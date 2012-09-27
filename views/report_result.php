@@ -12,10 +12,10 @@ $( function ()  {
 </script>
 <div class="row">
 	<div class="span12">
-		<a href="#" class="btn" data-toggle="collapse" data-target="#raw" id="raw-btn"><i class="icon-plus"></i> Show Raw SQL</a>
+		<a href="javascript:void(0);" class="btn" data-toggle="collapse" data-target="#raw" id="raw-btn"><i class="icon-plus"></i> Show Raw SQL</a>
 		<!--
-		<a href="#" class="btn"><i class="icon-list-alt"></i> Show Table</a>
-		<a href="#" class="btn"><i class="icon-picture"></i> Show Graph</a>
+		<a href="javascript:void(0);" class="btn"><i class="icon-list-alt"></i> Show Table</a>
+		<a href="javascript:void(0);" class="btn"><i class="icon-picture"></i> Show Graph</a>
 		-->
 		
 		<a href="<?php echo $permalink ?>" class="btn"><i class="icon-magnet"></i> Permalink</a>

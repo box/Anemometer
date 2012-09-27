@@ -70,8 +70,8 @@
 </div>
 <div class="row">
 	<p>You selected: <span id="selection"></span></p>
-	<p><a id="reset_selection" value="Clear selection" class="btn" href="#"><i class="icon-fire"></i> Reset Selection</a>
-		<a id="permalink_btn" class="btn" href="#"><i class="icon-magnet"></i> Graph Permalink</a></p>
+	<p><a id="reset_selection" value="Clear selection" class="btn" href="javascript:void(0);"><i class="icon-fire"></i> Reset Selection</a>
+		<a id="permalink_btn" class="btn" href="javascript:void(0);"><i class="icon-magnet"></i> Graph Permalink</a></p>
 </div>
 <hr>
 	</div></div>
