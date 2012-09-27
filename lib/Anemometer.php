@@ -84,6 +84,7 @@ class Anemometer {
         
         $data['columns'] = $this->report_obj->get_column_names();
         $data['permalink'] = site_url() . '?action=report&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
+        $data['jsonlink']  = site_url() . '?action=api&output=json&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
 
         // output data in the requested format
         // never display header and footer

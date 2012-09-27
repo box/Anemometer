@@ -75,7 +75,7 @@
 			<a id="permalink_btn" class="btn" href="#"><i class="icon-magnet"></i> Graph Permalink</a></p>
 	</div>
 	<div class="span4">
-		<p align="center"><span id="selection">click and drag on graph to zoom to selection</span></p>
+		<p align="center"><span id="selection">click and drag on graph to zoom</span></p>
 	</div>
 	<div class="span4">
 		<p align="center">

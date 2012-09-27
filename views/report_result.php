@@ -19,6 +19,7 @@ $( function ()  {
 		-->
 		
 		<a href="<?php echo $permalink ?>" class="btn"><i class="icon-magnet"></i> Permalink</a>
+		<a href="<?php echo $jsonlink ?>" class="btn"><i class="icon-cog"></i> JSON</a>
 		
 		<div class="collapse out" id="raw">
 			  <pre class="prettyprint lang-sql"><?php echo $sql ?></pre>
