@@ -10,17 +10,13 @@
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
 
     <!-- Le styles -->
-  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-  	<script src="js/jquery-1.7.1.min.js"></script>
-	<script src="js/jquery.ui.core.js"></script>
-	<script src="js/jquery.ui.widget.js"></script>
-	<script src="js/jquery.ui.datepicker.js"></script>
+	<link href="css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  	<script src="js/jquery-1.8.2.min.js"></script>
+	<script src="js/jquery-ui-1.8.24.custom.min.js"></script>
     <link href="css/bootstrap.css" rel="stylesheet">
     
     <!-- addon timepicker to date -->
-    <script src="js/jquery-ui-1.8.16.custom.min.js"></script>
     <script src="js/jquery-ui-timepicker-addon.js"></script>
-    <script src="js/jquery-ui-sliderAccess.js"></script>
     
     <style>
       /* css for timepicker */
@@ -43,8 +39,8 @@
     <script src="js/bootstrap-typeahead.js"></script>
     
     <!-- google pretty print -->
-    <link href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet" type="text/css"></link>
-    <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js" type="text/javascript"></script>
+    <link href="css/prettify.css" rel="stylesheet" type="text/css"></link>
+    <script src="js/prettify.js" type="text/javascript"></script>
     <script src="js/lang-sql.js" type="text/javascript"></script>
 
     <!-- dropdown menus  and other addons -->
