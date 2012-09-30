@@ -75,4 +75,24 @@ function check_mysql_error($result, $mysqli)
     }
 }
 
-?>
+
+/**
+ * Flatten a multiple dim array into a single list
+ *
+ * @param array $array
+ * @return array
+ */
+
+function flatten_array($array)
+{
+    $return = array();
+    foreach ($array as $key => $value) {
+        if (is_array($value)) {
+            $value = flatten_array($value);
+            $return = array_merge($return, $value);
+        }
+        else
+            $return[] = $value;
+    }
+    return $return;
+}
