@@ -43,6 +43,8 @@
  */
 
 require "QueryTableParser.php";
+require_once "QueryRewrite.php";
+
 class QueryExplain {
 
     private $get_connection_func;
@@ -143,13 +145,10 @@ class QueryExplain {
         if (!isset($this->mysqli)) {
             return null;
         }
-
-        if (!preg_match("/^\s*\(?\s*(EXPLAIN)?\s*SELECT/i", $this->query)) {
-            return null;
-        }
-
+		
         try {
             $result = $this->explain_query($this->query);
+			
             if ($this->mysqli->errno) {
                 return $this->mysqli->error . " (" . $this->mysqli->errno . ")";
             }
@@ -157,6 +156,7 @@ class QueryExplain {
             if (!$result) {
                 return "unknown error getting explain plan\n";
             }
+			
             return $this->result_as_table($result);
         } catch (Exception $e) {
             return $e->getMessage();
@@ -177,7 +177,7 @@ class QueryExplain {
                 throw new Exception("Missing field {$r}");
             }
         }
-
+		
         try {
             $this->mysqli = new mysqli();
             $this->mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, self::$CONNECT_TIMEOUT);
@@ -202,11 +202,13 @@ class QueryExplain {
      * @return MySQLi_Result    the result handle
      */
     private function explain_query() {
-		if (preg_match("/^\s*EXPLAIN/i", $this->query))
-		{
-			return $this->mysqli->query($this->query);
-		}
-        return $this->mysqli->query("EXPLAIN " . $this->query);
+		$Query = new QueryRewrite($this->query);
+		$explain = $Query->asExplain();
+		
+		if (is_null($explain))
+			return null;
+		
+        return $this->mysqli->query($explain);
     }
 
     /**
