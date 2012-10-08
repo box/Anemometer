@@ -320,7 +320,7 @@ class AnemometerModel {
             fwrite($pipes[0], $input);
             fclose($pipes[0]);
 
-            $result = stream_get_contents($pipes[1]).stream_get_contents($pipe[2]);
+            $result = stream_get_contents($pipes[1]).stream_get_contents($pipes[2]);
             fclose($pipes[1]);
             fclose($pipes[2]);
 
