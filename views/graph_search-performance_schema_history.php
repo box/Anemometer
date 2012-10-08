@@ -75,7 +75,7 @@
 </div>
 <hr>
 	</div></div>
-<span id="report_table"><center><img src="img/ajax-loader.gif"></center></div>
+<span id="report_table"><center><img src="img/ajax-loader.gif"></center></span>
 
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
@@ -91,12 +91,12 @@ var TABLE_URL_TIME_END_PARAM = "<?php echo $table_url_time_end_param ?>"
 var FLOT_OPTS = {
 	series: {
 		lines: { show: true }, // line graphs!
-		points: { show: true}, // draw individual data points
+		points: { show: true} // draw individual data points
 	},
 	legend: { noColumns: 2 },
 	xaxis: { tickDecimals: 0, mode: "time" },
 	yaxis: { min: 0 },
-	selection: { mode: "x" }, // any mouse selections should be along x axis
+	selection: { mode: "x" } // any mouse selections should be along x axis
 };
 
 // Placeholder for data to plot
@@ -108,7 +108,7 @@ var DATA = [];
  * @param data 	The array of objects containing time series data to plot.
  */
 function new_plot_data(data) {
-	// flot requires millseconds, so convert the timestamp from seconds to milliseconds
+	// flot requires milliseconds, so convert the timestamp from seconds to milliseconds
 	for ( var i = 0; i < data.length; i++ )
 	{
 		for ( var j = 0; j < data[i].data.length; j++ )

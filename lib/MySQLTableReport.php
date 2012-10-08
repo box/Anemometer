@@ -63,9 +63,9 @@
  *              // the filters here will make sure the data gets added to the right
  *              // part of the query, and not the WHERE clause like other fields.
  *              'group'     => 'group',
- *		'order'     => 'order',
- *		'having'    => 'having',
- *		'limit'     => 'limit',
+ *              'order'     => 'order',
+ *              'having'    => 'having',
+ *              'limit'     => 'limit',
  *          ),
  *
  *          'dimension' => array(
@@ -280,7 +280,7 @@ class MySQLTableReport {
      * @return array the list of columns defined in the database tables.
      */
     public function get_table_fields($table_name = null) {
-        // now find all colums from the tables
+        // now find all columns from the tables
         if (isset($table_name)) {
             $tables = array(&$table_name);
         } else {
@@ -442,7 +442,7 @@ class MySQLTableReport {
      *
      * @param string $col_name      the name of the form field as a column
      * @param string $var_name      the form variable name
-     * @param string $expression    the havin expression
+     * @param string $expression    the having expression
      * @return \MySQLTableReport
      */
     public function having($key, $field, $expression) {
@@ -497,7 +497,7 @@ class MySQLTableReport {
      */
     public function pivot($col_name, $var_name, $expression) {
         if (!isset($expression))
-		{
+        {
             return $this;
         }
 
@@ -506,25 +506,25 @@ class MySQLTableReport {
         $col_name = preg_replace("/pivot-/", "", $col_name);
         $values = $this->get_pivot_values($var_name);
 
-		foreach ($values as $v) {
-			
-			if (isset($this->report['custom_fields'][$expression]))
-			{
-				// for custom fields, we need to do some regex trickery.  This should work in many cases
-				// but there might be some strange situations where it doesn't.
-				// mostly where it doesn't work is where a pivot doesn't make sense.
-				$field = preg_replace("/(SUM|MIN|MAX|AVG|COUNT)\(([\.\w]+)\)/", "\\1(IF({$col_name}='".addslashes($v)."',\\2,0))" ,$this->report['custom_fields'][$expression]);
-				if ($field)
-				{
-					$columns[] = array($field, $v, null);
-				}
-			}
-			else
-			{
-				// default behavior for most columns
-				$columns[] = array("IF({$col_name}='" . addslashes($v) . "',{$expression},0)", $v, 'SUM');
-			}
-		}
+        foreach ($values as $v)
+        {
+            if (isset($this->report['custom_fields'][$expression]))
+            {
+                // for custom fields, we need to do some regex trickery.  This should work in many cases
+                // but there might be some strange situations where it doesn't.
+                // mostly where it doesn't work is where a pivot doesn't make sense.
+                $field = preg_replace("/(SUM|MIN|MAX|AVG|COUNT)\(([\.\w]+)\)/", "\\1(IF({$col_name}='".addslashes($v)."',\\2,0))" ,$this->report['custom_fields'][$expression]);
+                if ($field)
+                {
+                    $columns[] = array($field, $v, null);
+                }
+            }
+            else
+            {
+                // default behavior for most columns
+                $columns[] = array("IF({$col_name}='" . addslashes($v) . "',{$expression},0)", $v, 'SUM');
+            }
+        }
 
         return $columns;
     }
@@ -534,7 +534,7 @@ class MySQLTableReport {
      * values to be added to the WHERE clause
      *
      * This is used when you have a column like "invoice_date" in the report,
-     * but what you really want to search for is a range of dates bewteen a given
+     * but what you really want to search for is a range of dates between a given
      * start and end date.
      *
      * To do that, create form fields with _start and _end added to the name,
@@ -566,13 +566,13 @@ class MySQLTableReport {
     }
 
     public function reldate($col_name, $var_name, $expression, $op) {
-		if (substr(strtolower($expression),0,3) == 'now') {
-			$expression = date("Y-m-d H:i:s");
-		}
-		if (preg_match('/^\s*([+-])?(\d+)\s(\w+)$/', $expression, $match)) {
-			$expression = date("Y-m-d H:i:s", strtotime( $expression));
-		}
-		return array( array($col_name, $var_name, $expression, $op) );
+        if (substr(strtolower($expression),0,3) == 'now') {
+            $expression = date("Y-m-d H:i:s");
+        }
+        if (preg_match('/^\s*([+-])?(\d+)\s(\w+)$/', $expression, $match)) {
+            $expression = date("Y-m-d H:i:s", strtotime( $expression));
+        }
+        return array( array($col_name, $var_name, $expression, $op) );
     }
 
     /**
@@ -797,9 +797,9 @@ class MySQLTableReport {
             foreach ($this->form_fields[$alias] as $field => $config) {
                 $var_name = "{$alias}-{$field}";
                 $col_name = "{$alias}.{$field}";
-				if (isset($this->report['custom_fields'][$field])) {
-					$col_name = $this->report['custom_fields'][$field];
-				}
+                if (isset($this->report['custom_fields'][$field])) {
+                    $col_name = $this->report['custom_fields'][$field];
+                }
                 $functions = preg_split("/\|/", $config);
                 $args = array(array($col_name, $var_name, $values[$var_name]));
                 //print "checking fields {$var_name}=". $args[0][1]. "<br>";
@@ -908,13 +908,13 @@ class MySQLTableReport {
         }
 
         // GROUP / ORDER / HAVING / LIMIT
-        $aditional_clauses = array(
+        $additional_clauses = array(
             'GROUP BY' => $this->group,
-			'HAVING' => $this->having,
+            'HAVING' => $this->having,
             'ORDER BY' => $this->order,
             'LIMIT' => $this->limit
         );
-        foreach ($aditional_clauses as $clause => $value) {
+        foreach ($additional_clauses as $clause => $value) {
             if (isset($value) and $value != '') {
                 $sql .= " {$clause} {$value} \n";
             }
@@ -925,10 +925,10 @@ class MySQLTableReport {
     }
 
     /**
-     * retuns a list of all column names.  These will be exactly the same as
+     * Returns a list of all column names.  These will be exactly the same as
      * the columns returned by the query.
      *
-     * @return srray    the list of column names
+     * @return array    the list of column names
      */
     public function get_column_names() {
         return array_map(function ($k) {
@@ -937,7 +937,7 @@ class MySQLTableReport {
     }
 
     /**
-     * Execute the generated query on the configured databse and return
+     * Execute the generated query on the configured database and return
      * a result handle
      *
      * @param string $sql   optional sql to execute.
@@ -961,7 +961,7 @@ class MySQLTableReport {
     }
 
     /**
-     * check the result of a mysqli query and throw and excepton if there was an error
+     * check the result of a mysqli query and throw and exception if there was an error
      *
      * @param MySQLi_Result $result  handle to the result set
      * @throws Exception if there was a query error
@@ -977,7 +977,7 @@ class MySQLTableReport {
     /**
      * return a urlencoded string of parameters that were used in this report.
      *
-     * @param array	 $exceptions		List of variables names not to append
+     * @param array $exceptions List of variables names not to append
      * @return string   The url string
      */
     public function get_search_uri($exceptions = null) {
@@ -993,10 +993,10 @@ class MySQLTableReport {
                 $col_name = "{$alias}.{$field}";
                 $value = get_var($var_name);
 
-				if (isset($exceptions) and in_array($var_name, $exceptions))
-				{
-					continue;
-				}
+                if (isset($exceptions) and in_array($var_name, $exceptions))
+                {
+                    continue;
+                }
 
                 // we have to execute some of the functions here because
                 // the actual form fields may differ from the defined field name

@@ -2,7 +2,7 @@
 /**
  * class QueryExplain
  * rough utility class to get query explain plan and extract table names from
- * abitrary sql so we can run show create table on them.
+ * arbitrary sql so we can run show create table on them.
  *
  * This class needs a user defined method to find the database connection info
  * from the query and a bit of other data stored with the query_review_history table
@@ -26,7 +26,7 @@
  *      );
  * }
  *
- * The callback funtion will always take one array argument, and it needs to return
+ * The callback function will always take one array argument, and it needs to return
  * and array with the following keys defined: host,db,user,password; and optionally: port
  *
  * Because the object takes data associated with one query to return the db connection
@@ -56,7 +56,7 @@ class QueryExplain {
 
 
     /**
-     * Constructor.  See class documentation for explaination of the parameters
+     * Constructor.  See class documentation for explanation of the parameters
      *
      * @param callback $get_connection_func     The callback function
      * @param array $sample     array of information about the query
@@ -145,10 +145,10 @@ class QueryExplain {
         if (!isset($this->mysqli)) {
             return null;
         }
-		
+
         try {
             $result = $this->explain_query($this->query);
-			
+
             if ($this->mysqli->errno) {
                 return $this->mysqli->error . " (" . $this->mysqli->errno . ")";
             }
@@ -156,7 +156,7 @@ class QueryExplain {
             if (!$result) {
                 return "unknown error getting explain plan\n";
             }
-			
+
             return $this->result_as_table($result);
         } catch (Exception $e) {
             return $e->getMessage();
@@ -177,7 +177,7 @@ class QueryExplain {
                 throw new Exception("Missing field {$r}");
             }
         }
-		
+
         try {
             $this->mysqli = new mysqli();
             $this->mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, self::$CONNECT_TIMEOUT);
@@ -202,12 +202,14 @@ class QueryExplain {
      * @return MySQLi_Result    the result handle
      */
     private function explain_query() {
-		$Query = new QueryRewrite($this->query);
-		$explain = $Query->asExplain();
-		
-		if (is_null($explain))
-			return null;
-		
+        $Query = new QueryRewrite($this->query);
+        $explain = $Query->asExplain();
+
+        if (is_null($explain))
+        {
+            return null;
+        }
+
         return $this->mysqli->query($explain);
     }
 
@@ -248,7 +250,7 @@ class QueryExplain {
         $table .= self::make_rule($sizes, $column_order);
 
         foreach ($values as $row) {
-            //		print_r(array_values($row));
+            // print_r(array_values($row));
             $table .= self::make_row($sizes, $row, $column_order);
             $table .= self::make_rule($sizes, $column_order);
         }

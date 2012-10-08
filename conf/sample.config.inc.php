@@ -1,7 +1,7 @@
 <?php
 /**
  * This is the configuration file for the Anemometer application.  All of your
- * evironment specific settings will go here, and there should not be any need
+ * environment specific settings will go here, and there should not be any need
  * edit other files.
  *
  * @author Gavin Towey <gavin@box.com>
