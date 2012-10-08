@@ -102,13 +102,13 @@ var TIMEZONE_OFFSET = <?php echo $timezone_offset; ?> * 1000;
 var thefreakingoptions = {
 	series: {
 		lines: { show: true },
-		points: { show: true},
+		points: { show: true}
 	},
 	grid: { hoverable: true, clickable: true },
 	legend: { noColumns: 2},
 	xaxis: { tickDecimals: 0, mode: "time" },
 	yaxis: { min: 0 },
-	selection: { mode: "x" },
+	selection: { mode: "x" }
 };
 
 // Placeholder for data to plot

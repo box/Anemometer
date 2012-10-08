@@ -39,7 +39,7 @@
     <script src="js/bootstrap-typeahead.js"></script>
     
     <!-- google pretty print -->
-    <link href="css/prettify.css" rel="stylesheet" type="text/css"></link>
+    <link href="css/prettify.css" rel="stylesheet" type="text/css">
     <script src="js/prettify.js" type="text/javascript"></script>
     <script src="js/lang-sql.js" type="text/javascript"></script>
 

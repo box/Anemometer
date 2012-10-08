@@ -86,7 +86,7 @@
 </div>
 <hr>
 	</div></div>
-<span id="report_table"><center><img src="img/ajax-loader.gif"></center></div>
+<span id="report_table"><center><img src="img/ajax-loader.gif"></center></span>
 
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.js"></script>
 <script language="javascript" type="text/javascript" src="js/flot/jquery.flot.selection.js"></script>
@@ -103,13 +103,13 @@ var TIMEZONE_OFFSET = <?php echo $timezone_offset; ?> * 1000;
 var FLOT_OPTS = {
 	series: {
 		lines: { show: true }, // line graphs!
-		points: { show: true}, // draw individual data points
+		points: { show: true} // draw individual data points
 	},
 	grid: { hoverable: true, clickable: true },
 	legend: { noColumns: 2 },
 	xaxis: { tickDecimals: 0, mode: "time" },
 	yaxis: { min: 0 },
-	selection: { mode: "x" }, // any mouse selections should be along x axis
+	selection: { mode: "x" } // any mouse selections should be along x axis
 };
 var autoscale_y_on_zoom = false; // default behavior is backwards compatable
 // Placeholder for data to plot
@@ -121,7 +121,7 @@ var DATA = [];
  * @param data 	The array of objects containing time series data to plot.
  */
 function new_plot_data(data) {
-	// flot requires millseconds, so convert the timestamp from seconds to milliseconds
+	// flot requires milliseconds, so convert the timestamp from seconds to milliseconds
 	for ( var i = 0; i < data.length; i++ )
 	{
 		for ( var j = 0; j < data[i].data.length; j++ )
@@ -211,7 +211,7 @@ function setup_selection(theplot) {
 		console.log(ranges);
 		
 		var new_plot_opts = {
-				xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+				xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
 		};
 		
 		if ( autoscale_y_on_zoom ) {

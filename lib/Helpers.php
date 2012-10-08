@@ -37,7 +37,7 @@ function site_url()
 {
     if (isset($_SERVER['HTTPS']))
     {
-	$proto = 'https://';
+        $proto = 'https://';
     }
     else
     {
