@@ -112,9 +112,9 @@ class Anemometer {
 
 
     /**
-     *  Search by using a graph.  A brief search form is shown to allow a graph to
-     * be built.  Html table results that corespond to the time range of the graph is
-     * displayed below.  Regions can be selected in the graph directly which will
+     * Search by using a graph.  A brief search form is shown to allow a graph to
+     * be built. Html table results that correspond to the time range of the graph is
+     * displayed below. Regions can be selected in the graph directly which will
      * update the table results with the new time range.
      */
     public function graph_search()
@@ -170,7 +170,7 @@ class Anemometer {
         $this->init_report();
         $this->set_search_defaults('report_defaults', array('dimension-'.$time.'_start', 'dimension-'.$time.'_end', $data['checksum_field_name']));
 
-	    $_GET['fact-order'] = get_var('plot_field') . ' DESC';
+        $_GET['fact-order'] = get_var('plot_field') . ' DESC';
         $data['ajax_table_request_url_base'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource']. '&' . $this->report_obj->get_search_uri(array( 'dimension-'.$data['time_field_name']));
         $data['table_url_time_start_param'] = 'dimension-'.$data['time_field_name'].'_start';
         $data['table_url_time_end_param'] = 'dimension-'.$data['time_field_name'].'_end';
@@ -246,7 +246,7 @@ class Anemometer {
 
             $data['datasource'] = get_var('datasource');
             $data['tables'] = $this->report_obj->get_tables();
-	    
+
             if ('performance_schema' != $this->data_model->get_source_type())
             {
                 $fieldname = $this->data_model->get_field_name('hostname');
@@ -255,7 +255,7 @@ class Anemometer {
                 $this->report_obj->set_pivot_values('dimension-pivot-'.$fieldname, $data['hosts']);
             }
 
-            //		$data['fields = $this->report_obj->get_form_fields();
+            // $data['fields = $this->report_obj->get_form_fields();
             // @todo remove
             $data['tables'] = $this->report_obj->get_tables();
             foreach ($data['tables'] as $t) {

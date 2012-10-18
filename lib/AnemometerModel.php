@@ -51,7 +51,7 @@ class AnemometerModel {
         }
         $source_type = $this->conf['datasources'][$this->datasource_name]['source_type'];
         
-        // for backwards compatability with conf files.
+        // for backwards compatibility with conf files.
         if (array_key_exists($type, $this->conf) and array_key_exists($source_type, $this->conf[$type]))
         {
             return $this->conf[$type][$source_type];
@@ -276,7 +276,7 @@ class AnemometerModel {
     /**
      * Create a new query explainer object for the given query sample
      *
-     * @param array $sample     The qeury sample
+     * @param array $sample     The query sample
      */
     public function init_query_explainer(array $sample) {
         $this->explainer = new QueryExplain($this->conf['plugins']['explain'], $sample);
@@ -412,19 +412,15 @@ class AnemometerModel {
             return $this->conf['reports'][$source_type]['special_field_names'][$type];
         }
         
-        // backwards compatability
+        // backwards compatibility
         switch ($type)
         {
             case 'time':
                 return 'ts_min';
             case 'hostname':
                 return 'hostname_max';
-            case 'checksum':
-                return 'checksum';
-	    case 'sample':
-		return 'sample';
-	    default:
-		return $type;
+            default:
+                return $type;
         }
     }
 }
