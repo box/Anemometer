@@ -23,7 +23,12 @@ If you're just completely itching to start using this tool, here's what you need
 
 #### Setup DB ####
 
-First up, you should connect to the MySQL database you're looking to store the analysis data in and issue the following command:
+First up, grab the anemometer code from github. Navigate to the document root of your web server and snag a copy of the Box Anemometer code. Then change your current working directory to the Anemometer directory:
+
+    $ git clone git://github.com/box/Anemometer.git anemometer
+    $ cd anemometer
+    
+Next, you should connect to the MySQL database you're looking to store the analysis data in and issue the following command:
 
     $ mysql -h db.example.com < install.sql
     $ mysql -h db.example.com -e "grant ALL ON slow_query_log.* to 'anemometer'@'%' IDENTIFIED BY 'superSecurePass';"
@@ -43,15 +48,14 @@ Next, grab that slow query log file you have (mine's called "slow.log"!), and ru
     Pipeline process 11 (aggregate fingerprint) caused an error: Argument "57B" isn't numeric in numeric gt (>) at (eval 40) line 6, <> line 28.
     Pipeline process 11 (aggregate fingerprint) caused an error: Argument "57C" isn't numeric in numeric gt (>) at (eval 40) line 6, <> line 29.
 
-You may see an error like above, that's okay!.
+You may see an error like above, that's okay!
 TODO: explain what the options above are doing.
 
 
 #### View the data! ####
 
-Now, navigate to the web root of your apache server and snag a copy of the Box Anemometer code. Then copy the sample config so you can edit it:
+Now, navigate to the document root of your web server and copy the sample config so you can edit it:
 
-    $ git clone git@github.com:box/Anemometer.git anemometer
     $ cd anemometer/conf
     $ cp sample.config.inc.php config.inc.php 
 
