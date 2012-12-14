@@ -48,7 +48,7 @@ $conf['datasources']['localhost'] = array(
 /**
  * If you're using Anemometer with MySQL 5.6's performance schema,
  * then use this datasource
- * 
+ *
 $conf['datasources']['mysql56'] = array(
 	'host'	=> 'localhost',
 	'port'	=> 3306,
@@ -162,7 +162,7 @@ $conf['graph_defaults'] = array(
 $conf['report_defaults']['performance_schema'] = array(
 	'fact-order'	=> 'SUM_TIMER_WAIT DESC',
 	'fact-limit' => '20',
-	'table_fields' => array( 'DIGEST', 'snippet', 'index_ratio', 'COUNT_STAR', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' ) 
+	'table_fields' => array( 'DIGEST', 'snippet', 'index_ratio', 'COUNT_STAR', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' )
 );
 
 // these are the default values for using performance schema to save your own
@@ -173,7 +173,7 @@ $conf['report_defaults']['performance_schema_history'] = array(
 	'fact-limit' => '20',
 	'dimension-FIRST_SEEN_start' => date("Y-m-d H:i:s", strtotime( '-1 day')),
 	'dimension-FIRST_SEEN_end'	=> date("Y-m-d H:i:s"),
-	'table_fields' => array( 'DIGEST', 'snippet', 'index_ratio', 'COUNT_STAR', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' ) 
+	'table_fields' => array( 'DIGEST', 'snippet', 'index_ratio', 'COUNT_STAR', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' )
 );
 
 $conf['graph_defaults']['performance_schema_history'] = array(
@@ -196,7 +196,7 @@ $conf['history_defaults']['performance_schema_history'] = array(
 	'fact-limit' => '90',
 	'dimension-FIRST_SEEN_start' => date("Y-m-d H:i:s", strtotime( '-90 day')),
 	'dimension-FIRST_SEEN_end'	=> date("Y-m-d H:i:s"),
-	'table_fields' => array( 'date', 'snippet', 'index_ratio', 'COUNT_STAR', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' ) 
+	'table_fields' => array( 'date', 'snippet', 'index_ratio', 'COUNT_STAR', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' )
 );
 /**
  * Plugins are optional extra information that can be displayed, but often
@@ -326,7 +326,7 @@ $conf['reports']['slow_query_log'] = array(
 	),
 	// custom fields
 	'custom_fields'	=> array(
-		'checksum' => 'checksum',
+		'checksum' => 'HEX(checksum)',
 		'date'	=> 'DATE(ts_min)',
 		'hour'	=> 'substring(ts_min,1,13)',
 		'hour_ts'	=> 'unix_timestamp(substring(ts_min,1,13))',
@@ -399,12 +399,19 @@ $conf['reports']['performance_schema_history'] = array(
 		'hour'	=> 'substring(dimension.FIRST_SEEN,1,13)',
 		'hour_ts'	=> 'unix_timestamp(substring(dimension.FIRST_SEEN,1,13))',
 	),
-	
+
 	'special_field_names' => array(
 		'time'	 	=> 'FIRST_SEEN',
 		'checksum'	=> 'DIGEST',
 		'hostname'	=> 'hostname',
 		'sample'	=> 'DIGEST_TEXT'
+	),
+
+	'callbacks'     => array(
+		'table' => array(
+			'date'  => function ($x) { $type=''; if ( date('N',strtotime($x)) >= 6) { $type = 'weekend'; } return array($x,$type); },
+			'checksum' => function ($x) { return array(dec2hex($x), ''); }
+		)
 	)
 );
 

@@ -50,8 +50,8 @@ class AnemometerModel {
             throw new Exception("Cannot get report default values without a datasource defined");
         }
         $source_type = $this->conf['datasources'][$this->datasource_name]['source_type'];
-        
-        // for backwards compatibility with conf files.
+
+        // for backwards compatability with conf files.
         if (array_key_exists($type, $this->conf) and array_key_exists($source_type, $this->conf[$type]))
         {
             return $this->conf[$type][$source_type];
@@ -61,7 +61,7 @@ class AnemometerModel {
             return $this->conf[$type];
         }
     }
-    
+
     public function get_source_type()
     {
         if (isset($this->datasource_name) and array_key_exists('source_type', $this->conf['datasources'][$this->datasource_name]))
@@ -119,7 +119,7 @@ class AnemometerModel {
                 $this->dimension_table = $key;
             }
         }
-        
+
         if (array_key_exists('source_type', $this->conf['datasources'][$name]) and $this->conf['datasources'][$name]['source_type'] == 'performance_schema')
         {
             // check for correct mysql version with performance schema source type
@@ -278,7 +278,11 @@ class AnemometerModel {
      *
      * @param array $sample     The query sample
      */
-    public function init_query_explainer(array $sample) {
+    public function init_query_explainer($sample) {
+        if (!is_array($sample))
+        {
+            return;
+        }
         $this->explainer = new QueryExplain($this->conf['plugins']['explain'], $sample);
     }
 
@@ -288,8 +292,12 @@ class AnemometerModel {
      * @param array $sample     The query sample row data
      * @return mixed        Either a string with the explain plan, an error message or null
      */
-    public function get_explain_for_sample(array $sample) {
-        if (!isset($this->conf['plugins']['explain']) or !is_callable($this->conf['plugins']['explain'])) {
+    public function get_explain_for_sample($sample) {
+        if (!is_array($sample))
+        {
+            return null;
+        }
+        if (!array_key_exists('plugins',$this->conf) or !is_callable($this->conf['plugins']['explain'])) {
             return null;
         }
 
@@ -398,7 +406,7 @@ class AnemometerModel {
 
         return $this->explainer->get_table_status($query);
     }
-    
+
     public function get_field_name($type)
     {
         if (!isset($this->datasource_name))
@@ -406,13 +414,13 @@ class AnemometerModel {
             throw new Exception("Cannot get report special field names without a datasource defined");
         }
         $source_type = $this->conf['datasources'][$this->datasource_name]['source_type'];
-        
+
         if (array_key_exists('special_field_names', $this->conf['reports'][$source_type]))
         {
             return $this->conf['reports'][$source_type]['special_field_names'][$type];
         }
-        
-        // backwards compatibility
+
+        // backwards compatability
         switch ($type)
         {
             case 'time':
@@ -422,6 +430,15 @@ class AnemometerModel {
             default:
                 return $type;
         }
+    }
+
+    public function get_callbacks($source_type, $output)
+    {
+        if (key_exists('callbacks', $this->conf['reports'][$source_type]) and key_exists($output, $this->conf['reports'][$source_type]['callbacks']))
+        {
+            return $this->conf['reports'][$source_type]['callbacks'][$output];
+        }
+        return null;
     }
 }
 

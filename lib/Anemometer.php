@@ -68,20 +68,29 @@ class Anemometer {
             $this->report_obj->set_pivot_values('dimension-pivot-'.$hostname_field, $hosts);
         }
 
+        // translate the checksum field from possible hex value
+        $checksum_field_name = $this->data_model->get_field_name('checksum');
+        $checksum = $this->translate_checksum(get_var("fact-{$checksum_field_name}"));
+        if (isset($checksum))
+        {
+//            print "setting checksum [$checksum]";
+            $_GET["fact-{$checksum_field_name}"] = $checksum;
+        }
+
         // process the form data, and get the query result
         $data = array();
         $data['datasource'] = get_var('datasource');
         try
         {
             $data['sql'] = $this->report_obj->query();
-            $data['result'] = $this->report_obj->execute();    
+            $data['result'] = $this->report_obj->execute();
         }
         catch (Exception $e)
         {
             $this->alert($e->getMessage(),'alert-error');
             prettyprint($data['sql']);
         }
-        
+
         $data['columns'] = $this->report_obj->get_column_names();
         $data['permalink'] = site_url() . '?action=report&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
         $data['jsonlink']  = site_url() . '?action=api&output=json&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
@@ -121,23 +130,23 @@ class Anemometer {
     {
         $this->header();
         $this->set_search_defaults('graph_defaults');
-        
+
         $data = $this->setup_data_for_graph_search();
 
         // display the page
         $this->load->view("graph_search", $data);
         $this->footer();
     }
-    
+
     private function setup_data_for_graph_search($data=null)
     {
         if (!isset($data))
         {
             $data = array();
         }
-        
+
         $data['datasource'] = get_var('datasource');
-        
+
         $data['time_field_name'] = $time = $this->data_model->get_field_name('time');
         $data['hostname_field_name'] = $this->data_model->get_field_name('hostname');
         $data['checksum_field_name'] = $this->data_model->get_field_name('checksum');
@@ -175,7 +184,7 @@ class Anemometer {
         $data['table_url_time_start_param'] = 'dimension-'.$data['time_field_name'].'_start';
         $data['table_url_time_end_param'] = 'dimension-'.$data['time_field_name'].'_end';
         $data['timezone_offset'] = timezone_offset_get( new DateTimeZone( ini_get('date.timezone' )), new DateTime());
-        
+
         return $data;
     }
 
@@ -221,7 +230,7 @@ class Anemometer {
      */
     public function quicksearch() {
         $datasource = get_var('datasource');
-        $checksum = get_var('checksum');
+        $checksum = $this->translate_checksum(get_var('checksum'));
         $exists = $this->data_model->checksum_exists($checksum);
         if (!$exists) {
             $this->alert("Unknown checksum: {$checksum}");
@@ -284,7 +293,7 @@ class Anemometer {
         $this->header();
 
         $datasource = get_var('datasource');
-        $checksum = get_var('checksum');
+        $checksum = $this->translate_checksum(get_var('checksum'));
         $start = get_var('start') | 0;
         $rpp = get_var('rpp');
 
@@ -305,6 +314,25 @@ class Anemometer {
         $this->footer();
     }
 
+    private function translate_checksum($checksum)
+    {
+        if (preg_match('/^[0-9]+$/', $checksum))
+        {
+            return $checksum;
+        }
+        else if (preg_match('/^[0-9A-Fa-f]+$/', $checksum))
+        {
+            return $this->bchexdec($checksum);
+        }
+        else if (strlen($checksum) == 0)
+        {
+            return null;
+        }
+        else
+        {
+            throw new Exception("Invalid query checksum");
+        }
+    }
 
     /**
      * Display a specific query from its checksum value
@@ -312,22 +340,34 @@ class Anemometer {
      */
     public function show_query() {
         $this->header();
-
-        $checksum = get_var('checksum');
+        $output = 'table';
+        $checksum = $this->translate_checksum(get_var('checksum'));
         $exists = $this->data_model->checksum_exists($checksum);
         if (!$exists) {
             $this->alert("Unknown checksum: {$checksum}");
             return;
         }
 
-//        $data = $this->setup_data_for_graph_search();
-        
-        $data['checksum'] = $checksum;
         $data['datasource'] = get_var('datasource');
         $sample_field_name = $this->data_model->get_field_name('sample');
-        
+
         // query and most recent sample
-        $data['row'] = $this->data_model->get_query_by_checksum($checksum);
+        $row = $this->data_model->get_query_by_checksum($checksum);
+        $source_type = $this->data_model->get_source_type();
+        $callbacks = $this->data_model->get_callbacks($source_type, $output);
+        if (isset($callbacks))
+        {
+            foreach ($callbacks as $fxname => $fx) {
+                if (array_key_exists($fxname, $row)) {
+                    $result = $fx($row[$fxname]);
+                    $row[$fxname] = $result[0];
+                }
+            }
+        }
+        $data['checksum'] = $row['checksum'];
+        $_GET['checksum'] = $row['checksum'];
+
+        $data['row'] = $row;
         $data['sample'] = $this->data_model->get_query_samples($checksum, 1)->fetch_assoc();
 
         // review info
@@ -339,7 +379,7 @@ class Anemometer {
         // get explain plan and extra info
         // TODO convert to ajax calls, just get the url
         $source_type = $this->data_model->get_source_type();
-        
+
         $data['show_samples'] = true;
         if ($source_type == 'performance_schema_history')
         {
@@ -350,7 +390,9 @@ class Anemometer {
         {
             try
             {
-                    $this->data_model->init_query_explainer($data['sample']);
+                // unfortunately there is a "catchable" fatal error which isn't
+                // really catchable
+                $this->data_model->init_query_explainer($data['sample']);
             }
             catch ( Exception $e )
             {
@@ -393,13 +435,13 @@ class Anemometer {
         //$data = $this->setup_data_for_graph_search($data);
 
         $_GET['table_fields'][] = get_var('plot_field');
-        $_GET['fact-checksum'] = $checksum;
+        $_GET['fact-checksum'] = get_var('checksum');
         $data['ajax_request_url'] = site_url() . '?action=api&output=json2&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
 
         $data['sample_field_name'] = $this->data_model->get_field_name('sample');
         $data['hostname_field_name'] =$this->data_model->get_field_name('hostname');
         $data['time_field_name'] =$this->data_model->get_field_name('time');
-        
+
         $this->load->view("show_query", $data);
 
         // Show the history for this query
@@ -418,7 +460,7 @@ class Anemometer {
      *
      */
     public function upd_query() {
-        $checksum = get_var('checksum');
+        $checksum = $this->translate_checksum(get_var('checksum'));
         $valid_actions = array('Review', 'Review and Update Comments', 'Update Comments', 'Clear Review');
         $submit = get_var('submit');
 
@@ -461,7 +503,7 @@ class Anemometer {
         $this->header();
         print "<div class=\"alert {$level}\">{$string}</div>";
     }
-    
+
     private function display_report_form($data)
     {
         $data['hostname_field_name'] = $this->data_model->get_field_name('hostname');
@@ -472,7 +514,7 @@ class Anemometer {
         {
             throw new Exception("No datasource defined");
         }
-        
+
         $source_type = $this->data_model->get_source_type();
         switch ($source_type)
         {
@@ -500,13 +542,13 @@ class Anemometer {
         if (array_key_exists('PHP_AUTH_USER', $_SERVER))
         {
             return $_SERVER['PHP_AUTH_USER'];
-            
+
         }
         else if (array_key_exists('current_review_user', $_SESSION))
         {
             return $_SESSION['current_review_user'];
         }
-        
+
         return null;
     }
 
@@ -542,7 +584,7 @@ class Anemometer {
      */
     private function init_report() {
         $datasource = get_var('datasource');
-        
+
         if (isset($datasource)) {
             $conf = $this->data_model->get_data_source($datasource);
 
@@ -569,6 +611,36 @@ class Anemometer {
                 $_GET[$key] = $value;
             }
         }
+    }
+
+    private function bchexdec($hex) {
+        static $hexdec = array(
+            "0" => 0,
+            "1" => 1,
+            "2" => 2,
+            "3" => 3,
+            "4" => 4,
+            "5" => 5,
+            "6" => 6,
+            "7" => 7,
+            "8" => 8,
+            "9" => 9,
+            "A" => 10,
+            "B" => 11,
+            "C" => 12,
+            "D" => 13,
+            "E" => 14,
+            "F" => 15
+        );
+
+        $dec = 0;
+
+        for ($i = strlen($hex) - 1, $e = 1; $i >= 0; $i--, $e = bcmul($e, 16)) {
+            $factor = $hexdec[$hex[$i]];
+            $dec = bcadd($dec, bcmul($factor, $e));
+        }
+
+        return $dec;
     }
 }
 

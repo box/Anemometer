@@ -96,3 +96,59 @@ function flatten_array($array)
     }
     return $return;
 }
+
+function dec2hex($str)
+{
+	$hex = array('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');
+	// Result value
+	$hexval = '';
+	// The quotient of each division operation
+	$quotient = $str;
+	$divisor = $str;
+	// The ending condition
+	$flag = true;
+	while($flag)
+	{
+		$len = strlen($divisor);
+		$pos = 1;
+		$quotient = 0;
+		// Take the first two digits as temp divisor and advance by 1 each iteration
+		$div = substr($divisor, 0, 2);
+		$remainder = $div[0];
+		while($pos < $len)
+		{
+			// Calculate the next div
+			$div = $remainder == 0 ? $divisor[$pos] : $remainder.$divisor[$pos];
+			$remainder = $div % 16;
+			$quotient = $quotient.floor($div/16);
+			$pos++;
+		}
+		// Recast the divisor as string to make the $divisor[$pos] work
+		$quotient = trim_left_zeros($quotient);
+		$divisor = "$quotient";
+		$hexval = $hex[$remainder].$hexval;
+		// If the divisor is smaller than 15 then end the iteration
+		if (strlen($divisor)<=2)
+		{
+			if ($divisor<15)
+			{
+				$flag = false;
+			}
+		}
+	}
+	$hexval = $hex[$quotient].$hexval;
+	$hexval = trim_left_zeros($hexval);
+	// Pad zeros (only because we are using this function for 64-bit integers)
+	//$hexval = str_repeat('0', 16-strlen($hexval)).$hexval;
+	return $hexval;
+}
+
+function trim_left_zeros($str)
+{
+	$str = ltrim($str, '0');
+	if (empty($str))
+	{
+		$str = '0';
+	}
+	return $str;
+}
