@@ -299,6 +299,12 @@ class MySQLTableReport {
                                 }, $tables)) . ")";
 
         $stmt = $this->mysqli->prepare($sql);
+	if ($stmt === false)
+	{
+		print "error building field list from in database {$this->mysqli->host_info}<br>";
+		print $this->mysqli->error ."<br>\n";
+	}
+	#print_r($tables);
         call_user_func_array(array($stmt, 'bind_param'), $values);
         $stmt->execute();
         $stmt->bind_result($table_name, $col_name);
