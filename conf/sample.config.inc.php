@@ -326,7 +326,7 @@ $conf['reports']['slow_query_log'] = array(
 	),
 	// custom fields
 	'custom_fields'	=> array(
-		'checksum' => 'HEX(checksum)',
+		'checksum' => 'checksum',
 		'date'	=> 'DATE(ts_min)',
 		'hour'	=> 'substring(ts_min,1,13)',
 		'hour_ts'	=> 'unix_timestamp(substring(ts_min,1,13))',
