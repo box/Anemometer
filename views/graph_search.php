@@ -122,17 +122,28 @@ var DATA = [];
  */
 function new_plot_data(data) {
 	// flot requires milliseconds, so convert the timestamp from seconds to milliseconds
+	new_data = new Array();
 	for ( var i = 0; i < data.length; i++ )
 	{
+		var y_sum = 0; // to check for an empty series.
 		for ( var j = 0; j < data[i].data.length; j++ )
 		{
 			data[i].data[j][0] = data[i].data[j][0] * 1000;
 			data[i].data[j][0] = data[i].data[j][0] + (TIMEZONE_OFFSET);
+			y_sum += parseFloat(data[i].data[j][1]);
 		}
+		//console.log("i="+i+"; ysum="+y_sum);
+		if (y_sum == 0 && i > 0) // this series is empty; remove it.
+		{
+			delete data[i];
+		} else {
+			new_data.push(data[i]);
+		}
+
 	}
+	//console.log(data);
 	var theplot = $("#theplot"); // get the graph div
-	DATA = data;
-	plot_obj = $.plot(theplot, DATA, FLOT_OPTS);
+	plot_obj = $.plot(theplot, new_data, FLOT_OPTS);
 	setup_selection(theplot);
 }
 
@@ -191,11 +202,11 @@ function find_y_maxmin(data, xmin, xmax)
 				{
 					ymax = newval;
 				}
-				
+
 				if (ymin == null || ymin > newval)
 				{
 					ymin = newval;
-				}				
+				}
 			}
 		}
 	}
@@ -209,15 +220,15 @@ function find_y_maxmin(data, xmin, xmax)
 function setup_selection(theplot) {
 	theplot.bind("plotselected", function (event, ranges) {
 		console.log(ranges);
-		
+
 		var new_plot_opts = {
 				xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
 		};
-		
+
 		if ( autoscale_y_on_zoom ) {
 			yrange = find_y_maxmin(DATA, ranges.xaxis.from, ranges.xaxis.to);
 			new_plot_opts['yaxis'] = { min: yrange[0], max: yrange[1]* 1.2 };
-		} 
+		}
 		var plot = $.plot(theplot, DATA, $.extend ( true, {}, FLOT_OPTS, new_plot_opts));
 
 		// need a date object to shove timestamp into for conversion to ANSI-type date string
@@ -294,11 +305,11 @@ $("#theplot").bind("plothover", function (event, pos, item) {
 	if (item) {
 		if (previousPoint != item.dataIndex) {
 			previousPoint = item.dataIndex;
-			
+
 			$("#tooltip").remove();
 			var x = item.datapoint[0].toFixed(2),
 				y = item.datapoint[1].toFixed(2);
-			
+
 			var theDate = new Date(x-TIMEZONE_OFFSET);
 			showTooltip(item.pageX, item.pageY,
 						item.series.label + "<br/>\n" + theDate + " = " + y);
@@ -306,7 +317,7 @@ $("#theplot").bind("plothover", function (event, pos, item) {
 	}
 	else {
 		$("#tooltip").remove();
-		previousPoint = null;            
+		previousPoint = null;
 	}
 });
 
@@ -372,7 +383,7 @@ $(document).ready( function ()  {
 		dataType: 'html',
 		success: show_table_data
 	})
-	
-	
+
+
 });
 </script>

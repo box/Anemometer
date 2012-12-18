@@ -6,21 +6,21 @@
 </div>
 
 <hr>
-	
+
 	<div class="row" style="padding-bottom: 10px">
 		<div class="span12">
 			<a href="javascript:void(0);" class="btn" data-toggle="collapse" data-target="#graph" id="graph-btn"><i class="icon-plus"></i> Show Graph Options</a><br/>
 		</div>
 	</div>
-		
+
 		<div class="collapse out" id="graph">
-	
+
 			<form action="<?php echo site_url() ?>" method="GET" class="form-inline">
 				<input type="hidden" name="action" value="show_query">
 				<input type="hidden" name="datasource" value="<?php echo $datasource; ?>">
 				<input type="hidden" name="checksum" value="<?php echo $checksum; ?>">
 				<input type="hidden" name="show_form" value="1">
-					
+
 				<div class="row">
 					<div class="span3">
 						From<br>
@@ -29,7 +29,7 @@
 							<span class="add-on"><i class="icon-calendar" id="dp"></i></span>
 						</div>
 					</div>
-			
+
 					<div class="span4">
 						To<br>
 						<div class="input-append">
@@ -37,7 +37,7 @@
 							<span class="add-on"><i class="icon-calendar" id="dp"></i></span>
 						</div>
 					</div>
-			
+
 				<div class="span4">
 					Column to plot<br>
 					<select name="plot_field" class="span3">
@@ -46,7 +46,7 @@
 								<option value="<?php echo $f ?>" <?php if (get_var('plot_field') == $f) { echo "SELECTED"; } ?>><?php echo $f ?></option>
 							<?php } ?>
 							</optgroup>
-			
+
 							<?php foreach (array_keys($table_fields) as $table)  { ?>
 								<optgroup label="<?php echo $table; ?>">
 									<?php foreach ($table_fields[$table] as $f)  { ?>
@@ -68,22 +68,22 @@
 						</select>
 						<input type="checkbox" name="<?php echo "dimension-pivot-{$hostname_field_name}" ?>" value='<?php echo $time_field_name ?>'<?php echo (isset($dimension_pivot_hostname_max) ? ' CHECKED ' : '') ?>> Show each host as a separate series
 					</div>
-			
+
 					<div class="span4" >
 						Checksum<br>
 						<input name="fact-<?php echo $checksum_field_name ?>" class="span4 typeahead" value="<?php echo get_var('fact-'.$checksum_field_name) ?>">
 					</div>
-			
+
 					<div class="span4">
 						<input type="submit" class="btn-primary btn-large" name="submit" value="Search">
 					</div>
 				</div>
-			
+
 			</form>
 		</div>
-	
 
-	
+
+
 	<div class="row">
 		<div id="theplot" class="span12" style="height: 300px;"></div>
 	</div>
@@ -114,20 +114,31 @@ var thefreakingoptions = {
 // Placeholder for data to plot
 var thedamndata = [];
 
-
-// Callback function for drawing the graph after data is retrieved from an AJAX call
 function newPlotData(data) {
-	console.debug(data);
+	// flot requires milliseconds, so convert the timestamp from seconds to milliseconds
+	new_data = new Array();
 	for ( var i = 0; i < data.length; i++ )
 	{
+		var y_sum = 0; // to check for an empty series.
 		for ( var j = 0; j < data[i].data.length; j++ )
 		{
 			data[i].data[j][0] = data[i].data[j][0] * 1000;
+			data[i].data[j][0] = data[i].data[j][0] + (TIMEZONE_OFFSET);
+			y_sum += parseFloat(data[i].data[j][1]);
 		}
+		//console.log("i="+i+"; ysum="+y_sum);
+		if (y_sum == 0 && i > 0) // this series is empty; remove it.
+		{
+			delete data[i];
+		} else {
+			new_data.push(data[i]);
+		}
+
 	}
-	var theplot = $("#theplot");
-	thedamndata = data;
-	the_freaking_plot_with_freaking_lasers_on_its_freaking_head = $.plot(theplot, thedamndata, thefreakingoptions);
+	//console.log(data);
+	var theplot = $("#theplot"); // get the graph div
+	plot_obj = $.plot(theplot, new_data, thefreakingoptions);
+	setup_selection(theplot);
 }
 
 function setupSelection(theplot) {
@@ -169,11 +180,11 @@ $("#theplot").bind("plothover", function (event, pos, item) {
 	if (item) {
 		if (previousPoint != item.dataIndex) {
 			previousPoint = item.dataIndex;
-			
+
 			$("#tooltip").remove();
 			var x = item.datapoint[0].toFixed(2),
 				y = item.datapoint[1].toFixed(2);
-			
+
 			var theDate = new Date(x-TIMEZONE_OFFSET);
 			showTooltip(item.pageX, item.pageY,
 						item.series.label + "<br/>\n" + theDate + " = " + y);
@@ -181,7 +192,7 @@ $("#theplot").bind("plothover", function (event, pos, item) {
 	}
 	else {
 		$("#tooltip").remove();
-		previousPoint = null;            
+		previousPoint = null;
 	}
 });
 
@@ -205,7 +216,7 @@ $(document).ready( function ()  {
 		dataType: 'json',
 		success: newPlotData
 	});
-	
+
 	$("#dimension-ts_min_start").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
 	$("#dimension-ts_min_end").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
 
@@ -222,10 +233,10 @@ $(document).ready( function ()  {
 	</div>
 	<hr>
 	<div class="row">
-		<div class="span12">		
+		<div class="span12">
 			<!-- <div class="alert alert-info"> -->
 			<?php if ($show_samples) { ?>
-			
+
 				<table width="100%">
 				<tr>
 					<td>
@@ -249,7 +260,7 @@ $(document).ready( function ()  {
 				</table>
 				<pre class="prettyprint lang-sql"><?php echo $sample[$sample_field_name]; ?></pre>
 				<?php } ?>
-				
+
 		<?php if (isset($explain_plan_error)) { ?>
 			<div class="alert"><strong>Error in Query Explain Plugin:</strong> <?php echo $explain_plan_error; ?></div>
 		<?php } ?>
@@ -267,7 +278,7 @@ $(document).ready( function ()  {
                 </div>
               </div>
 			  <?php } ?>
-			  
+
 		<?php if (isset($visual_explain) and $visual_explain != '') { ?>
             <div class="accordion-group">
               <div class="accordion-heading">
@@ -282,7 +293,7 @@ $(document).ready( function ()  {
               </div>
             </div>
 		<?php } ?>
-		
+
 		<?php if (isset($query_advisor) and $query_advisor != '') { ?>
             <div class="accordion-group">
               <div class="accordion-heading">
@@ -297,7 +308,7 @@ $(document).ready( function ()  {
               </div>
             </div>
 		<?php } ?>
-			
+
 		<?php if (isset($create_table) and $create_table != '') { ?>
             <div class="accordion-group">
               <div class="accordion-heading">
@@ -312,7 +323,7 @@ $(document).ready( function ()  {
               </div>
             </div>
 		<?php } ?>
-		
+
 		<?php if (isset($table_status) and $table_status != '') { ?>
 			<div class="accordion-group">
               <div class="accordion-heading">
@@ -326,13 +337,13 @@ $(document).ready( function ()  {
                 </div>
               </div>
             </div>
-		
+
 		<?php } ?>
           </div>
 			<!-- </div> -->
 		</div>
 	</div>
-		
+
 <form action="<?php echo site_url() ."?action=upd_query&datasource={$datasource}&checksum={$checksum}"; ?>" method="POST" >
 	<div class="row">
 		<div class="span12">
@@ -345,7 +356,7 @@ $(document).ready( function ()  {
 			<div id="new_review" class="collapse in">
 					<i class="icon-comment"></i> <strong>comments</strong><br>
 					<textarea name="comments" class="span12" rows="16"><?php echo $row['comments']; ?></textarea>
-					
+
 					<div class="row">
 						<div class="span12">
 					<strong>Status: </strong><br><select name="reviewed_status" class="combobox">
@@ -358,7 +369,7 @@ $(document).ready( function ()  {
 							<option value="<?php echo $r ?>" <?php if (isset($current_auth_user) AND $r==$current_auth_user) { echo ' SELECTED '; } ?>><?php echo $r ?></option>
 						<?php } ?>
 					</select><br>
-					
+
 						<input type="submit" name="submit" value="Review and Update Comments" class="btn btn-primary"/>
 						<!--
 						<input type="submit" name="submit" value="Review" class="btn btn-primary"/>
@@ -368,8 +379,8 @@ $(document).ready( function ()  {
 					</div>
 					</div>
 				</div>
-			
-			
+
+
 		</div>
 	</div>
 </form>
@@ -382,7 +393,7 @@ $(document).ready( function ()  {
 	// $("#dimension-ts_min_end").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
 		$('.combobox').combobox();
 		prettyPrint();
-		
+
 		$('#graph').on('hidden', function () {
 			el = document.getElementById('graph-btn');
 			el.innerHTML = '<i class="icon-plus"></i> Show Graph Options'
@@ -391,10 +402,10 @@ $(document).ready( function ()  {
 		  el = document.getElementById('graph-btn');
 		  el.innerHTML = '<i class="icon-minus"></i> Hide Graph Options'
 		});
-		
+
 		show_graph = <?php echo get_var('show_form') ? 'true' : 'false' ?>;
 		if (show_graph) {
 		  $("#graph-btn").trigger("click");
-		} 
+		}
 	});
 </script>
