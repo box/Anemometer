@@ -147,12 +147,12 @@ $conf['report_defaults'] = array(
 );
 
 $conf['graph_defaults'] = array(
-	'fact-group'	=> 'hour_ts',
-	'fact-order'	=> 'hour_ts',
+	'fact-group'	=> 'minute_ts',
+	'fact-order'	=> 'minute_ts',
 	'fact-limit' => '',
 	'dimension-ts_min_start' => date("Y-m-d H:i:s", strtotime( '-7 day')),
 	'dimension-ts_min_end'	=> date("Y-m-d H:i:s"),
-	'table_fields' => array('hour_ts'),
+	'table_fields' => array('minute_ts'),
 	// hack ... fix is to make query builder select the group and order fields,
 	// then table fields only has to contain the plot_field
 	'plot_field' => 'Query_time_sum',
@@ -177,12 +177,12 @@ $conf['report_defaults']['performance_schema_history'] = array(
 );
 
 $conf['graph_defaults']['performance_schema_history'] = array(
-	'fact-group'	=> 'hour_ts',
-	'fact-order'	=> 'hour_ts',
+	'fact-group'	=> 'minute_ts',
+	'fact-order'	=> 'minute_ts',
 	'fact-limit' => '',
 	'dimension-FIRST_SEEN_start' => date("Y-m-d H:i:s", strtotime( '-7 day')),
 	'dimension-FIRST_SEEN_end'	=> date("Y-m-d H:i:s"),
-	'table_fields' => array('hour_ts'),
+	'table_fields' => array('minute_ts'),
 	// hack ... fix is to make query builder select the group and order fields,
 	// then table fields only has to contain the plot_field
 	'plot_field' => 'SUM_TIMER_WAIT',
@@ -330,12 +330,20 @@ $conf['reports']['slow_query_log'] = array(
 		'date'	=> 'DATE(ts_min)',
 		'hour'	=> 'substring(ts_min,1,13)',
 		'hour_ts'	=> 'unix_timestamp(substring(ts_min,1,13))',
+		'minute_ts'     => 'unix_timestamp(substring(ts_min,1,16))',
+		'minute'        => 'substring(ts_min,1,16)',
 		'snippet' => 'LEFT(dimension.sample,20)',
 		'index_ratio' =>'ROUND(SUM(Rows_examined_sum)/SUM(rows_sent_sum),2)',
 		'query_time_avg' => 'SUM(Query_time_sum) / SUM(ts_cnt)',
 		'rows_sent_avg' => 'ROUND(SUM(Rows_sent_sum)/SUM(ts_cnt),0)',
-
 	),
+
+	'callbacks'     => array(
+		'table' => array(
+			'date'  => function ($x) { $type=''; if ( date('N',strtotime($x)) >= 6) { $type = 'weekend'; } return array($x,$type); },
+			'checksum' => function ($x) { return array(dec2hex($x), ''); }
+		)
+	)
 
 );
 
@@ -398,6 +406,8 @@ $conf['reports']['performance_schema_history'] = array(
 		'rows_sent_avg' => 'ROUND(SUM_ROWS_SENT/COUNT_STAR,0)',
 		'hour'	=> 'substring(dimension.FIRST_SEEN,1,13)',
 		'hour_ts'	=> 'unix_timestamp(substring(dimension.FIRST_SEEN,1,13))',
+		'minute_ts'     => 'unix_timestamp(substring(dimension.FIRST_SEEN,1,16))',
+		'minute'        => 'substring(dimension.FIRST_SEEN,1,16)',
 	),
 
 	'special_field_names' => array(
@@ -406,13 +416,6 @@ $conf['reports']['performance_schema_history'] = array(
 		'hostname'	=> 'hostname',
 		'sample'	=> 'DIGEST_TEXT'
 	),
-
-	'callbacks'     => array(
-		'table' => array(
-			'date'  => function ($x) { $type=''; if ( date('N',strtotime($x)) >= 6) { $type = 'weekend'; } return array($x,$type); },
-			'checksum' => function ($x) { return array(dec2hex($x), ''); }
-		)
-	)
 );
 
 /**
