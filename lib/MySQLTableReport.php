@@ -711,7 +711,7 @@ class MySQLTableReport {
      * @return null|string
      */
     private function get_column_aggregate_function($name) {
-        
+
         if (!preg_match("/^([^_]+)_?.*_([^_]+)$/", $name, $regs)) {
             return null;
         }
@@ -731,8 +731,8 @@ class MySQLTableReport {
             case 'LAST':
                 return 'MAX';
         }
-        
-    
+
+
         switch ($regs[2]) {
             case 'sum':
             case 'cnt':
@@ -847,6 +847,15 @@ class MySQLTableReport {
         }
     }
 
+    public static function remove_schema_name($column)
+    {
+        if (strpos($column,'.') !== false and substr_count($column,'.') == 1)
+        {
+            return substr($column, strpos($column,'.')+1);
+        }
+        return $column;
+    }
+
     /**
      * generate the SQL query and return it as a string.
      *
@@ -872,6 +881,7 @@ class MySQLTableReport {
 
                                         if (isset($k[2])) {
                                             // aggregate function on the column
+                                            $k[0] = MySQLTableReport::remove_schema_name($k[0]);
                                             return sprintf("%s(%s) AS `%s`", $k[2], $k[0], isset($k[1]) ? $k[1] : $k[0]);
                                         }
                                         // non aggregate column
@@ -938,7 +948,9 @@ class MySQLTableReport {
      */
     public function get_column_names() {
         return array_map(function ($k) {
-                            return $k[1] != '' ? $k[1] : $k[0];
+                            $column =  ($k[1] != '' ? $k[1] : $k[0]);
+                            $column = MySQLTableReport::remove_schema_name($column);
+                            return $column;
                         }, array_values($this->select));
     }
 

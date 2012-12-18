@@ -24,6 +24,7 @@ class Anemometer {
     private $data_model;
     private $report_obj;
     private $header_printed = false;
+    private $exception_select_fields = array('checksum','sample'); // column names which appear in both fact and dimension tables
 
     /**
      * Constructor.  Pass in the global configuration object
@@ -90,7 +91,6 @@ class Anemometer {
             $this->alert($e->getMessage(),'alert-error');
             prettyprint($data['sql']);
         }
-
         $data['columns'] = $this->report_obj->get_column_names();
         $data['permalink'] = site_url() . '?action=report&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
         $data['jsonlink']  = site_url() . '?action=api&output=json&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
@@ -270,8 +270,10 @@ class Anemometer {
             foreach ($data['tables'] as $t) {
                 $data['table_fields'][$t] = $this->report_obj->get_table_fields($t);
             }
+            $data['table_aliases'] = $this->data_model->get_table_aliases();
             $data['custom_fields'] = $this->report_obj->get_custom_fields();
             $data['table_fields_selected'] = get_var('table_fields');
+            $data['exception_select_fields'] = $this->exception_select_fields;
 
 
             $data['review_types'] = $this->data_model->get_review_types();

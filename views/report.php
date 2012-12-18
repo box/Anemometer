@@ -55,13 +55,22 @@
 			<?php foreach (array_keys($table_fields) as $table)  { ?>
 				<optgroup label="<?php echo $table; ?>">
 					<?php foreach ($table_fields[$table] as $f)  { ?>
-						<option value="<?php echo $f ?>" <?php if (isset($table_fields_selected) and in_array($f, $table_fields_selected )) { echo "SELECTED"; } ?>><?php echo $f ?></option>
+						<?php $field_name = $table_aliases[$table].".{$f}"; ?>
+						<?php $is_selected = false; ?>
+						<?php if (isset($table_fields_selected)
+								  and in_array($field_name, $table_fields_selected )
+								  or (!in_array($f, $exception_select_fields) and in_array($f, $table_fields_selected))
+								  )
+								  {
+									$is_selected = true;
+								  }
+						?>
+						<option value="<?php echo $field_name; ?>" <?php if ($is_selected) { echo "SELECTED"; } ?>><?php echo $f ?></option>
 					<?php } ?>
 				</optgroup>
 			<?php } ?>
 		</select>
 	</div>
-	
 	
 	<div class="span4">
 		Filter By Host<br>

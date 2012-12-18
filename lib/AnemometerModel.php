@@ -139,6 +139,11 @@ class AnemometerModel {
         }
     }
 
+    public function get_table_aliases()
+    {
+        return array( $this->fact_table => 'fact', $this->dimension_table => 'dimension');
+    }
+
     /**
      * set the current fact and dimension table.  That is the query_review and
      * query_review_history tables.  This is used when we select samples or update
