@@ -39,8 +39,17 @@ class Anemometer {
             return;
         }
 
+
         $this->conf = $conf;
         $this->data_model = new AnemometerModel($conf);
+        if (array_key_exists('time_columns', $this->conf))
+        {
+            $this->time_columns = $this->conf['time_columns'];
+        }
+        else
+        {
+            $this->time_columns = array();
+        }
         $datasource = get_var('datasource');
         if (isset($datasource)) {
             $this->data_model->set_data_source($datasource);
@@ -147,7 +156,14 @@ class Anemometer {
 
         $data['datasource'] = get_var('datasource');
 
-        $data['time_field_name'] = $time = $this->data_model->get_field_name('time');
+        // to maintain backwards config file compatability, we try to guess
+        // the time field being used for this report
+        $time = $this->get_time_field_from_report_defaults('graph_defaults');
+        if (!isset($time))
+        {
+            $time = $this->data_model->get_field_name('time');
+        }
+        $data['time_field_name'] = $time;
         $data['hostname_field_name'] = $this->data_model->get_field_name('hostname');
         $data['checksum_field_name'] = $this->data_model->get_field_name('checksum');
 
@@ -180,7 +196,7 @@ class Anemometer {
         $this->set_search_defaults('report_defaults', array('dimension-'.$time.'_start', 'dimension-'.$time.'_end', $data['checksum_field_name']));
 
         $_GET['fact-order'] = get_var('plot_field') . ' DESC';
-        $data['ajax_table_request_url_base'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource']. '&' . $this->report_obj->get_search_uri(array( 'dimension-'.$data['time_field_name']));
+        $data['ajax_table_request_url_base'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource']. '&' . $this->report_obj->get_search_uri(array( 'dimension-'.$data['time_field_name'], 'dimension-ts_min'));
         $data['table_url_time_start_param'] = 'dimension-'.$data['time_field_name'].'_start';
         $data['table_url_time_end_param'] = 'dimension-'.$data['time_field_name'].'_end';
         $data['timezone_offset'] = timezone_offset_get( new DateTimeZone( ini_get('date.timezone' )), new DateTime());
@@ -286,6 +302,7 @@ class Anemometer {
         $this->api();
         $this->footer();
     }
+
 
     /**
      * Show query samples for a specific checksum
@@ -468,6 +485,7 @@ class Anemometer {
         // just set some form fields and call report
         // maybe convert to ajax call ...
         $this->init_report();
+        $this->clear_all_time_values();
         $this->set_search_defaults('history_defaults', array());
         $_GET['fact-checksum'] = $checksum;
         //print_r($_GET);
@@ -614,6 +632,7 @@ class Anemometer {
                             $conf['tables'],
                             $this->data_model->get_report($conf['source_type'])
             );
+            $this->report_obj->set_non_aggregate_columns($this->time_columns);
         }
     }
 
@@ -631,6 +650,38 @@ class Anemometer {
                 $_GET[$key] = $value;
             }
         }
+    }
+
+    private function clear_all_time_values()
+    {
+        foreach ($this->time_columns as $col)
+        {
+            $start = "dimension-{$col}_start";
+            $end = "dimension-{$col}_end";
+            foreach (array($start, $end) as $form_field_name)
+            {
+                if (array_key_exists($form_field_name, $_GET))
+                {
+                    unset($_GET[$form_field_name]);
+                }
+            }
+        }
+    }
+
+    private function get_time_field_from_report_defaults($type)
+    {
+        $defaults = $this->data_model->get_report_defaults($type);
+        foreach ($this->time_columns as $col)
+        {
+            $start = "dimension-{$col}_start";
+            $end = "dimension-{$col}_end";
+
+            if (array_key_exists($start, $defaults) or array_key_exists($end, $defaults))
+            {
+                return $col;
+            }
+        }
+        return null;
     }
 
     private function bchexdec($hex) {

@@ -111,6 +111,7 @@ class MySQLTableReport {
     private $order;
     private $limit;
     private $raw_where;
+    private $non_aggregate_columns = array();
 
     private static $CONNECT_TIMEOUT = 5;
 
@@ -158,6 +159,12 @@ class MySQLTableReport {
         $this->limit  = null;
         $this->raw_where = null;
         $this->form_data_processed = false;
+        $this->non_aggregate_columns = array();
+    }
+
+    public function set_non_aggregate_columns(array $columns)
+    {
+        $this->non_aggregate_columns = $columns;
     }
 
     /**
@@ -715,6 +722,11 @@ class MySQLTableReport {
         if (strpos($name, '.') !== false)
         {
             $name = substr($name, strpos($name, '.')+1, strlen($name));
+	}
+
+        if (in_array($name, $this->non_aggregate_columns))
+        {
+            return null;
         }
 
         if (!preg_match("/^([^_]+)_?.*_([^_]+)$/", $name, $regs)) {

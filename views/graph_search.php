@@ -122,7 +122,7 @@ var DATA = [];
  */
 function new_plot_data(data) {
 	// flot requires milliseconds, so convert the timestamp from seconds to milliseconds
-	new_data = new Array();
+	DATA = new Array();
 	for ( var i = 0; i < data.length; i++ )
 	{
 		var y_sum = 0; // to check for an empty series.
@@ -137,13 +137,12 @@ function new_plot_data(data) {
 		{
 			delete data[i];
 		} else {
-			new_data.push(data[i]);
+			DATA.push(data[i]);
 		}
-
 	}
 	//console.log(data);
 	var theplot = $("#theplot"); // get the graph div
-	plot_obj = $.plot(theplot, new_data, FLOT_OPTS);
+	plot_obj = $.plot(theplot, DATA, FLOT_OPTS);
 	setup_selection(theplot);
 }
 
@@ -230,7 +229,8 @@ function setup_selection(theplot) {
 			new_plot_opts['yaxis'] = { min: yrange[0], max: yrange[1]* 1.2 };
 		}
 		var plot = $.plot(theplot, DATA, $.extend ( true, {}, FLOT_OPTS, new_plot_opts));
-
+		console.log(plot);
+		
 		// need a date object to shove timestamp into for conversion to ANSI-type date string
 		d = new Date();
 
@@ -253,6 +253,7 @@ function setup_selection(theplot) {
 		$('#permalink_btn').attr('href', GRAPH_PERMALINK_URL + new_url_start_end_params);
 
 		// Get the data for the table and re-populate it!
+		console.log("Refreshing Table Data: " + new_table_data_url);
 		$.ajax({
 			url: new_table_data_url,
 			method: 'GET',
@@ -369,6 +370,7 @@ $(document).ready( function ()  {
 	});
 
 	// kick off the initial AJAX call to get the data to plot for the graph
+	console.log("Fetching graph results: " + GRAPH_DATA_URL + url_start_end_params);
 	$.ajax({
 		url: GRAPH_DATA_URL + url_start_end_params,
 		method: 'GET',
@@ -377,6 +379,7 @@ $(document).ready( function ()  {
 	});
 
 	// kick off the initial AJAX call to get the data for the table below the graph
+	console.log("Fetching initial table results: "+table_url_now);
 	$.ajax({
 		url: table_url_now,
 		method: 'GET',
