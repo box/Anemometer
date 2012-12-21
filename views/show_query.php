@@ -138,7 +138,7 @@ function newPlotData(data) {
 	//console.log(data);
 	var theplot = $("#theplot"); // get the graph div
 	plot_obj = $.plot(theplot, new_data, thefreakingoptions);
-	setup_selection(theplot);
+	//setup_selection(theplot);
 }
 
 function setupSelection(theplot) {
@@ -246,7 +246,7 @@ $(document).ready( function ()  {
 						<!-- dropdown button for more samples with counts -->
 						<div class="btn-group">
 							<a class="btn" href="javascript:void(0);">More Samples</a>
-							<a class="btn dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 							  <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
