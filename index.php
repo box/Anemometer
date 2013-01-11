@@ -14,6 +14,11 @@ if (strnatcmp(phpversion(), '5.3') < 0) {
 	die();
 }
 
+if (!function_exists('bcadd')) {
+	print "Anemometer requires the BCMath extension";
+	die();
+}
+
 set_include_path( get_include_path() . PATH_SEPARATOR . "./lib");
 require "Helpers.php";
 require "Anemometer.php";
