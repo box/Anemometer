@@ -311,6 +311,7 @@ $(document).ready( function ()  {
 					<pre class="prettyprint lang-sql nowrap"><?php echo $explain_plan; ?></pre>
                 </div>
               </div>
+            </div>
 			  <?php } ?>
 
 		<?php if (isset($visual_explain) and $visual_explain != '') { ?>
@@ -375,7 +376,7 @@ $(document).ready( function ()  {
 		<?php } ?>
           </div>
 			<!-- </div> -->
-		</div>
+        <!-- </div> -->
 	</div>
 
 <form action="<?php echo site_url() ."?action=upd_query&datasource={$datasource}&checksum={$checksum}"; ?>" method="POST" >

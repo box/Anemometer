@@ -418,7 +418,14 @@ class AnemometerModel {
             return "can't find query advisor at " . $this->conf['plugins']['query_advisor'];
         }
 
-        return $this->exec_external_script($this->conf['plugins']['query_advisor'], $query);
+        $output = explode("\n", $this->exec_external_script($this->conf['plugins']['query_advisor']." --query '$query'", NULL));
+        foreach ( $output as $line ) {
+            if ( substr($line,0,1) === '#' || strlen($line) === 0 )
+                continue;
+            list($advisor, $md5) = explode(' ',$line);
+            $advisors[] = $this->conf['advisor_rules'][$advisor];
+        }
+        return implode("\n", $advisors);
     }
 
     /**
