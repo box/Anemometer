@@ -191,6 +191,49 @@ class AnemometerModel {
     }
 
     /**
+     * Return detail states of a query
+     * @param string $checksum  The checksum to check
+     * @return array    Detail states set
+     * @author LiBin
+     */
+    public function get_detail_by_checksum($checksum) {
+        
+        $data = array();
+        $query = array();
+
+        
+        $checksum_field_name = $this->get_field_name('checksum');
+
+        $columes = array(
+            'Bytes' => "`Bytes_sum`,`Bytes_min`,`Bytes_max`,`Bytes_pct_95`,`Bytes_stddev`,`Bytes_median`",
+            'Query_time(s)' => "`Query_time_sum`,`Query_time_min`, `Query_time_max`, `Query_time_pct_95`,`Query_time_stddev`,`Query_time_median`",
+            'Lock_time(s)' => "`Lock_time_sum`,`Lock_time_min`,`Lock_time_max`,`Lock_time_pct_95`,`Lock_time_stddev`,`Lock_time_median`",
+            'Rows_sent' => "`Rows_sent_sum`,`Rows_sent_min`,`Rows_sent_max`,`Rows_sent_pct_95`,`Rows_sent_stddev`,`Rows_sent_median`",
+            'Rows_examined' => "`Rows_examined_sum`,`Rows_examined_min`,`Rows_examined_max`,`Rows_examined_pct_95`,`Rows_examined_stddev`,`Rows_examined_median`",
+            'Rows_affected'=> "`Rows_affected_sum`,`Rows_affected_min`,`Rows_affected_max`,`Rows_affected_pct_95`,`Rows_affected_stddev`,`Rows_affected_median`",
+            'Rows_read' => "`Rows_read_sum`,`Rows_read_min`,`Rows_read_max`,`Rows_read_pct_95`,`Rows_read_stddev`,`Rows_read_median`",
+            'Merge_passes' => "`Merge_passes_sum`,`Merge_passes_min`,`Merge_passes_max`,`Merge_passes_pct_95`,`Merge_passes_stddev`,`Merge_passes_median`",
+            'InnoDB_IO_r_ops' => "'-' AS `InnoDB_IO_r_ops_sum`,`InnoDB_IO_r_ops_min`,`InnoDB_IO_r_ops_max`,`InnoDB_IO_r_ops_pct_95`,`InnoDB_IO_r_ops_ptc_95`,`InnoDB_IO_r_ops_median`",
+            'InnoDB_IO_r_bytes' => "'-' AS `InnoDB_IO_r_bytes_sum`,'-' AS `InnoDB_IO_r_bytes_min`,'-' AS `InnoDB_IO_r_bytes_max`,`InnoDB_IO_r_bytes_pct_95`,`InnoDB_IO_r_bytes_stddev`,`InnoDB_IO_r_bytes_median`",
+            'InnoDB_IO_r_wait' => "'-' AS `InnoDB_IO_r_wait_sum`,`InnoDB_IO_r_wait_min`,`InnoDB_IO_r_wait_max`,`InnoDB_IO_r_wait_pct_95`,`InnoDB_IO_r_wait_stddev`, `InnoDB_IO_r_wait_median`", 
+            'InnoDB_rec_lock_wait' => "'-' AS `InnoDB_rec_lock_wait_sum`,`InnoDB_rec_lock_wait_min`,`InnoDB_rec_lock_wait_max`,`InnoDB_rec_lock_wait_pct_95`,`InnoDB_rec_lock_wait_stddev`,`InnoDB_rec_lock_wait_median`",
+            'InnoDB_queue_wait' => "'-' AS `InnoDB_queue_wait_sum`,`InnoDB_queue_wait_min`,`InnoDB_queue_wait_max`,`InnoDB_queue_wait_pct_95`,`InnoDB_queue_wait_stddev`,`InnoDB_queue_wait_median`",
+            'InnoDB_pages_distinct' => "'-' AS `InnoDB_pages_distinct_sum`,`InnoDB_pages_distinct_min`,`InnoDB_pages_distinct_max`,`InnoDB_pages_distinct_pct_95`,`InnoDB_pages_distinct_stddev`,`InnoDB_pages_distinct_median`",
+        );
+
+        foreach ($columes as $attr=>$cols)
+        {
+            $sql = "SELECT $cols FROM `{$this->dimension_table}` WHERE `{$checksum_field_name}`='{$checksum}'";
+            $result = $this->mysqli->query($sql);
+            if (is_object($result))
+                if($row = $result->fetch_assoc())
+                    $data[] = array_merge(array('attr'=>$attr),$row);
+        }
+
+        return $data;
+    }
+
+    /**
      * Query the database and return true if a given checksum exists
      *
      * @param string $checksum      The checksum to check
@@ -375,7 +418,14 @@ class AnemometerModel {
             return "can't find query advisor at " . $this->conf['plugins']['query_advisor'];
         }
 
-        return $this->exec_external_script($this->conf['plugins']['query_advisor'], $query);
+        $output = explode("\n", $this->exec_external_script($this->conf['plugins']['query_advisor']." --query '$query'", NULL));
+        foreach ( $output as $line ) {
+            if ( substr($line,0,1) === '#' || strlen($line) === 0 )
+                continue;
+            list($advisor, $md5) = explode(' ',$line);
+            $advisors[] = $this->conf['advisor_rules'][$advisor];
+        }
+        return implode("\n", $advisors);
     }
 
     /**

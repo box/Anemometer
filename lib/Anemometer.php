@@ -444,6 +444,8 @@ class Anemometer {
         $data['hostname_field_name'] =$this->data_model->get_field_name('hostname');
         $data['time_field_name'] =$this->data_model->get_field_name('time');
 
+        $data['detail_states'] = $this->data_model->get_detail_by_checksum($checksum);
+
         $this->load->view("show_query", $data);
 
         // Show the history for this query

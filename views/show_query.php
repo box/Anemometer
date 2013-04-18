@@ -232,6 +232,40 @@ $(document).ready( function ()  {
 		</div>
 	</div>
 	<hr>
+    <div class="row">
+        <div class="span12">
+			<a href="javascript:void(0);" class="btn" data-toggle="collapse" data-target="#table" id="table-btn"><i class="icon-plus"></i> Show Detail States</a><br/>
+        </div>
+    </div>
+    <div style="margin: 20px">
+    <div class="collapse out" id="table">
+        <table class="table table-striped table-bordered table-condensed">
+            <thead><tr>
+                <th>Attribute</th>
+                <th>Sum</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Pct_95</th>
+                <th>Stddev</th>
+                <th>Median</th>
+            </tr></thead>
+            <tbody>
+            <?php
+                foreach ($detail_states as $detail)
+                {
+                    echo '<tr>';
+                    foreach ($detail as $key=>$value)
+                    {
+                       echo '<td>'.$value.'</td>';
+                    }
+                    echo '</tr>';
+                }
+            ?>
+            </tbody>
+        </table>
+    </div></div>
+
+    <hr>
 	<div class="row">
 		<div class="span12">
 			<!-- <div class="alert alert-info"> -->
@@ -277,6 +311,7 @@ $(document).ready( function ()  {
 					<pre class="prettyprint lang-sql nowrap"><?php echo $explain_plan; ?></pre>
                 </div>
               </div>
+            </div>
 			  <?php } ?>
 
 		<?php if (isset($visual_explain) and $visual_explain != '') { ?>
@@ -341,7 +376,7 @@ $(document).ready( function ()  {
 		<?php } ?>
           </div>
 			<!-- </div> -->
-		</div>
+        <!-- </div> -->
 	</div>
 
 <form action="<?php echo site_url() ."?action=upd_query&datasource={$datasource}&checksum={$checksum}"; ?>" method="POST" >
@@ -403,6 +438,14 @@ $(document).ready( function ()  {
 		  el.innerHTML = '<i class="icon-minus"></i> Hide Graph Options'
 		});
 
+		$('#table').on('hidden', function () {
+			el = document.getElementById('table-btn');
+			el.innerHTML = '<i class="icon-plus"></i> Show Detail States'
+		});
+		$('#table').on('show', function () {
+		  el = document.getElementById('table-btn');
+		  el.innerHTML = '<i class="icon-minus"></i> Hide Detail States'
+		});
 		show_graph = <?php echo get_var('show_form') ? 'true' : 'false' ?>;
 		if (show_graph) {
 		  $("#graph-btn").trigger("click");
