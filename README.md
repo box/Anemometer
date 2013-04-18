@@ -62,7 +62,7 @@ Now, navigate to the document root of your web server and copy the sample config
 
 The sample config explains every setting you may want to change in it.  At the very least, make sure you set the Datasource to the MySQL database you're storing the analyzed digest information in:
 
-    $conf['datasources']['locahost'] = array(
+    $conf['datasources']['localhost'] = array(
     	'host'	=> 'db.example.com',
     	'port'	=> 3306,
     	'db'	=> 'slow_query_log',
