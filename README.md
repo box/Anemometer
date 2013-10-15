@@ -38,12 +38,27 @@ Next, you should connect to the MySQL database you're looking to store the analy
 Next, grab that slow query log file you have (mine's called "slow.log"!), and run pt-query-digest on it:
 **NOTE:** I'm using a BASH 3.0 shell here on my MySQL database server! This is so the "$HOSTNAME" variable properly replaces with "db.example.com")
 
+
+For pt-query-digest verson < 2.2
+
     $ pt-query-digest --user=anemometer --password=superSecurePass \
                       --review h=db.example.com,D=slow_query_log,t=global_query_review \
                       --review-history h=db.example.com,D=slow_query_log,t=global_query_review_history \
                       --no-report --limit=0% \ 
                       --filter=" \$event->{Bytes} = length(\$event->{arg}) and \$event->{hostname}=\"$HOSTNAME\"" \ 
                       /var/lib/mysql/db.example.com-slow.log
+    
+
+For pt-query-digest verson >= 2.2
+
+    $ pt-query-digest --user=anemometer --password=superSecurePass \
+                      --review h=db.example.com,D=slow_query_log,t=global_query_review \
+                      --history h=db.example.com,D=slow_query_log,t=global_query_review_history \
+                      --no-report --limit=0% \ 
+                      --filter=" \$event->{Bytes} = length(\$event->{arg}) and \$event->{hostname}=\"$HOSTNAME\"" \ 
+                      /var/lib/mysql/db.example.com-slow.log
+
+
     Pipeline process 11 (aggregate fingerprint) caused an error: Argument "57A" isn't numeric in numeric gt (>) at (eval 40) line 6, <> line 27.
     Pipeline process 11 (aggregate fingerprint) caused an error: Argument "57B" isn't numeric in numeric gt (>) at (eval 40) line 6, <> line 28.
     Pipeline process 11 (aggregate fingerprint) caused an error: Argument "57C" isn't numeric in numeric gt (>) at (eval 40) line 6, <> line 29.
