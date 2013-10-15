@@ -39,7 +39,7 @@ Next, grab that slow query log file you have (mine's called "slow.log"!), and ru
 **NOTE:** I'm using a BASH 3.0 shell here on my MySQL database server! This is so the "$HOSTNAME" variable properly replaces with "db.example.com")
 
 
-For pt-query-digest verson < 2.2
+For pt-query-digest version < 2.2
 
     $ pt-query-digest --user=anemometer --password=superSecurePass \
                       --review h=db.example.com,D=slow_query_log,t=global_query_review \
@@ -49,7 +49,7 @@ For pt-query-digest verson < 2.2
                       /var/lib/mysql/db.example.com-slow.log
     
 
-For pt-query-digest verson >= 2.2
+For pt-query-digest version >= 2.2
 
     $ pt-query-digest --user=anemometer --password=superSecurePass \
                       --review h=db.example.com,D=slow_query_log,t=global_query_review \
