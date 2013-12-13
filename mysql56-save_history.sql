@@ -1,4 +1,4 @@
-USE DB slow_query_log;
+USE slow_query_log;
 
 CREATE TEMPORARY TABLE `statements_temp` SELECT * FROM performance_schema.events_statements_summary_by_digest;
 
