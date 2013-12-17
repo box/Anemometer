@@ -8,6 +8,17 @@
  * @license Apache 2.0 license.  See LICENSE document for more info
  **/
 
+// Ensure we're on php 5.3 or newer
+if (strnatcmp(phpversion(), '5.3') < 0) {
+	print "Anemometer requires PHP 5.3 or newer. You have ".phpversion();
+	die();
+}
+
+if (!function_exists('bcadd')) {
+	print "Anemometer requires the BCMath extension";
+	die();
+}
+
 set_include_path( get_include_path() . PATH_SEPARATOR . "./lib");
 require "Helpers.php";
 require "Anemometer.php";
