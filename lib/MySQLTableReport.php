@@ -712,6 +712,11 @@ class MySQLTableReport {
      */
     private function get_column_aggregate_function($name) {
 
+        if (strpos($name, '.') !== false)
+        {
+            $name = substr($name, strpos($name, '.')+1, strlen($name));
+        }
+
         if (!preg_match("/^([^_]+)_?.*_([^_]+)$/", $name, $regs)) {
             return null;
         }
@@ -732,7 +737,12 @@ class MySQLTableReport {
                 return 'MAX';
         }
 
-
+        /**
+         * this second check is because the performance_schema
+         * column names all have the aggregate at the front of the column name
+         * like: SUM_COUNT_STAR
+         * So we do another check to handle those as well
+         **/
         switch ($regs[2]) {
             case 'sum':
             case 'cnt':

@@ -24,7 +24,7 @@ class Anemometer {
     private $data_model;
     private $report_obj;
     private $header_printed = false;
-    private $exception_select_fields = array('checksum','sample'); // column names which appear in both fact and dimension tables
+    private $exception_select_fields = array('checksum','sample','DIGEST'); // column names which appear in both fact and dimension tables
 
     /**
      * Constructor.  Pass in the global configuration object
