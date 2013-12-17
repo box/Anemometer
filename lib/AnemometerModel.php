@@ -260,7 +260,12 @@ class AnemometerModel {
     public function get_query_samples($checksum, $limit = 1, $offset = 0) {
         $checksum_field_name = $this->get_field_name('checksum');
         $time_field_name = $this->get_field_name('time');
-        $sql = "SELECT * FROM `{$this->dimension_table}` WHERE `{$checksum_field_name}`='{$checksum}' ORDER BY `{$time_field_name}` DESC LIMIT {$limit} OFFSET {$offset}";
+        $table = $this->dimension_table;
+        if ($this->get_source_type() == 'performance_schema')
+        {
+            $table = $this->fact_table;
+        }
+        $sql = "SELECT * FROM `{$table}` WHERE `{$checksum_field_name}`='{$checksum}' ORDER BY `{$time_field_name}` DESC LIMIT {$limit} OFFSET {$offset}";
         return $this->mysqli->query($sql);
     }
 
@@ -414,13 +419,9 @@ class AnemometerModel {
 
     public function get_field_name($type)
     {
-        if (!isset($this->datasource_name))
-        {
-            throw new Exception("Cannot get report special field names without a datasource defined");
-        }
-        $source_type = $this->conf['datasources'][$this->datasource_name]['source_type'];
-
-        if (array_key_exists('special_field_names', $this->conf['reports'][$source_type]))
+        $source_type = $this->get_source_type();
+        if (array_key_exists('special_field_names', $this->conf['reports'][$source_type])
+              and array_key_exists($type, $this->conf['reports'][$source_type]['special_field_names']))
         {
             return $this->conf['reports'][$source_type]['special_field_names'][$type];
         }
@@ -432,6 +433,8 @@ class AnemometerModel {
                 return 'ts_min';
             case 'hostname':
                 return 'hostname_max';
+            case 'fingerprint':
+                return 'fingerprint';
             default:
                 return $type;
         }

@@ -27,7 +27,7 @@ error_reporting(E_ALL);
 $action = isset($_GET['action']) ? $_GET['action'] : 'index';
 
 $conf = array();
-include "conf/config.inc.php";
+@include "conf/config.inc.php";
 if (empty($conf))
 {
 	$action = 'noconfig';

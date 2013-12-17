@@ -162,7 +162,16 @@ $conf['graph_defaults'] = array(
 $conf['report_defaults']['performance_schema'] = array(
 	'fact-order'	=> 'SUM_TIMER_WAIT DESC',
 	'fact-limit' => '20',
-	'table_fields' => array( 'DIGEST', 'snippet', 'index_ratio', 'COUNT_STAR', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' )
+	'fact-group' => 'DIGEST',
+	'table_fields' => array( 'DIGEST', 'snippet', 'index_ratio', 'COUNT_STAR', 'SUM_TIMER_WAIT', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' )
+);
+
+// these are the default values for mysql 5.6 performance schema datasources
+$conf['history_defaults']['performance_schema'] = array(
+	'fact-order'	=> 'SUM_TIMER_WAIT DESC',
+	'fact-limit' => '20',
+	'fact-group' => 'DIGEST',
+	'table_fields' => array( 'DIGEST', 'index_ratio', 'COUNT_STAR', 'SUM_LOCK_TIME','SUM_ROWS_AFFECTED','SUM_ROWS_SENT','SUM_ROWS_EXAMINED','SUM_CREATED_TMP_TABLES','SUM_SORT_SCAN','SUM_NO_INDEX_USED' )
 );
 
 // these are the default values for using performance schema to save your own
@@ -256,7 +265,7 @@ $conf['plugins'] = array(
 	'explain'	=>	function ($sample) {
 		$conn = array();
 
-		if (strlen($sample['hostname_max']) < 5)
+		if (!array_key_exists('hostname_max',$sample) or strlen($sample['hostname_max']) < 5)
 		{
 			return;
 		}
@@ -359,6 +368,7 @@ $conf['reports']['performance_schema'] = array(
 			'where'		=> 'raw_where',
 			'DIGEST'	=> 'clear|where',
 			'DIGEST_TEXT' => 'clear|like|where',
+		        'group'		=> 'group',
 		),
 	),
 	// custom fields
@@ -367,6 +377,13 @@ $conf['reports']['performance_schema'] = array(
 		'index_ratio' =>'ROUND(SUM_ROWS_EXAMINED/SUM_ROWS_SENT,2)',
 		'rows_sent_avg' => 'ROUND(SUM_ROWS_SENT/COUNT_STAR,0)',
 
+	),
+
+	'special_field_names' => array(
+		'time'	 	=> 'FIRST_SEEN',
+		'checksum'	=> 'DIGEST',
+		'sample'	=> 'DIGEST_TEXT',
+		'fingerprint'   => 'DIGEST_TEXT',
 	),
 );
 

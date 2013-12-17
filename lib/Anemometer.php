@@ -318,6 +318,11 @@ class Anemometer {
 
     private function translate_checksum($checksum)
     {
+	if (!in_array($this->data_model->get_source_type(), array('slow_query_log','default')))
+	{
+		return $checksum;
+	}
+
         if (preg_match('/^[0-9]+$/', $checksum))
         {
             return $checksum;
@@ -352,10 +357,14 @@ class Anemometer {
 
         $data['datasource'] = get_var('datasource');
         $sample_field_name = $this->data_model->get_field_name('sample');
+        $checksum_field_name = $this->data_model->get_field_name('checksum');
+        $fingerprint_field_name = $this->data_model->get_field_name('fingerprint');
 
         // query and most recent sample
         $row = $this->data_model->get_query_by_checksum($checksum);
         $source_type = $this->data_model->get_source_type();
+        $data['source_type'] = $source_type;
+
         $callbacks = $this->data_model->get_callbacks($source_type, $output);
         if (isset($callbacks))
         {
@@ -366,21 +375,20 @@ class Anemometer {
                 }
             }
         }
-        $data['checksum'] = $row['checksum'];
-        $_GET['checksum'] = $row['checksum'];
+
+        $data['checksum'] = $row[$checksum_field_name];
+        $_GET['checksum'] = $row[$checksum_field_name];
 
         $data['row'] = $row;
+
         $data['sample'] = $this->data_model->get_query_samples($checksum, 1)->fetch_assoc();
+        $sample = $data['sample'][$sample_field_name];
 
         // review info
         $data['review_types'] = $this->data_model->get_review_types();
         $data['reviewers'] = $this->data_model->get_reviewers();
         $data['current_auth_user'] = $this->get_auth_user();
 
-        $sample = $data['sample'][$sample_field_name];
-        // get explain plan and extra info
-        // TODO convert to ajax calls, just get the url
-        $source_type = $this->data_model->get_source_type();
 
         $data['show_samples'] = true;
         if ($source_type == 'performance_schema_history')
@@ -415,11 +423,14 @@ class Anemometer {
         $data['timezone_offset'] = timezone_offset_get( new DateTimeZone( ini_get('date.timezone' )), new DateTime());
 
         $data['tables'] = $this->report_obj->get_tables();
-        $dimension_table = $this->report_obj->get_table_by_alias('dimension');
-        $data['hosts'] = $this->report_obj->get_distinct_values($dimension_table, $data['hostname_field_name']);
-        // check
-        $data[$data['hostname_field_name']] = get_var($data['hostname_field_name']);
-        $this->report_obj->set_pivot_values('dimension-pivot-'.$data['hostname_field_name'], $data['hosts']);
+        if ($source_type == 'slow_query_log')
+        {
+            $dimension_table = $this->report_obj->get_table_by_alias('dimension');
+            $data['hosts'] = $this->report_obj->get_distinct_values($dimension_table, $data['hostname_field_name']);
+            // check
+            $data[$data['hostname_field_name']] = get_var($data['hostname_field_name']);
+            $this->report_obj->set_pivot_values('dimension-pivot-'.$data['hostname_field_name'], $data['hosts']);
+        }
 
         // get custom fields for search form
         foreach ($data['tables'] as $t) {
@@ -438,13 +449,20 @@ class Anemometer {
 
         $_GET['table_fields'][] = get_var('plot_field');
         $_GET['fact-checksum'] = get_var('checksum');
+        $_GET['fact-DIGEST'] = get_var('checksum');
         $data['ajax_request_url'] = site_url() . '?action=api&output=json2&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
 
         $data['sample_field_name'] = $this->data_model->get_field_name('sample');
         $data['hostname_field_name'] =$this->data_model->get_field_name('hostname');
         $data['time_field_name'] =$this->data_model->get_field_name('time');
+        $data['fingerprint_field_name'] = $fingerprint_field_name;
 
-        $this->load->view("show_query", $data);
+        $view = "show_query";
+        if ($source_type == 'performance_schema')
+        {
+            $view = "show_query_perf_schema";
+        }
+        $this->load->view($view, $data);
 
         // Show the history for this query
         // just set some form fields and call report
