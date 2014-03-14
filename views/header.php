@@ -11,8 +11,8 @@
 
     <!-- Le styles -->
 	<link href="css/jquery-ui.css" rel="stylesheet" type="text/css"/>
-  	<script src="js/jquery-1.8.2.min.js"></script>
-	<script src="js/jquery-ui-1.8.24.custom.min.js"></script>
+  	<script src="js/jquery-1.8.3.min.js"></script>
+	<script src="js/jquery-ui-1.9.2.custom.min.js"></script>
     <link href="css/bootstrap.css" rel="stylesheet">
     
     <!-- addon timepicker to date -->
