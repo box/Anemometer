@@ -23,9 +23,16 @@ If you're just completely itching to start using this tool, here's what you need
 
 #### Setup DB ####
 
-First up, grab the anemometer code from github. Navigate to the document root of your web server and snag a copy of the Box Anemometer code. Then change your current working directory to the Anemometer directory:
+First up, grab the anemometer code from github. Navigate to the document root of your web server and snag a copy of the Box Anemometer code.
 
-    $ git clone git://github.com/box/Anemometer.git anemometer
+    $ git clone git://github.com/box/Anemometer.git anemometer 
+Or, if you have 9418 port closed:
+
+    $ git clone https://github.com/box/Anemometer.git anemometer 
+
+
+Then change your current working directory to the Anemometer directory:
+
     $ cd anemometer
     
 Next, you should connect to the MySQL database you're looking to store the analysis data in and issue the following command:
