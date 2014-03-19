@@ -871,7 +871,7 @@ class MySQLTableReport {
 
     public static function remove_schema_name($column)
     {
-        if (strpos($column,'.') !== false and substr_count($column,'.') == 1)
+        if (strpos($column,'.') !== false and substr_count($column,'.') == 1  and substr($column, 0, 2) != 'IF')
         {
             return substr($column, strpos($column,'.')+1);
         }
