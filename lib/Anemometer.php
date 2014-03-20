@@ -3,10 +3,6 @@ require "Loader.php";
 require "AnemometerModel.php";
 require "MySQLTableReport.php";
 
-//TEST bmk
-//ini_set('date.timezone', 'Europe/Copenhagen');
-//unset after workin from php.ini
-
 /**
  * class Anemometer
  *
