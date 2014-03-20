@@ -1,4 +1,3 @@
-### FORK from BjarneK ###
 Box Anemometer
 --------------
 
