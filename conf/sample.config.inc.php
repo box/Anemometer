@@ -257,7 +257,8 @@ $conf['history_defaults']['performance_schema_history'] = array(
 $conf['plugins'] = array(
 
 	'visual_explain' => '/usr/bin/pt-visual-explain',
-	'query_advisor'	=> '/usr/bin/pt-query-advisor',
+#	percona toolkit has removed query advisor
+#	'query_advisor'	=> '/usr/bin/pt-query-advisor',
 
 	'show_create'	=> true,
 	'show_status'	=> true,
