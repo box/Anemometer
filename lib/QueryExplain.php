@@ -227,7 +227,7 @@ class QueryExplain {
         while ($row = $result->fetch_assoc()) {
             foreach ($row as $col_name => $value) {
                 $len = strlen($value);
-                if ($len > $sizes[$col_name]) {
+                if (array_key_exists($col_name, $sizes) and $len > $sizes[$col_name]) {
                     $sizes[$col_name] = $len;
                 }
 
@@ -237,10 +237,17 @@ class QueryExplain {
         }
 
         foreach ($columns as $col => $count) {
-            $len = strlen($col);
-            if ($len > $sizes[$col]) {
-                $sizes[$col] = $len;
+            $len = strlen($col) + 0;
+            if (array_key_exists($col, $sizes))
+	    {
+		if ( $len > $sizes[$col]) {
+			$sizes[$col] = $len;
+	        }
             }
+	    else
+	    {
+		$sizes[$col] = $len;
+	    }
         }
 
         $column_order = array_keys($columns);

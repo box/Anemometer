@@ -56,7 +56,7 @@ class QueryTableParser {
 
                 if (preg_match("/\w+/", $table)) {
                     $table = str_replace('`', '', $table);
-                    $tables[$table]++;
+                    $tables[$table]=1;
                 }
             }
         }
