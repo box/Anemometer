@@ -34,15 +34,15 @@ help () {
 Usage: $0 --interval <seconds>
 
 Options:
-	--socket -S              The mysql socket to use
-	--defaults-file          The defaults file to use for the client
-        --interval -i            The collection duration
-        --rate                   Set log_slow_rate_limit (For Percona MySQL Only)
+    --socket -S              The mysql socket to use
+    --defaults-file          The defaults file to use for the client
+    --interval -i            The collection duration
+    --rate                   Set log_slow_rate_limit (For Percona MySQL Only)
 
-	--history-db-host	 Hostname of anemometer database server
-        --history-db-port        Port of anemometer database server
-        --history-db-name        Database name of anemometer database server (Default slow_query_log)
-        --history-defaults-file  Defaults file to pass to pt-query-digest for connecting to the remote anemometer database
+    --history-db-host        Hostname of anemometer database server
+    --history-db-port        Port of anemometer database server
+    --history-db-name        Database name of anemometer database server (Default slow_query_log)
+    --history-defaults-file  Defaults file to pass to pt-query-digest for connecting to the remote anemometer database
 EOF
 }
 

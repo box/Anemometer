@@ -8,7 +8,8 @@ This is the Box Anemometer, the MySQL Slow Query Monitor.  This tool is used to 
 1.	[What is Anemometer?](https://github.com/box/Anemometer/wiki)
 2.	[Extra Features](https://github.com/box/Anemometer/wiki/Extra-Features)
 3.	[Using PERFORMANCE_SCHEMA](https://github.com/box/Anemometer/wiki/Using-PERFORMANCE_SCHEMA-in-MySQL-5.6)
-4.	Installation: See Quickstart below	
+4.	[Collection Script](https://github.com/box/Anemometer/wiki/Anemometer-Collection-Script)
+5.	Installation: See Quickstart below
 
 ### Quickstart ###
 
