@@ -53,10 +53,27 @@ class QueryTableParser {
             if (in_array(strtolower($token), $this->table_tokens)) {
 
                 $table = $this->get_next_token();
-
-                if (preg_match("/\w+/", $table)) {
-                    $table = str_replace('`', '', $table);
-                    $tables[$table]=1;
+                
+                #Handles old style joins
+                if (preg_match("/,/", $table)) {
+                    while (preg_match("/,/", $table)) {
+                        $table = str_replace(',', '', $table);
+                        if (preg_match("/\w+/", $table)) {
+                            $table = str_replace('`', '', $table);
+                            $tables[$table]=1;
+                        }
+                        $table = $this->get_next_token();
+                    }
+                    if (preg_match("/\w+/", $table)) {
+                        $table = str_replace('`', '', $table);
+                        $tables[$table]=1;
+                    }
+                }
+                else {
+                    if (preg_match("/\w+/", $table)) {
+                        $table = str_replace('`', '', $table);
+                        $tables[$table]=1;
+                    }
                 }
             }
         }
