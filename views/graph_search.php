@@ -232,15 +232,16 @@ function setup_selection(theplot) {
 		console.log(plot);
 		
 		// need a date object to shove timestamp into for conversion to ANSI-type date string
-		d = new Date();
+		d_s = new Date();
+		d_e = new Date();
 
 		// get start datetime for selected fields
-		d.setTime(Math.floor(ranges.xaxis.from - (TIMEZONE_OFFSET)));
-		start_time = to_sql_date(d);
+		d_s.setTime(Math.floor(ranges.xaxis.from - (TIMEZONE_OFFSET)));
+		start_time = to_sql_date(d_s);
 
 		// get end datetime for selected fields
-		d.setTime(Math.floor(ranges.xaxis.to - (TIMEZONE_OFFSET)));
-		end_time = to_sql_date(d);
+		d_e.setTime(Math.floor(ranges.xaxis.to - (TIMEZONE_OFFSET)));
+		end_time = to_sql_date(d_e);
 
 		// construct a url with the new time frame the graph is focused on to populate the table on the page.
 		var new_url_start_end_params = '&' + escape(TABLE_URL_TIME_START_PARAM) + '=' + escape(start_time) + '&' + escape(TABLE_URL_TIME_END_PARAM)  + '=' + escape(end_time);
@@ -260,6 +261,9 @@ function setup_selection(theplot) {
 			dataType: 'html',
 			success: show_table_data
 		});
+
+		start_time = to_sql_date(new Date(d_s.getTime() + (d_s.getTimezoneOffset() * 60 * 1000) + TIMEZONE_OFFSET));
+		end_time = to_sql_date(new Date(d_e.getTime() + (d_e.getTimezoneOffset() * 60 * 1000) + TIMEZONE_OFFSET));
 
 		// Throw the selected time values just under the graph for clarity
 		$('#selection').text(start_time + " to " + end_time);
