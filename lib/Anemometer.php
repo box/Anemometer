@@ -706,9 +706,9 @@ class Anemometer {
 
         $dec = 0;
 
-        for ($i = strlen($hex) - 1, $e = 1; $i >= 0; $i--, $e = bcmul($e, 16)) {
+        for ($i = strlen($hex) - 1, $e = 1; $i >= 0; $i--, $e = bcmul($e, 16, 0)) {
             $factor = $hexdec[$hex[$i]];
-            $dec = bcadd($dec, bcmul($factor, $e));
+            $dec = bcadd($dec, bcmul($factor, $e, 0), 0);
         }
 
         return $dec;
