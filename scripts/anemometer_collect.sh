@@ -4,7 +4,7 @@
 # this is a quick draft script so please give feedback!
 #
 # basic usage would be to add this to cron like this:
-# */5 * * * * anemometer_collect.sh --interval 15 --history-db-host=anemometer-db.example.com
+# */5 * * * * anemometer_collect.sh --interval 15 --history-db-host anemometer-db.example.com
 #
 # This will have to run as a user which has write privileges to the mysql slow log
 #
@@ -49,7 +49,7 @@ EOF
 while test $# -gt 0
 do
     case $1 in
-        -socket|-S)
+        --socket|-S)
             socket=$2
             shift
             ;;
@@ -146,7 +146,7 @@ mv "$LOG" /tmp/tmp_slow_log
 
 if [ ! -z "${history_defaults_file}" ];
 then
-	pass_opt="--defaults-file='${history_defaults_file}'"
+	pass_opt="--defaults-file=${history_defaults_file}"
 fi
 "${digest}" $pass_opt \
   --review h="${history_db_host}",D="$history_db_name",t=global_query_review \
