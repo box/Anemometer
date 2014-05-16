@@ -29,6 +29,6 @@ EOF
 
 # add cron for collection script
 cat << EOF > /home/vagrant/crontab
-*/5 * * * * /vagrant/anemometer/scripts/anemometer_collect.sh --interval 15 --history-db-host localhost
+*/5 * * * * /vagrant/anemometer/scripts/anemometer_collect.sh --interval 15 --history-db-host localhost --defaults-file /home/vagrant/.my.cnf --history-defaults-file /home/vagrant/.my.cnf
 EOF
-crontab -u vagrant /home/vagrant/crontab 
+crontab -u root /home/vagrant/crontab

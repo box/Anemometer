@@ -25,6 +25,7 @@ class Anemometer {
     private $report_obj;
     private $header_printed = false;
     private $exception_select_fields = array('checksum','sample','DIGEST'); // column names which appear in both fact and dimension tables
+    private $timezone_offset;
 
     /**
      * Constructor.  Pass in the global configuration object
@@ -39,6 +40,13 @@ class Anemometer {
             return;
         }
 
+        $timezone = ini_get('date.timezone');
+        if (!$timezone)
+        {
+            date_default_timezone_set('America/Los_Angeles');
+            $timezone = date_default_timezone_get();
+        }
+        $this->timezone_offset = timezone_offset_get( new DateTimeZone( $timezone ), new DateTime());
 
         $this->conf = $conf;
         $this->data_model = new AnemometerModel($conf);
@@ -199,7 +207,7 @@ class Anemometer {
         $data['ajax_table_request_url_base'] = site_url() . '?action=api&output=table&noheader=1&datasource=' . $data['datasource']. '&' . $this->report_obj->get_search_uri(array( 'dimension-'.$data['time_field_name'], 'dimension-ts_min'));
         $data['table_url_time_start_param'] = 'dimension-'.$data['time_field_name'].'_start';
         $data['table_url_time_end_param'] = 'dimension-'.$data['time_field_name'].'_end';
-        $data['timezone_offset'] = timezone_offset_get( new DateTimeZone( ini_get('date.timezone' )), new DateTime());
+        $data['timezone_offset'] = $this->timezone_offset;
 
         return $data;
     }
@@ -437,7 +445,7 @@ class Anemometer {
         $data['hostname_field_name'] = $this->data_model->get_field_name('hostname');
         $data['checksum_field_name'] = $this->data_model->get_field_name('checksum');
 
-        $data['timezone_offset'] = timezone_offset_get( new DateTimeZone( ini_get('date.timezone' )), new DateTime());
+        $data['timezone_offset'] = $this->timezone_offset;
 
         $data['tables'] = $this->report_obj->get_tables();
         if ($source_type == 'slow_query_log')

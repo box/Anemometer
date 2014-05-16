@@ -284,6 +284,7 @@ $conf['plugins'] = array(
 			$conn['port'] = $parts[1];
 		}
 
+		$conn['db'] = 'mysql';
 		if ($sample['db_max'] != '')
 		{
 			$conn['db'] = $sample['db_max'];
