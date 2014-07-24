@@ -35,15 +35,7 @@ function get_var($name)
  */
 function site_url()
 {
-    if (isset($_SERVER['HTTPS']))
-    {
-        $proto = 'https://';
-    }
-    else
-    {
-        $proto = 'http://';
-    }
-    return $proto . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
+    return $_SERVER['SCRIPT_NAME'];
 }
 
 
