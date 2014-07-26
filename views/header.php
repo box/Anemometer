@@ -55,6 +55,19 @@
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
+      
+      .navbar .brand{
+      	padding: 0 20px !important; /* prevent brand from expanding navbar height */
+      }
+      
+      .navbar .brand img{ /* center logo vertically in navbar */
+      	position: relative;
+      	top: 6px;
+      }
+      
+      #quicksearch{
+      	margin-bottom: 0; /* prevent quicksearch form from expanding navbar height */
+      }
     </style>
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
 
