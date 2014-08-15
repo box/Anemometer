@@ -1,2 +1,4 @@
+*.lock
+.vagrant
 conf/config.inc.php
 *.komodoproject
