@@ -227,7 +227,7 @@ class QueryExplain {
         while ($row = $result->fetch_assoc()) {
             foreach ($row as $col_name => $value) {
                 $len = strlen($value);
-                if (array_key_exists($col_name, $sizes) and $len > $sizes[$col_name]) {
+                if (!array_key_exists($col_name, $sizes) or $len > $sizes[$col_name]) {
                     $sizes[$col_name] = $len;
                 }
 
