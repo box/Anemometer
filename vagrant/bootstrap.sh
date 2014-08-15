@@ -18,8 +18,8 @@ mysql -u root < /vagrant/anemometer/mysql56-install.sql
 
 # install percona toolkit
 yum install -y perl-DBD-MySQL perl-Time-HiRes perl-IO-Socket-SSL
-wget http://www.percona.com/redir/downloads/percona-toolkit/LATEST/RPM/percona-toolkit-2.2.7-1.noarch.rpm
-rpm -i percona-toolkit-2.2.7-1.noarch.rpm 
+wget -q "http://www.percona.com/redir/downloads/percona-toolkit/2.2.10/RPM/percona-toolkit-2.2.10-1.noarch.rpm"
+rpm -i percona-toolkit-2.2.10-1.noarch.rpm 
 
 # create my.cnf for access
 cat << EOF > /home/vagrant/.my.cnf
