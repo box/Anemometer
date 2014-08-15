@@ -235,11 +235,11 @@ function setup_selection(theplot) {
 		d = new Date();
 
 		// get start datetime for selected fields
-		d.setTime(Math.floor(ranges.xaxis.from - (TIMEZONE_OFFSET)));
+		d.setTime(Math.floor(ranges.xaxis.from) + (d.getTimezoneOffset() * 60 * 1000));
 		start_time = to_sql_date(d);
 
 		// get end datetime for selected fields
-		d.setTime(Math.floor(ranges.xaxis.to - (TIMEZONE_OFFSET)));
+		d.setTime(Math.floor(ranges.xaxis.to) + (d.getTimezoneOffset() * 60 * 1000));
 		end_time = to_sql_date(d);
 
 		// construct a url with the new time frame the graph is focused on to populate the table on the page.
