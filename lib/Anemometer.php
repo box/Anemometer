@@ -487,6 +487,10 @@ class Anemometer {
         {
             $view = "show_query_perf_schema";
         }
+        else
+        {
+            $data['detail_states'] = $this->data_model->get_detail_by_checksum($checksum);
+	}
         $this->load->view($view, $data);
 
         // Show the history for this query
