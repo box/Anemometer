@@ -43,7 +43,8 @@ class Anemometer {
         $timezone = ini_get('date.timezone');
         if (!$timezone)
         {
-            date_default_timezone_set('America/Los_Angeles');
+            $system_timezone = exec('date +%Z');
+            date_default_timezone_set($system_timezone);
             $timezone = date_default_timezone_get();
         }
         $this->timezone_offset = timezone_offset_get( new DateTimeZone( $timezone ), new DateTime());
