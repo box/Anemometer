@@ -53,6 +53,7 @@
 		<div class="span4" >
 			Checksum<br>
 			<input name="fact-<?php echo $checksum_field_name ?>" class="span4 typeahead" value="<?php echo get_var('fact-'.$checksum_field_name) ?>">
+            <input type="checkbox" name="<?php echo "dimension-pivot-{$checksum_field_name}" ?>" value='<?php echo $time_field_name ?>'<?php echo (isset($dimension_pivot_checksum) ? ' CHECKED ' : '') ?>> Show top queries as a separate series
 		</div>
 
 		<div class="span4">
@@ -79,7 +80,7 @@
 	</div>
 	<div class="span4">
 		<p align="center">
-			<input type="checkbox" id="autoscale_y" onclick="toggle_autoscale_y()"/> Auto-scale Y-axis on zoom
+			<input type="checkbox" id="autoscale_y" onclick="toggle_autoscale_y()" CHECKED/> Auto-scale Y-axis on zoom
 		</p>
 	</div>
 
@@ -94,10 +95,11 @@
 // urls to retrieve data from
 var GRAPH_DATA_URL = "<?php echo $ajax_request_url ?>";
 var GRAPH_PERMALINK_URL = "<?php echo $graph_permalink; ?>";
-var TABLE_BASE_URL = "<?php echo $ajax_table_request_url_base ?>"
-var TABLE_URL_TIME_START_PARAM = "<?php echo $table_url_time_start_param ?>"
-var TABLE_URL_TIME_END_PARAM = "<?php echo $table_url_time_end_param ?>"
+var TABLE_BASE_URL = "<?php echo $ajax_table_request_url_base ?>";
+var TABLE_URL_TIME_START_PARAM = "<?php echo $table_url_time_start_param ?>";
+var TABLE_URL_TIME_END_PARAM = "<?php echo $table_url_time_end_param ?>";
 var TIMEZONE_OFFSET = <?php echo $timezone_offset; ?> * 1000;
+var SHOW_QUERY_BASE_URL = "<?php echo $show_query_base_url ?>";
 
 // Setup options for the plot
 var FLOT_OPTS = {
@@ -230,7 +232,7 @@ function setup_selection(theplot) {
 		}
 		var plot = $.plot(theplot, DATA, $.extend ( true, {}, FLOT_OPTS, new_plot_opts));
 		console.log(plot);
-		
+
 		// need a date object to shove timestamp into for conversion to ANSI-type date string
 		d = new Date();
 
@@ -258,7 +260,7 @@ function setup_selection(theplot) {
 			url: new_table_data_url,
 			method: 'GET',
 			dataType: 'html',
-			success: show_table_data
+			success: refresh_table_data
 		});
 
 		// Throw the selected time values just under the graph for clarity
@@ -279,7 +281,42 @@ function setup_selection(theplot) {
 function show_table_data(data) {
 	var report_table = $('#report_table');
 	report_table.html(data);
+    handle_top_n_graph_if_needed()
 	prettyPrint();
+}
+
+function refresh_table_data(data) {
+	var report_table = $('#report_table');
+	report_table.html(data);
+	prettyPrint();
+}
+
+function handle_top_n_graph_if_needed() {
+    checkbox = $("[name=<?php echo "dimension-pivot-{$checksum_field_name}" ?>]");
+    if (checkbox.is(":checked"))
+    {
+        var objs = $("#report_table tbody td:first-child a");
+        var checksums = [];
+        for (i=0; i<objs.length; i++) {
+            checksums.push( objs[i].text );
+        }
+        // Store references to the initial start/end times for graph resets.
+        var initial_start_time = $('#dimension-ts_min_start').val();
+        var initial_end_time = $('#dimension-ts_min_end').val();
+
+        // URL to get data for the table using the base time values on the page. This is also used to 'reset' the table.
+        var url_start_end_params = '&' + escape(TABLE_URL_TIME_START_PARAM) + '=' + escape(initial_start_time) + '&' + escape(TABLE_URL_TIME_END_PARAM)  + '=' + escape(initial_end_time);
+        var checkbox_base_name = checkbox.attr("name");
+        var plot_field_value = $("[name=plot_field] option:selected")[0].text;
+        var FULL_GRAPH_URL = GRAPH_DATA_URL + url_start_end_params + "&" + checkbox_base_name + "=" + plot_field_value + "&" + checkbox_base_name + "-use-values" + "=" +  checksums.join('|');
+        console.log("Fetching graph results (top n query): " + FULL_GRAPH_URL );
+            $.ajax({
+                url: FULL_GRAPH_URL,
+                method: 'GET',
+                dataType: 'json',
+                success: new_plot_data
+            });
+    }
 }
 
 function showTooltip(x, y, contents) {
@@ -369,14 +406,26 @@ $(document).ready( function ()  {
 		$('#permalink_btn').attr('href', GRAPH_PERMALINK_URL + url_start_end_params);
 	});
 
-	// kick off the initial AJAX call to get the data to plot for the graph
-	console.log("Fetching graph results: " + GRAPH_DATA_URL + url_start_end_params);
-	$.ajax({
-		url: GRAPH_DATA_URL + url_start_end_params,
-		method: 'GET',
-		dataType: 'json',
-		success: new_plot_data
-	});
+    top_n = $("[name=<?php echo "dimension-pivot-{$checksum_field_name}" ?>]");
+    if (!top_n.is(":checked")) {
+        // kick off the initial AJAX call to get the data to plot for the graph
+        console.log("Fetching graph results: " + GRAPH_DATA_URL + url_start_end_params);
+        $.ajax({
+            url: GRAPH_DATA_URL + url_start_end_params,
+            method: 'GET',
+            dataType: 'json',
+            success: new_plot_data
+        });
+    } else {
+        console.log("updating labelFormatter in graph!");
+        FLOT_OPTS['legend'].labelFormatter = function (label, series) {
+            if (/^[0-9A-Z]+$/.test(label) ) {
+                return '<a href="' + SHOW_QUERY_BASE_URL + '&checksum='+label+'">'+label+'</a>';
+            }
+             return label;
+        }
+        console.log(FLOT_OPTS);
+    }
 
 	// kick off the initial AJAX call to get the data for the table below the graph
 	console.log("Fetching initial table results: "+table_url_now);

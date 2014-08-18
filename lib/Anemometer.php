@@ -77,18 +77,27 @@ class Anemometer {
      */
     public function api()
     {
+        $checksum_field_name = $this->data_model->get_field_name('checksum');
+        $hostname_field =  $this->data_model->get_field_name('hostname');
+        $dimension_table = $this->report_obj->get_table_by_alias('dimension');
+
         // special case for optional pivot on hostname
         // mainly used to graph each host as a series
-        $hostname_field =  $this->data_model->get_field_name('hostname');
         if (get_var('dimension-pivot-'.$hostname_field) != null)
         {
-            $dimension_table = $this->report_obj->get_table_by_alias('dimension');
             $hosts = $this->report_obj->get_distinct_values($dimension_table, $hostname_field);
             $this->report_obj->set_pivot_values('dimension-pivot-'.$hostname_field, $hosts);
+        } else if (get_var('dimension-pivot-'.$checksum_field_name) != null
+                   and get_var("dimension-pivot-{$checksum_field_name}-use-values") != null) {
+            $values = explode('|',get_var("dimension-pivot-{$checksum_field_name}-use-values"));
+            for ($i=0; $i<count($values); $i++) {
+                $values[$i] = $this->translate_checksum($values[$i]);
+            }
+            $this->report_obj->set_pivot_values("dimension-pivot-{$checksum_field_name}", $values);
+            //$_GET["dimension-pivot-{$checksum_field_name}"] = get_var('plot_field');
         }
 
         // translate the checksum field from possible hex value
-        $checksum_field_name = $this->data_model->get_field_name('checksum');
         $checksum = $this->translate_checksum(get_var("fact-{$checksum_field_name}"));
         if (isset($checksum))
         {
@@ -197,9 +206,14 @@ class Anemometer {
             $_GET['dimension-pivot-'.$data['hostname_field_name']] = get_var('plot_field');
             $data['dimension_pivot_hostname_max'] = get_var('plot_field');
         }
+        if (get_var('dimension-pivot-'.$data['checksum_field_name'])) {
+            $_GET['dimension-pivot-'.$data['checksum_field_name']] = get_var('plot_field');
+            $data['dimension_pivot_checksum'] = get_var('plot_field');
+        }
 
         $data['ajax_request_url'] = site_url() . '?action=api&output=json2&noheader=1&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri(array( 'dimension-'.$time));
         $data['graph_permalink'] = site_url() . '?action=graph_search&datasource=' . $data['datasource'] . '&plot_field='.get_var('plot_field').'&'.$this->report_obj->get_search_uri(array( 'dimension-'.$time ));
+        $data['show_query_base_url'] = site_url() . '?action=show_query&datasource=' . $data['datasource'];
         // now go get a url for the table results
         $this->init_report();
         $this->set_search_defaults('report_defaults', array('dimension-'.$time.'_start', 'dimension-'.$time.'_end', $data['checksum_field_name']));
@@ -470,6 +484,10 @@ class Anemometer {
         if (get_var('dimension-pivot-'.$data['hostname_field_name'])) {
             $_GET['dimension-pivot-'.$data['hostname_field_name']] = get_var('plot_field');
             $data['dimension_pivot_hostname_max'] = get_var('plot_field');
+        }
+        if (get_var('dimension-pivot-'.$data['checksum_field_name'])) {
+            $_GET['dimension-pivot-'.$data['checksum_field_name']] = get_var('plot_field');
+            $data['dimension_pivot_checksum'] = get_var('plot_field');
         }
         //$data = $this->setup_data_for_graph_search($data);
 

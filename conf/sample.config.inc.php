@@ -333,6 +333,7 @@ $conf['reports']['slow_query_log'] = array(
 			'hostname_max'	=> 'clear|where',
 			'ts_min'	=>	'date_range|reldate|clear|where',
 			'pivot-hostname_max' => 'clear|pivot|select',
+			'pivot-checksum' => 'clear|pivot|select',
 		),
 	),
 	// custom fields
