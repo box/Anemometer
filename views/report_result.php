@@ -17,20 +17,22 @@ $( function ()  {
 		<a href="javascript:void(0);" class="btn"><i class="icon-list-alt"></i> Show Table</a>
 		<a href="javascript:void(0);" class="btn"><i class="icon-picture"></i> Show Graph</a>
 		-->
-		
+
 		<a href="<?php echo $permalink ?>" class="btn"><i class="icon-magnet"></i> Permalink</a>
 		<a href="<?php echo $jsonlink ?>" class="btn"><i class="icon-cog"></i> JSON</a>
-		
+
 		<div class="collapse out" id="raw">
 			  <pre class="prettyprint lang-sql"><?php echo $sql ?></pre>
 		</div>
     </div>
+
 </div>
 
 </div>
 </div>
 
 <div style="margin: 20px">
+    Showing <b><?php echo count($result); ?></b> results
 	<table class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
@@ -66,4 +68,3 @@ $( function ()  {
 		<?php } ?>
 	</table>
 </div>
-  
