@@ -1,3 +1,5 @@
+[![Project Status](http://opensource.box.com/badges/maintenance.svg)](http://opensource.box.com/badges)
+
 Box Anemometer
 --------------
 
