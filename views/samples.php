@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="span12">
 		<i class="icon-leaf"></i> <strong>Sample</strong> on host <strong><?php echo $sample['hostname_max']; ?></strong> at <strong><?php echo $sample['ts_max']; ?></strong>
-		<pre class="prettyprint lang-sql"><?php echo $sample['sample']; ?></pre>
+		<pre class="prettyprint lang-sql"><?php echo htmlspecialchars($sample['sample']); ?></pre>
 	</div>
 </div>
 <?php } ?>
