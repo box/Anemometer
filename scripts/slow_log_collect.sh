@@ -21,10 +21,10 @@
 socket= defaults_file= mysqlopts=
 digest='/usr/local/bin/pt-query-digest'
 
-history_db_host=
+history_db_host='localhost'
 history_db_port=3306
 history_db_name='anemometer'
-history_defaults_file=
+history_defaults_file='~/.my.cnf'
 
 help () {
 	cat <<EOF
@@ -37,7 +37,7 @@ Options:
 
     --history-db-host        Hostname of anemometer database server
     --history-db-port        Port of anemometer database server
-    --history-db-name        Database name of anemometer database server (Default slow_query_log)
+    --history-db-name        Database name of anemometer database server (Default anemometer)
     --history-defaults-file  Defaults file to pass to pt-query-digest for connecting to the remote anemometer database
 EOF
 }
