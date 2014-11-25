@@ -1,10 +1,9 @@
 #/usr/bin/env bash
 
 # anemometer collection script to gather and digest slow query logs
-# this is a quick draft script so please give feedback!
 #
 # basic usage would be to add this to cron like this:
-# */5 * * * * anemometer_collect.sh --interval 15 --history-db-host anemometer-db.example.com
+# */5 * * * * slow_log_collect.sh --interval 15 --history-db-host anemometer-db.example.com
 #
 # This will have to run as a user which has write privileges to the mysql slow log
 #
@@ -19,13 +18,12 @@
 #
 #
 
-socket= defaults_file= rate_limit= mysqlopts=
-interval=30
-digest='/usr/bin/pt-query-digest'
+socket= defaults_file= mysqlopts=
+digest='/usr/local/bin/pt-query-digest'
 
 history_db_host=
 history_db_port=3306
-history_db_name='slow_query_log'
+history_db_name='anemometer'
 history_defaults_file=
 
 help () {
@@ -36,8 +34,6 @@ Usage: $0 --interval <seconds>
 Options:
     --socket -S              The mysql socket to use
     --defaults-file          The defaults file to use for the client
-    --interval -i            The collection duration
-    --rate                   Set log_slow_rate_limit (For Percona MySQL Only)
 
     --history-db-host        Hostname of anemometer database server
     --history-db-port        Port of anemometer database server
@@ -49,22 +45,14 @@ EOF
 while test $# -gt 0
 do
     case $1 in
-        --socket|-S)
-            socket=$2
-            shift
-            ;;
-        --defaults-file|-f)
-            defaults_file=$2
-            shift
-            ;;
-        --interval|-i)
-            interval=$2
-            shift
-            ;;
-	--rate|r)
-	    rate=$2
-	    shift
-	    ;;
+    --socket|-S)
+        socket=$2
+        shift
+        ;;
+    --defaults-file|-f)
+        defaults_file=$2
+        shift
+        ;;
 	--pt-query-digest|-d)
 	    digest=$2
 	    shift
@@ -77,10 +65,10 @@ do
 	    history_db_host=$2
 	    shift
 	    ;;
-        --history-db-port)
-            history_db_port=$2
-	    shift
-	    ;;
+    --history-db-port)
+        history_db_port=$2
+    	shift
+    	;;
 	--history-db-name)
 	    history_db_name=$2
 	    shift
@@ -115,34 +103,9 @@ then
 	exit 1
 fi
 
-echo "Collecting from slow query log file: ${LOG}"
-
-# simple 30 second collection
-if [ ! -z "${rate}" ];
-then
-	mysql $mysqlopts -e "SET GLOBAL log_slow_rate_limit=${rate}"
-fi
-
-mysql $mysqlopts -e "SET GLOBAL long_query_time=0.00"
-mysql $mysqlopts -e "SET GLOBAL slow_query_log=1"
-if [ $? -ne 0 ];
-then
-	echo "Error: cannot enable slow log. Aborting"
-	exit 1
-fi
-echo "Slow log enabled; sleeping for ${interval} seconds"
-sleep "${interval}"
-
-mysql $mysqlopts -e "SET GLOBAL slow_query_log=0"
-echo "Done.  Processing log and saving to ${history_db_host}:${history_db_port}/${history_db_name}"
-
-# process the log
-if [[ ! -e "$LOG" ]]
-then
-	echo "No slow log to process";
-	exit
-fi
 mv "$LOG" /tmp/tmp_slow_log
+
+mysql $mysqlopts -e "FLUSH SLOW LOGS"
 
 if [ ! -z "${history_defaults_file}" ];
 then
@@ -152,7 +115,7 @@ fi
   --review h="${history_db_host}",D="$history_db_name",t=global_query_review \
   --history h="${history_db_host}",D="$history_db_name",t=global_query_review_history \
   --no-report --limit=0\% \
-  --filter="\$event->{Bytes} = length(\$event->{arg}) and \$event->{hostname}=\"$HOSTNAME\" " \
+  --filter="\$event->{Bytes} = length(\$event->{arg})" \
   "/tmp/tmp_slow_log"
 
 rm /tmp/tmp_slow_log
