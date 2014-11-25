@@ -19,7 +19,7 @@ CREATE TABLE `global_query_review` (
 
 -- Create the historical query review table
 CREATE TABLE `global_query_review_history` (
-  `hostname_max` varchar(64) NOT NULL,
+  `hostname_max` varchar(64) DEFAULT NULL,
   `db_max` varchar(64) DEFAULT NULL,
   `checksum` bigint(20) unsigned NOT NULL,
   `sample` longtext NOT NULL,
