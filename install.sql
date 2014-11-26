@@ -5,6 +5,7 @@ USE slow_query_log;
 
 -- Create the global query review table
 CREATE TABLE `global_query_review` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `checksum` bigint(20) unsigned NOT NULL,
   `fingerprint` text NOT NULL,
   `sample` longtext NOT NULL,
@@ -14,12 +15,13 @@ CREATE TABLE `global_query_review` (
   `reviewed_on` datetime DEFAULT NULL,
   `comments` text,
   `reviewed_status` varchar(24) DEFAULT NULL,
-  PRIMARY KEY (`checksum`)
+  PRIMARY KEY (`id`),
+  KEY `checksum` (`checksum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Create the historical query review table
 CREATE TABLE `global_query_review_history` (
-  `hostname_max` varchar(64) DEFAULT NULL,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `db_max` varchar(64) DEFAULT NULL,
   `checksum` bigint(20) unsigned NOT NULL,
   `sample` longtext NOT NULL,
@@ -118,7 +120,7 @@ CREATE TABLE `global_query_review_history` (
   `Bytes_pct_95` float DEFAULT NULL,
   `Bytes_stddev` float DEFAULT NULL,
   `Bytes_median` float DEFAULT NULL,
-  UNIQUE KEY `hostname_max` (`hostname_max`,`checksum`,`ts_min`,`ts_max`),
-  KEY `ts_min` (`ts_min`),
-  KEY `checksum` (`checksum`)
+  PRIMARY KEY (`id`),
+  KEY `checksum` (`checksum`,`ts_min`,`ts_max`),
+  KEY `ts_min` (`ts_min`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
