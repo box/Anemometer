@@ -97,7 +97,7 @@ fi
 
 # path to the slow query log
 LOG=$( mysql $mysqlopts -e " show global variables like 'slow_query_log_file'" -B  | tail -n1 | awk '{ print $2 }' )
-if [ $? -ne 0 ];
+if [ $? -ne 0 -o -z "$LOG" ];
 then
 	echo "Error getting slow log file location"
 	exit 1
