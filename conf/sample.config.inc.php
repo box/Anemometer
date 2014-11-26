@@ -34,10 +34,14 @@
  */
 $conf['datasources']['localhost'] = array(
 	'host'	=> 'localhost',
+	'explain_host'	=> 'localhost',
 	'port'	=> 3306,
+	'explain_port'	=> 3306,
 	'db'	=> 'slow_query_log',
 	'user'	=> 'root',
+	'explain_user'	=> 'root',
 	'password' => '',
+	'explain_password' => '',
 	'tables' => array(
 		'global_query_review' => 'fact',
 		'global_query_review_history' => 'dimension'
@@ -266,32 +270,19 @@ $conf['plugins'] = array(
 	'explain'	=>	function ($sample) {
 		$conn = array();
 
-		if (!array_key_exists('hostname_max',$sample) or strlen($sample['hostname_max']) < 5)
-		{
-			return;
-		}
-
-		$pos = strpos($sample['hostname_max'], ':');
-		if ($pos === false)
-		{
-			$conn['port'] = 3306;
-			$conn['host'] = $sample['hostname_max'];
-		}
-		else
-		{
-			$parts = preg_split("/:/", $sample['hostname_max']);
-			$conn['host'] = $parts[0];
-			$conn['port'] = $parts[1];
-		}
-
 		$conn['db'] = 'mysql';
 		if ($sample['db_max'] != '')
 		{
 			$conn['db'] = $sample['db_max'];
 		}
 
-		$conn['user'] = 'root';
-		$conn['password'] = '';
+		global $controller;
+		global $conf;
+		$current_source_name = $controller->data_model->get_current_source_name();
+		$conn['host'] = $conf['datasources'][$current_source_name]['explain_host'];
+		$conn['port'] = $conf['datasources'][$current_source_name]['explain_port'];
+		$conn['user'] = $conf['datasources'][$current_source_name]['explain_user'];
+		$conn['password'] = $conf['datasources'][$current_source_name]['explain_password'];
 
 		return $conn;
 	},

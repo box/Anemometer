@@ -21,7 +21,7 @@ require "MySQLTableReport.php";
 class Anemometer {
 
     private $conf;
-    private $data_model;
+    public $data_model;
     private $report_obj;
     private $header_printed = false;
     private $exception_select_fields = array('checksum','sample','DIGEST'); // column names which appear in both fact and dimension tables

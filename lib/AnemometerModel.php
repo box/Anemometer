@@ -71,6 +71,15 @@ class AnemometerModel {
         return 'default';
     }
 
+    public function get_current_source_name()
+    {
+        if (isset($this->datasource_name))
+        {
+            return $this->datasource_name;
+        }
+        return 'default';
+    }
+
     /**
      * return the list of review types.  This is a configurable list of short text
      * statuses that can describe the query.
