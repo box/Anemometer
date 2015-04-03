@@ -1,6 +1,5 @@
 <?php
-require_once 'PHPUnit/Autoload.php';
-require_once 'QueryRewrite.php';
+require_once 'lib/QueryRewrite.php';
 
 class TestQueryRewrite extends PHPUnit_Framework_TestCase {
     protected $_QueryRewrite = null;
