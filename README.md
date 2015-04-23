@@ -13,6 +13,7 @@ This is the Box Anemometer, the MySQL Slow Query Monitor.  This tool is used to 
 4.	[Collection Script](https://github.com/box/Anemometer/wiki/Anemometer-Collection-Script)
 5.	[Development with Vagrant](https://github.com/box/Anemometer/wiki/Development-with-Vagrant)
 6.	Installation: See Quickstart below
+7.  [Unit Testing](https://github.com/box/Anemometer/wiki/Unit-Testing)
 
 ### Quickstart ###
 
