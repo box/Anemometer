@@ -66,7 +66,6 @@ class Anemometer {
         }
 
         $this->init_report();
-        session_start();
     }
 
     /**
@@ -540,7 +539,9 @@ class Anemometer {
             $fields_to_change['reviewed_by'] = get_var('reviewed_by');
             $fields_to_change['reviewed_on'] = date('Y-m-d H:i:s');
             $fields_to_change['reviewed_status'] = get_var('reviewed_status');
+            session_start();
             $_SESSION['current_review_user'] = get_var('reviewed_by');
+            session_write_close();
         }
 
         if ($submit == 'Review and Update Comments' || $submit == 'Update Comments') {
@@ -604,6 +605,7 @@ class Anemometer {
      * from the session if possible.
      */
     private function get_auth_user() {
+        session_start();
         if (array_key_exists('PHP_AUTH_USER', $_SERVER))
         {
             return $_SERVER['PHP_AUTH_USER'];
@@ -614,6 +616,7 @@ class Anemometer {
             return $_SESSION['current_review_user'];
         }
 
+        session_write_close();
         return null;
     }
 
