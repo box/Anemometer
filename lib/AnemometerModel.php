@@ -198,7 +198,7 @@ class AnemometerModel {
      */
     public function checksum_exists($checksum) {
         $checksum_field_name = $this->get_field_name('checksum');
-        $query = "SELECT `{$checksum_field_name}` FROM `{$this->fact_table}` WHERE `{$checksum_field_name}`='" . $this->mysqli->real_escape_string($checksum) . "'";
+        $query = "SELECT `{$checksum_field_name}` FROM `{$this->fact_table}` WHERE `{$checksum_field_name}`=" . $this->mysqli->real_escape_string($checksum);
         $result = $this->mysqli->query($query);
         check_mysql_error($result, $this->mysqli);
         if ($result->num_rows) {
@@ -227,7 +227,7 @@ class AnemometerModel {
                         }, array_keys($fields), array_values($fields)
                 )
         );
-        $sql .= " WHERE `{$checksum_field_name}`='" . $this->mysqli->real_escape_string($checksum) . "'";
+        $sql .= " WHERE `{$checksum_field_name}`=" . $this->mysqli->real_escape_string($checksum);
         $res = $this->mysqli->query($sql);
         // @todo ... fix this by making it a local method
         check_mysql_error($res, $this->mysqli);
@@ -241,7 +241,7 @@ class AnemometerModel {
      */
     public function get_query_by_checksum($checksum) {
         $checksum_field_name = $this->get_field_name('checksum');
-        $result = $this->mysqli->query("SELECT * FROM `{$this->fact_table}` WHERE `{$checksum_field_name}`='{$checksum}'");
+        $result = $this->mysqli->query("SELECT * FROM `{$this->fact_table}` WHERE `{$checksum_field_name}`={$checksum}");
         check_mysql_error($result, $this->mysqli);
         if ($row = $result->fetch_assoc()) {
             return $row;
@@ -265,7 +265,7 @@ class AnemometerModel {
         {
             $table = $this->fact_table;
         }
-        $sql = "SELECT * FROM `{$table}` WHERE `{$checksum_field_name}`='{$checksum}' ORDER BY `{$time_field_name}` DESC LIMIT {$limit} OFFSET {$offset}";
+        $sql = "SELECT * FROM `{$table}` WHERE `{$checksum_field_name}`={$checksum} ORDER BY `{$time_field_name}` DESC LIMIT {$limit} OFFSET {$offset}";
         return $this->mysqli->query($sql);
     }
 
