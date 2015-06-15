@@ -202,7 +202,7 @@ class QueryExplain {
      * @return MySQLi_Result    the result handle
      */
     private function explain_query() {
-        $Query = new QueryRewrite($this->query);
+		$Query = new QueryRewrite(preg_replace('/\/\*(.*)\*\//Uis', '', $this->query));
         $explain = $Query->asExplain();
 
         if (is_null($explain))
