@@ -129,7 +129,7 @@ class AnemometerModel {
             if (is_object($result))
             {
                 $row = $result->fetch_assoc();
-                if ($row['@@version'] >= '5.6')
+                if ($row['@@version'] >= '5.6' or $row['@@version'] >= '10.0')
                 {
                     return true;
                 }
