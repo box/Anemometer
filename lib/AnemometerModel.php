@@ -135,7 +135,7 @@ class AnemometerModel {
                 }
                 $version = $row['@@version'];
             }
-            throw new Exception("Datasource {$name} has a source_type of performance_schema which requires mysql version >= 5.6.  Found version: {$version}");
+            throw new Exception("Datasource {$name} has a source_type of performance_schema which requires mysql version >= 5.6 or mariadb verison >= 10.0.  Found version: {$version}");
         }
     }
 
