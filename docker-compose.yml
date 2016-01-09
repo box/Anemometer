@@ -1,0 +1,14 @@
+mysql:
+  image: tutum/mysql
+  ports:
+    - "3306:3306"
+  environment:
+    - MYSQL_USER=anemometer
+    - MYSQL_PASS=s3cr3tth1ng
+
+anemometer:
+  build: .
+  ports:
+    - "8080:80"
+  links:
+    - mysql:db
