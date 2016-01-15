@@ -5,7 +5,7 @@ WORKDIR /var/www/html
 
 RUN apt-get update && apt-get install -yf mysql-client
 RUN \
-  apt-get update && apt-get install -yf git unzip zlib1g-dev mysql-client && \
+  apt-get update && apt-get install -yf git unzip zlib1g-dev mysql-client netcat && \
   docker-php-ext-install zip bcmath mysql mysqli pdo pdo_mysql
 
 RUN \
@@ -17,4 +17,4 @@ RUN \
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh
 
-CMD ["apache2-foreground"]
+CMD ["/docker-entrypoint.sh"]
