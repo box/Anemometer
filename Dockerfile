@@ -15,6 +15,6 @@ RUN \
   composer install && \
   ln -s /var/www/html/conf/sample.config.inc.php /var/www/html/conf/config.inc.php
 
-ADD docker/docker-entrypoint.sh /docker-entrypoint.sh
+ADD docker-entrypoint.sh /docker-entrypoint.sh
 
 CMD ["/docker-entrypoint.sh"]

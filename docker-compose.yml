@@ -7,8 +7,8 @@ mysql:
     - MYSQL_PASS=s3cr3tth1ng
 
 anemometer:
-  build: ../
-  dockerfile: docker/Dockerfile
+  build: .
+  dockerfile: Dockerfile
   ports:
     - "8080:80"
   links:
