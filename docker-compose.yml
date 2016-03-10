@@ -12,4 +12,4 @@ anemometer:
   ports:
     - "8080:80"
   links:
-    - mysql:db
+    - mysql:anemometer

@@ -33,11 +33,11 @@
  *
  */
 $conf['datasources']['localhost'] = array(
-	'host'	=> getenv('DB_PORT_3306_TCP_ADDR') ?: 'localhost',
+	'host'	=> getenv('ANEMOMETER_PORT_3306_TCP_ADDR') ?: 'localhost',
 	'port'	=> 3306,
 	'db'	=> 'slow_query_log',
-	'user'	=> getenv('DB_ENV_MYSQL_USER') ?: 'root',
-	'password' => getenv('DB_ENV_MYSQL_PASS') ?: '',
+	'user'	=> getenv('ANEMOMETER_ENV_MYSQL_USER') ?: 'root',
+	'password' => getenv('ANEMOMETER_ENV_MYSQL_PASS') ?: '',
 	'tables' => array(
 		'global_query_review' => 'fact',
 		'global_query_review_history' => 'dimension'
