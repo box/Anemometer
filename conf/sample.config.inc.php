@@ -254,12 +254,10 @@ $conf['history_defaults']['performance_schema_history'] = array(
  * explain plugin, then these sections will not be displayed.
  *
  */
-$conf['plugins'] = array(
+
+/* $conf['plugins'] = array(
 
 	'visual_explain' => '/usr/bin/pt-visual-explain',
-#	percona toolkit has removed query advisor
-#	'query_advisor'	=> '/usr/bin/pt-query-advisor',
-
 	'show_create'	=> true,
 	'show_status'	=> true,
 
@@ -295,7 +293,7 @@ $conf['plugins'] = array(
 
 		return $conn;
 	},
-);
+);*/
 
 /**
  * This is configuration information for how the actual sql queries are built
