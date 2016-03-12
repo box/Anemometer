@@ -255,8 +255,8 @@ $conf['history_defaults']['performance_schema_history'] = array(
  *
  */
 
-/* $conf['plugins'] = array(
-
+ $conf['plugins'] = array(
+/*
 	'visual_explain' => '/usr/bin/pt-visual-explain',
 	'show_create'	=> true,
 	'show_status'	=> true,
@@ -292,8 +292,8 @@ $conf['history_defaults']['performance_schema_history'] = array(
 		$conn['password'] = '';
 
 		return $conn;
-	},
-);*/
+	},*/
+);
 
 /**
  * This is configuration information for how the actual sql queries are built
