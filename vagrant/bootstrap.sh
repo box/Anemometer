@@ -1,22 +1,32 @@
 #!/usr/bin/env bash
+sudo -s 
 
 # base packages, including percona mysql repo
 yum install -y http://www.percona.com/downloads/percona-release/percona-release-0.0-1.x86_64.rpm
 yum install -y Percona-Server-client-56 Percona-Server-shared-56 Percona-Server-server-56
-yum install -y httpd php php-mysql php-bcmath wget
+yum install -y httpd php php-mysql php-bcmath wget git
 # install percona toolkit
 yum install -y perl-DBD-MySQL perl-Time-HiRes perl-IO-Socket-SSL
 wget -q "http://www.percona.com/redir/downloads/percona-toolkit/2.2.10/RPM/percona-toolkit-2.2.10-1.noarch.rpm"
 rpm -i percona-toolkit-2.2.10-1.noarch.rpm
 
+#sed -i 's/enforcing/disabled/g' /etc/sysconfig/selinux
+sed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
+
+setenforce 0
 
 systemctl start mysqld.service
 systemctl start httpd.service
 
+git clone https://github.com/3manuek/Anemometer.git anemometer
+
 # setup symlink for apache & install anemometer files
-ln -s /vagrant/anemometer  /var/www/html/anemometer 
-mysql -u root < /vagrant/anemometer/install.sql 
-mysql -u root < /vagrant/anemometer/mysql56-install.sql
+#ln -s /vagrant/anemometer  /var/www/html/anemometer 
+
+[[ ! -e  /var/www/html/anemometer ]] && ln -s anemometer /var/www/html/anemometer 
+
+#mysql -u root < /vagrant/anemometer/install.sql 
+mysql -u root < anemometer/mysql56-install.sql 2> /dev/null
 
 
 # create my.cnf for access
