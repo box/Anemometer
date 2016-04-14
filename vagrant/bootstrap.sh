@@ -6,7 +6,7 @@ ANEMOMETER_FOLDER=/var/www/html/anemometer
 echo "Package installation; can take several minutes."
 # base packages, including percona mysql repo
 yum update -y
-yum install -y kernel-devel-`uname -r` gcc make perl bzip2
+yum install -y kernel-devel-`uname -r` gcc make perl bzip2 perl-Digest-MD5
 yum install -y http://www.percona.com/downloads/percona-release/percona-release-0.0-1.x86_64.rpm
 yum install -y Percona-Server-client-56 Percona-Server-shared-56 Percona-Server-server-56
 yum install -y httpd php php-mysql php-bcmath wget git
@@ -42,6 +42,19 @@ mv ${ANEMOMETER_FOLDER}/conf/sample.config.inc.php ${ANEMOMETER_FOLDER}/conf/con
 cat << EOF > /home/vagrant/.my.cnf
 [client]
 user=root
+EOF
+
+cat << EOF > /etc/my.cnf
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+symbolic-links=0
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+slow_query_log=1
+long_query_time=2
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
 EOF
 
 
