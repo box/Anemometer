@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 sudo -s
 
+ANEMOMETER_FOLDER=/var/www/html/anemometer
+
 echo "Package installation; can take several minutes."
 # base packages, including percona mysql repo
 yum update -y
@@ -28,8 +30,8 @@ sed -i 's/;date.timezone\ \=.*/date.timezone\ \=\ UTC/g' /etc/php.ini
 
 # Creating symbolic links ocurred in permission issues.
 echo "Cloning anemometer"
-git clone https://github.com/3manuek/Anemometer.git /var/www/html/anemometer
-mv /var/www/html/anemometer/conf/sample.config.inc.php /var/www/html/anemometer/conf/config.inc.php
+git clone https://github.com/3manuek/Anemometer.git $ANEMOMETER_FOLDER
+mv ${ANEMOMETER_FOLDER}/conf/sample.config.inc.php ${ANEMOMETER_FOLDER}/conf/config.inc.php
 
 #'user'  => 'root',
 #'password' => '',
@@ -63,4 +65,5 @@ systemctl start httpd.service
 
 #mysql -u root < /vagrant/anemometer/install.sql
 echo "Installing DB ..."
-mysql -u root < anemometer/mysql56-install.sql 2> /dev/null
+mysql -u root < ${ANEMOMETER_FOLDER}/install.sql 2> /dev/null
+mysql -u root < ${ANEMOMETER_FOLDER}/mysql56-install.sql 2> /dev/null
