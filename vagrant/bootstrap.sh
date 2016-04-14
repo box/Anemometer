@@ -31,7 +31,7 @@ git clone https://github.com/3manuek/Anemometer.git anemometer
 # setup symlink for apache & install anemometer files
 #ln -s /vagrant/anemometer  /var/www/html/anemometer
 
-[[ ! -e  /var/www/html/anemometer ]] && ln -s /var/www/html/anemometer anemometer
+[[ ! -h  /var/www/html/anemometer ]] && ln -s /home/vagrant/anemometer /var/www/html/anemometer
 
 #mysql -u root < /vagrant/anemometer/install.sql
 mysql -u root < anemometer/mysql56-install.sql 2> /dev/null
