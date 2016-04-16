@@ -64,19 +64,10 @@ cat << EOF > /home/vagrant/crontab
 EOF
 crontab -u root /home/vagrant/crontab
 
-
-# setup symlink for apache & install anemometer files
-# ln -s /vagrant/anemometer  /var/www/html/anemometer
-
-# [[ ! -h  /var/www/html/anemometer ]] && ln -s /home/vagrant/anemometer /var/www/html/anemometer
-
-
 echo "Starting services"
 systemctl start mysqld.service
 systemctl start httpd.service
 
-
-#mysql -u root < /vagrant/anemometer/install.sql
 echo "Installing DB ..."
 mysql -u root < ${ANEMOMETER_FOLDER}/install.sql 2> /dev/null
 mysql -u root < ${ANEMOMETER_FOLDER}/mysql56-install.sql 2> /dev/null
