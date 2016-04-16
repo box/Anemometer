@@ -4,17 +4,15 @@ Reference:
 https://github.com/mitchellh/vagrant/issues/6497
 
 
-Added in the `Vagrantfile`:
+Added in the `Vagrantfile` the following line:
 
 ```
-config.vm.synced_folder ".", "/vagrant", type: "nfs"
+config.vm.synced_folder ".", "/vagrant"
 ```
 
 
-I thought it was: https://www.virtualbox.org/ticket/12879
 
-
-Solution was:
+Requirements:
 
 ```
 vagrant plugin install vagrant-vbguest
