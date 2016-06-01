@@ -21,7 +21,7 @@
                       <b class="caret"></b>
                       
                 </a>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu scrollable-menu">
                   <?php foreach ($datasources as $ds) { ?> 
                     <li><a href="<?php echo site_url().'?action=report&datasource='.$ds; ?>"><?php echo $ds; ?></a></li>
                   <?php } ?>
