@@ -6,7 +6,7 @@ yum install -y Percona-Server-client-56 Percona-Server-shared-56 Percona-Server-
 yum install -y httpd php php-mysql php-bcmath
 
 # add init scripts & auto start
-chkconfig --levels 235 mysqld on
+chkconfig --levels 235 mysql on
 /etc/init.d/mysql start
 chkconfig --levels 235 httpd on
 /etc/init.d/httpd start
