@@ -240,7 +240,7 @@ $(document).ready( function ()  {
 				<table width="100%">
 				<tr>
 					<td>
-						<strong>Last Sample</strong> on host <strong><?php echo $sample[$hostname_field_name]; ?></strong> at <strong><?php echo $sample[$time_field_name]; ?></strong>
+					 	<strong>Last Sample</strong> on db <strong><?php echo $sample['db_max']; ?></strong> @ host <strong><?php echo $sample[$hostname_field_name]; ?></strong> at <strong><?php echo $sample[$time_field_name]; ?></strong>
 					</td>
 					<td>
 						<!-- dropdown button for more samples with counts -->

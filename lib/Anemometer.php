@@ -78,8 +78,9 @@ class Anemometer {
     {
         $checksum_field_name = $this->data_model->get_field_name('checksum');
         $hostname_field =  $this->data_model->get_field_name('hostname');
-        $dimension_table = $this->report_obj->get_table_by_alias('dimension');
-
+        if ('performance_schema' != $this->data_model->get_source_type()) {
+            $dimension_table = $this->report_obj->get_table_by_alias('dimension');
+        }
         // special case for optional pivot on hostname
         // mainly used to graph each host as a series
         if (get_var('dimension-pivot-'.$hostname_field) != null)

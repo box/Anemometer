@@ -32,18 +32,10 @@
  * one you want to report on.
  *
  */
-$conf['datasources']['localhost'] = array(
-	'host'	=> 'localhost',
-	'port'	=> 3306,
-	'db'	=> 'slow_query_log',
-	'user'	=> 'root',
-	'password' => '',
-	'tables' => array(
-		'global_query_review' => 'fact',
-		'global_query_review_history' => 'dimension'
-	),
-	'source_type' => 'slow_query_log'
-);
+ 
+foreach(glob("conf/datasource_*.inc.php") as $datasource) {
+	require_once($datasource);
+}
 
 /**
  * If you're using Anemometer with MySQL 5.6's performance schema,
