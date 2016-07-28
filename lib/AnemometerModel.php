@@ -289,8 +289,11 @@ class AnemometerModel {
      * @param array $sample     The query sample
      */
     public function init_query_explainer($sample) {
-        if (!is_array($sample))
-        {
+        if (
+            !is_array($sample) or
+            !array_key_exists('plugins', $this->conf) or
+            !array_key_exists('explain', $this->conf['plugins'])
+        ) {
             return;
         }
         $this->explainer = new QueryExplain($this->conf['plugins']['explain'], $sample);
@@ -307,7 +310,11 @@ class AnemometerModel {
         {
             return null;
         }
-        if (!array_key_exists('plugins',$this->conf) or !is_callable($this->conf['plugins']['explain'])) {
+        if (
+            !array_key_exists('plugins',$this->conf) or
+            !array_key_exists('explain', $this->conf['plugins']) or
+            !is_callable($this->conf['plugins']['explain'])
+        ) {
             return null;
         }
 

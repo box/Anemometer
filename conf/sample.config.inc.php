@@ -33,11 +33,11 @@
  *
  */
 $conf['datasources']['localhost'] = array(
-	'host'	=> 'localhost',
+	'host'	=> getenv('ANEMOMETER_PORT_3306_TCP_ADDR') ?: 'localhost',
 	'port'	=> 3306,
 	'db'	=> 'slow_query_log',
-	'user'	=> 'root',
-	'password' => '',
+	'user'	=> getenv('ANEMOMETER_ENV_MYSQL_USER') ?: 'root',
+	'password' => getenv('ANEMOMETER_ENV_MYSQL_PASS') ?: '',
 	'tables' => array(
 		'global_query_review' => 'fact',
 		'global_query_review_history' => 'dimension'
@@ -254,12 +254,10 @@ $conf['history_defaults']['performance_schema_history'] = array(
  * explain plugin, then these sections will not be displayed.
  *
  */
-$conf['plugins'] = array(
 
+ $conf['plugins'] = array(
+/*
 	'visual_explain' => '/usr/bin/pt-visual-explain',
-#	percona toolkit has removed query advisor
-#	'query_advisor'	=> '/usr/bin/pt-query-advisor',
-
 	'show_create'	=> true,
 	'show_status'	=> true,
 
@@ -294,7 +292,7 @@ $conf['plugins'] = array(
 		$conn['password'] = '';
 
 		return $conn;
-	},
+	},*/
 );
 
 /**
