@@ -2,3 +2,4 @@ conf/config.inc.php
 *.komodoproject
 vendor/
 /.idea/
+/vagrant/.vagrant/
