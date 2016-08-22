@@ -22,7 +22,7 @@ class TestHelpers extends PHPUnit_Framework_TestCase {
         $returnedValue = dec2hex($dec);
         $this->assertEquals($expectedResult,$returnedValue);
     }
-
+    
     public function testtrim_left_zeros_wEndZeroes(){
         $string = "000000000170";
         $expectedResult = "170";
