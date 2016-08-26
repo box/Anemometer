@@ -1,5 +1,5 @@
 FROM centos:7
-MAINTAINER Box Open Source "ops@box.com"
+MAINTAINER Box Open Source "oss@box.com"
 
 COPY . /var/www/html
 WORKDIR /var/www/html
