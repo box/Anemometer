@@ -1,8 +1,6 @@
 CREATE DATABASE IF NOT EXISTS slow_query_log;
 
-USE slow_query_log;
-
-CREATE TABLE events_statements (
+CREATE TABLE IF NOT EXISTS slow_query_log.events_statements (
  `DIGEST` varchar(32) character set binary NOT NULL ,
   `DIGEST_TEXT` longtext NOT NULL,
   `first_seen` datetime DEFAULT NULL,
@@ -14,7 +12,7 @@ CREATE TABLE events_statements (
   PRIMARY KEY (`DIGEST`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE events_statements_history (
+CREATE TABLE IF NOT EXISTS slow_query_log.events_statements_history (
    history_id bigint unsigned not null auto_increment PRIMARY KEY,
    hostname varchar(48) not null default '',
   `DIGEST` varchar(32) character set binary DEFAULT NULL ,
