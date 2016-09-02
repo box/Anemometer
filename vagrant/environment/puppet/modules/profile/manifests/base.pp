@@ -57,15 +57,6 @@ password=qwerty
 "
   }
 
-  # Disable scl because of error
-  # http://mirror.centos.org/centos/6/SCL/x86_64/repodata/repomd.xml: [Errno 14] PYCURL ERROR 22 - "The requested URL returned error: 404 Not Found"
-  # Trying other mirror.
-  # Error: Cannot retrieve repository metadata (repomd.xml) for repository: scl. Please verify its path and try again
-
-  package { "centos-release-SCL":
-    ensure => absent
-  }
-
   yumrepo { 'Percona':
     baseurl => 'http://repo.percona.com/centos/$releasever/os/$basearch/',
     enabled => 1,
@@ -74,14 +65,15 @@ password=qwerty
     retries => 3
   }
 
-  $packages = [ 'vim', 'nc',
+  $packages = [ 'vim-enhanced', 'nmap-ncat',
     'Percona-Server-client-56', 'Percona-Server-server-56',
     'Percona-Server-devel-56', 'Percona-Server-shared-56', 'percona-toolkit',
-    'httpd', 'php', 'php-mysql', 'php-bcmath']
+    'httpd', 'php', 'php-mysql', 'php-bcmath',
+    'docker']
 
   package { $packages:
     ensure => installed,
-    require => [Yumrepo['Percona'], Package['centos-release-SCL']]
+    require => [Yumrepo['Percona']]
   }
 
   service { 'mysql':
@@ -138,6 +130,12 @@ password=qwerty
     user => 'root',
     minute => '*/5'
 
+  }
+
+  service { 'docker':
+    ensure => running,
+    enable => true,
+    require => Package['docker']
   }
 
 }

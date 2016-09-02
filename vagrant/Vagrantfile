@@ -4,11 +4,18 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = '2'
 
+$script = <<SCRIPT
+rpm -Uhv https://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
+yum -y install puppet
+SCRIPT
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = 'puphpet/centos65-x64'
+  config.vm.box = 'bento/centos-7.1'
   config.vm.hostname = 'anemometer'
   config.vm.network :forwarded_port, host: 8844, guest: 80
   config.vm.synced_folder '..', '/anemometer'
+
+  config.vm.provision "shell", inline: $script
   config.vm.provision :puppet do |puppet|
     puppet.environment_path = 'environment'
     puppet.environment = 'puppet'
