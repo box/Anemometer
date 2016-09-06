@@ -43,12 +43,14 @@ function site_url()
  * wrap html pre tags around the given string, with class="prettyprint"
  *
  * @param string $string
+ * @return string Formatted html
  */
 function prettyprint($string)
 {
-    print '<pre class="prettyprint">';
-    print $string;
-    print "</pre>";
+    $return = '<pre class="prettyprint">';
+    $return .= "\n$string\n";
+    $return .= "</pre>";
+	return $return;
 }
 
 
