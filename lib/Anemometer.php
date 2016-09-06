@@ -115,7 +115,7 @@ class Anemometer {
         catch (Exception $e)
         {
             $this->alert($e->getMessage(),'alert-error');
-            prettyprint($data['sql']);
+            print prettyprint($data['sql']);
         }
         $data['columns'] = $this->report_obj->get_column_names();
         $data['permalink'] = site_url() . '?action=report&datasource=' . $data['datasource'] . '&' . $this->report_obj->get_search_uri();
