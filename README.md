@@ -1,4 +1,5 @@
 [![Project Status](http://opensource.box.com/badges/maintenance.svg)](http://opensource.box.com/badges)
+[![Travis](https://img.shields.io/travis/box/Anemometer.svg?maxAge=2592000)](https://travis-ci.org/box/Anemometer)
 
 Box Anemometer
 --------------
