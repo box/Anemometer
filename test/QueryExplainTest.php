@@ -1,6 +1,6 @@
 <?php
 
-require_once '../lib/QueryExplain.php';
+require_once 'lib/QueryExplain.php';
 
 /**
  * Created by IntelliJ IDEA.

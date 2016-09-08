@@ -1,5 +1,5 @@
 <?php
-require_once '../lib/QueryTableParser.php';
+require_once 'lib/QueryTableParser.php';
 
 class TestQueryTableParser extends PHPUnit_Framework_TestCase
 {
