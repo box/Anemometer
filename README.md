@@ -4,6 +4,8 @@
 Box Anemometer
 --------------
 
+[![Join the chat at https://gitter.im/box/Anemometer](https://badges.gitter.im/box/Anemometer.svg)](https://gitter.im/box/Anemometer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is the Box Anemometer, the MySQL Slow Query Monitor.  This tool is used to analyze slow query logs collected from MySQL instances to identify problematic queries.
 
 ### Documentation ###
