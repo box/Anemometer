@@ -48,9 +48,9 @@ require_once "QueryRewrite.php";
 class QueryExplain {
 
     private $get_connection_func;
-    private $mysqli;
-    private $conf;
-    private $query;
+    public $mysqli;
+    public $conf;
+    public $query;
 
     private static $CONNECT_TIMEOUT = 1;
 
