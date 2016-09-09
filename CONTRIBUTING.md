@@ -59,7 +59,7 @@ Before sending a pull request, rebase against upstream, such as:
 
 ```
 git fetch upstream
-git rebase upstream/master
+git rebase upstream/develop
 ```
 
 This will add your changes on top of what's already in upstream, minimizing merge issues.
@@ -71,5 +71,7 @@ Make sure that all tests are passing before submitting a pull request.
 ### Step 8: Send the pull request
 
 Send the pull request from your feature branch to us. Be sure to include a description that lets us know what work you did.
+
+The base branch should be `develop`.
 
 Keep in mind that we like to see one issue addressed per pull request, as this helps keep our git history clean and we can more easily track down issues.
