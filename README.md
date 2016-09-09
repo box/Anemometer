@@ -1,9 +1,8 @@
-[![Project Status](http://opensource.box.com/badges/maintenance.svg)](http://opensource.box.com/badges)
-[![Travis](https://img.shields.io/travis/box/Anemometer.svg?maxAge=2592000)](https://travis-ci.org/box/Anemometer)
 
 Box Anemometer
 --------------
-
+[![Project Status](http://opensource.box.com/badges/maintenance.svg)](http://opensource.box.com/badges)
+[![Travis](https://img.shields.io/travis/box/Anemometer.svg?maxAge=2592000)](https://travis-ci.org/box/Anemometer)
 [![Join the chat at https://gitter.im/box/Anemometer](https://badges.gitter.im/box/Anemometer.svg)](https://gitter.im/box/Anemometer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is the Box Anemometer, the MySQL Slow Query Monitor.  This tool is used to analyze slow query logs collected from MySQL instances to identify problematic queries.
