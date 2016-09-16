@@ -258,7 +258,7 @@ $(document).ready( function ()  {
 					</td>
 				</tr>
 				</table>
-				<pre class="prettyprint lang-sql"><?php echo $sample[$sample_field_name]; ?></pre>
+				<pre class="prettyprint lang-sql"><?php echo htmlspecialchars($sample[$sample_field_name]); ?></pre>
 				<?php } ?>
 
 		<?php if (isset($explain_plan_error)) { ?>
