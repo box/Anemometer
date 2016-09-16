@@ -109,3 +109,9 @@
   max-height: 300px;
   overflow-y: auto;
 }
+
+.scrollable-menu {
+    height: auto;
+    max-height: 600px;
+    overflow-x: hidden;
+}
