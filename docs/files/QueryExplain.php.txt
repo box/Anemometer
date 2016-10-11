@@ -43,14 +43,11 @@
  */
 
 require __DIR__ . '/QueryTableParser.php';
-require_once __DIR__ . '/QueryRewrite.php';
+require_once __DIR__ . 'QueryRewrite.php';
 
 class QueryExplain {
 
     private $get_connection_func;
-    /**
-     * @var mysqli
-     */
     public $mysqli;
     public $conf;
     public $query;
@@ -94,7 +91,7 @@ class QueryExplain {
      * @return string  the create table statements, or an error message
      */
     public function get_create() {
-        if ($this->mysqli === null) {
+        if (!isset($this->mysqli)) {
             return null;
         }
 
@@ -105,12 +102,12 @@ class QueryExplain {
         $create_tables = array();
         foreach ($tables as $table) {
             $result = $this->mysqli->query("SHOW CREATE TABLE {$table}");
-            if (is_object($result) && $row = $result->fetch_array()) {
+            if (is_object($result) and $row = $result->fetch_array()) {
                 $create_tables[] = $row[1];
             }
         }
 
-        return implode("\n\n", $create_tables);
+        return join("\n\n", $create_tables);
     }
 
     /**
@@ -124,7 +121,7 @@ class QueryExplain {
             return null;
         }
 
-        $tables = $this->get_tables_from_query(new QueryTableParser());
+        $tables = $this->get_tables_from_query($this->query);
         $table_status = array();
         foreach ($tables as $table) {
             $sql = "SHOW TABLE STATUS LIKE '{$table}'";
@@ -137,7 +134,7 @@ class QueryExplain {
                 $table_status[] = $str;
             }
         }
-        return implode("\n\n", $table_status);
+        return join("\n\n", $table_status);
     }
 
     /**
@@ -146,7 +143,7 @@ class QueryExplain {
      * @return null|string The explain plan, or an error message
      */
     public function explain() {
-        if ($this->mysqli === null) {
+        if (!isset($this->mysqli)) {
             return null;
         }
 
@@ -309,3 +306,4 @@ class QueryExplain {
 }
 
 ?>
+

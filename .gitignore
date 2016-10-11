@@ -3,3 +3,4 @@ conf/config.inc.php
 vendor/
 /.idea/
 /vagrant/.vagrant/
+.DS_Store
