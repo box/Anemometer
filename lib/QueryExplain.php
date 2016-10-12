@@ -42,12 +42,15 @@
  *
  */
 
-require "QueryTableParser.php";
-require_once "QueryRewrite.php";
+require __DIR__ . '/QueryTableParser.php';
+require_once __DIR__ . '/QueryRewrite.php';
 
 class QueryExplain {
 
     private $get_connection_func;
+    /**
+     * @var mysqli
+     */
     public $mysqli;
     public $conf;
     public $query;
@@ -60,12 +63,13 @@ class QueryExplain {
      *
      * @param callback $get_connection_func     The callback function
      * @param array $sample     array of information about the query
-     * @throws Exception  if a database connection cannot be made
+     * @throws RuntimeException  if a database connection cannot be made
+     * @throws InvalidArgumentException if $get_connection_func is not a function
      */
-    function __construct($get_connection_func, $sample) {
+    public function __construct($get_connection_func, $sample) {
         $this->get_connection_func = $get_connection_func;
         if (!is_callable($this->get_connection_func)) {
-            return "func not callable:\n" . print_r($this->get_connection_func, true);
+            throw new InvalidArgumentException("func not callable:\n" . print_r($this->get_connection_func, true));
         }
         $this->conf = call_user_func($this->get_connection_func, $sample);
         $this->connect();
@@ -75,10 +79,11 @@ class QueryExplain {
     /**
      * Try to parse the real table names out of a sql query
      *
+     * @param QueryTableParser $parser instance of QueryTableParser()
      * @return array the list of tables in the query
      */
-    public function get_tables_from_query() {
-        $parser = new QueryTableParser();
+    public function get_tables_from_query(QueryTableParser $parser) {
+
         return $parser->parse($this->query);
     }
 
@@ -89,24 +94,23 @@ class QueryExplain {
      * @return string  the create table statements, or an error message
      */
     public function get_create() {
-        if (!isset($this->mysqli)) {
+        if ($this->mysqli === null) {
             return null;
         }
 
-
-        $tables = $this->get_tables_from_query($this->query);
+        $tables = $this->get_tables_from_query(new QueryTableParser());
         if (!is_array($tables)) {
             return $tables;
         }
         $create_tables = array();
         foreach ($tables as $table) {
             $result = $this->mysqli->query("SHOW CREATE TABLE {$table}");
-            if (is_object($result) and $row = $result->fetch_array()) {
+            if (is_object($result) && $row = $result->fetch_array()) {
                 $create_tables[] = $row[1];
             }
         }
 
-        return join("\n\n", $create_tables);
+        return implode("\n\n", $create_tables);
     }
 
     /**
@@ -120,7 +124,7 @@ class QueryExplain {
             return null;
         }
 
-        $tables = $this->get_tables_from_query($this->query);
+        $tables = $this->get_tables_from_query(new QueryTableParser());
         $table_status = array();
         foreach ($tables as $table) {
             $sql = "SHOW TABLE STATUS LIKE '{$table}'";
@@ -133,7 +137,7 @@ class QueryExplain {
                 $table_status[] = $str;
             }
         }
-        return join("\n\n", $table_status);
+        return implode("\n\n", $table_status);
     }
 
     /**
@@ -142,7 +146,7 @@ class QueryExplain {
      * @return null|string The explain plan, or an error message
      */
     public function explain() {
-        if (!isset($this->mysqli)) {
+        if ($this->mysqli === null) {
             return null;
         }
 
@@ -168,13 +172,13 @@ class QueryExplain {
      * used to construct the object.
      *
      * @return boolean  true if successful
-     * @throws Exception    throws errors on connect to the database
+     * @throws RuntimeException throws errors on connect to the database
      */
     private function connect() {
         $required = array('host', 'user', 'password', 'db');
         foreach ($required as $r) {
             if (!isset($this->conf[$r])) {
-                throw new Exception("Missing field {$r}");
+                throw new RuntimeException("Missing field {$r}");
             }
         }
 
@@ -182,16 +186,21 @@ class QueryExplain {
             $this->mysqli = new mysqli();
             $this->mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, self::$CONNECT_TIMEOUT);
             $this->mysqli->real_connect(
-                    $this->conf['host'], $this->conf['user'], $this->conf['password'], $this->conf['db'], $this->conf['port']
+                $this->conf['host'],
+                $this->conf['user'],
+                $this->conf['password'],
+                $this->conf['db'],
+                $this->conf['port']
             );
         } catch (Exception $e) {
-            throw new Exception(
-                    sprintf("Timeout connecting to mysql on %s:%s", $this->conf['host'], $this->conf['port'])
+            throw new RuntimeException(
+                    sprintf('Timeout connecting to mysql on %s:%s', $this->conf['host'], $this->conf['port'])
             );
         }
 
         if ($this->mysqli->connect_errno || !$this->mysqli) {
-            throw new Exception("Connection error: " . $this->mysqli->connect_error . "(" . $this->mysqli->connect_errno . ")");
+            throw new RuntimeException('Connection error: '
+                . $this->mysqli->connect_error . '(' . $this->mysqli->connect_errno . ')');
         }
 
         return true;

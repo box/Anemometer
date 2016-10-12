@@ -1,0 +1,2589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">113</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">8</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1016738716"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1016738716" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Anemometer.html">Anemometer</a></li>
+                                                    <li class="class"><a href="../classes/AnemometerModel.html">AnemometerModel</a></li>
+                                                    <li class="class"><a href="../classes/Loader.html">Loader</a></li>
+                                                    <li class="class"><a href="../classes/MySQLTableReport.html">MySQLTableReport</a></li>
+                                                    <li class="class"><a href="../classes/QueryExplain.html">QueryExplain</a></li>
+                                                    <li class="class"><a href="../classes/QueryRewrite.html">QueryRewrite</a></li>
+                                                    <li class="class"><a href="../classes/QueryTableParser.html">QueryTableParser</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>MySQLTableReport</h1>
+                    <p><em>class MySQLTableReport
+Generic reporting class.  Given a configuration file, that describes the tables
+and fields to be searched, and information to connect to a database, take form data
+and generate an SQL query to run.</em></p>
+                    <p>The report object is made to address a certain class of reports:  Time series data,
+to aggregate by some arbitrary column and return the SUM/MIN/MAX/AVG/etc of other
+columns.</p>
+<p>Basic usage:
+<code>
+$report = new MySQLTableReport( $datasource, $tables, $report);</p>
+<p>// run the query and get the result and header data
+$result  = $report-&gt;execute($sql);
+$columns = $report-&gt;get_column_names();</p>
+<p>// ... display as desired.
+</code></p>
+<p>the parameters above have the following forms:
+<code>
+$datasource = array(
+'host'  =&gt; $host, // the mysql server hostname
+'port'  =&gt; $port, // optional port number
+'user'  =&gt; $user, // the user credential
+'password' =&gt; $pass, // the password for the user
+'db'    =&gt; $db, // the database name
+);</p>
+<p>$tables = array(
+'fact_table_name'       =&gt; 'fact',      // table_name =&gt; alias
+'dimension_table_name'  =&gt;  'dimension', // table_name =&gt; alias
+);
+</code></p>
+<p>The aliases used for tables are mostly anything you choose <em>except</em> that one
+table must have the alias 'fact'.  This is considered the root table to which
+any additional tables can be joined. There can be only one fact table, but you can
+have any number of dimension tables as long as each have unique aliases</p>
+<p><code>
+$report = array(</p>
+<pre><code> // the JOIN clause for any dimension tables.  Specify the exact clause used
+ // for each table alias
+ 'join'      =&gt; array(
+     'dimension'     =&gt;  "USING (id)",
+ ),
+
+ // fields for the tables; defined by the table's alias and not the real table name
+ // this allows the exact same report to be used on tables with the same structure
+ // but different names
+ 'fields'    =&gt; array(
+     'fact'  =&gt; array(
+         'name'      =&gt; 'clear|where',
+
+         // note that these aren't field names in the table, but we need
+         // a place to put them for the form processor to handle them
+         // the filters here will make sure the data gets added to the right
+         // part of the query, and not the WHERE clause like other fields.
+         'group'     =&gt; 'group',
+         'order'     =&gt; 'order',
+         'having'    =&gt; 'having',
+         'limit'     =&gt; 'limit',
+     ),
+
+     'dimension' =&gt; array(
+         'date'      =&gt; 'date_range|clear|where',
+         'price'     =&gt; 'ge|clear|where'
+     )
+
+ ), // end fields
+
+ // custom fields are allowed as well
+ 'custom_fields' =&gt; array(
+         'epoch'     =&gt;  'FROM_UNIXTIME(date)',
+         'snippet'   =&gt;  'LEFT(info,15)'
+ )</code></pre>
+<p>);
+</code></p>
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/MySQLTableReport.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_set_non_aggregate_columns" class="">set_non_aggregate_columns()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_set_pivot_values" class="">set_pivot_values()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_get_pivot_values" class="">get_pivot_values()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_get_tables" class="">get_tables()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_get_table_by_alias" class="">get_table_by_alias()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_get_form_fields" class="">get_form_fields()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_get_custom_fields" class="">get_custom_fields()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_get_table_fields" class="">get_table_fields()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_get_distinct_values" class="">get_distinct_values()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_get_form_field_values" class="">get_form_field_values()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_select" class="">select()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_from" class="">from()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_join" class="">join()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_where" class="">where()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_group" class="">group()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_order" class="">order()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_limit" class="">limit()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_having" class="">having()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_raw_where" class="">raw_where()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_pivot" class="">pivot()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_date_range" class="">date_range()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_reldate" class="">reldate()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_clear" class="">clear()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_ge" class="">ge()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_le" class="">le()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_gt" class="">gt()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_lt" class="">lt()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_ne" class="">ne()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_like" class="">like()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_process_form_data" class="">process_form_data()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_remove_schema_name" class="">remove_schema_name()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_query" class="">query()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_get_column_names" class="">get_column_names()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_execute" class="">execute()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_get_search_uri" class="">get_search_uri()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/MySQLTableReport.html#method_init_report" class="">init_report()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_connect_to_datasource" class="">connect_to_datasource()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_get_column_aggregate_function" class="">get_column_aggregate_function()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_filter_where" class="">filter_where()</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#method_check_mysql_error" class="">check_mysql_error()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MySQLTableReport.html#property_datasource" class="">$datasource</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_tables" class="">$tables</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_report" class="">$report</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_form_fields" class="">$form_fields</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_pivot" class="">$pivot</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_form_data_processed" class="">$form_data_processed</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_sql" class="">$sql</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_select" class="">$select</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_from" class="">$from</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_join" class="">$join</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_where" class="">$where</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_having" class="">$having</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_order" class="">$order</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_limit" class="">$limit</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_raw_where" class="">$raw_where</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_non_aggregate_columns" class="">$non_aggregate_columns</a><br />
+                                                                    <a href="../classes/MySQLTableReport.html#property_CONNECT_TIMEOUT" class="">$CONNECT_TIMEOUT</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/MySQLTableReport.html"><div class="path-wrapper">MySQLTableReport.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Default</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\MySQLTableReport</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                todo
+                            </th>
+                            <td>
+                                                                    <p>describe the config format in more detail</p>
+                                                                    <p>create a base class</p>
+                                                                    <p>create a pear package out of this</p>
+                                                                    <p>abstract aggregate function handling (or move to the config)</p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                author
+                            </th>
+                            <td>
+                                                                    <p>Gavin Towey <a href="mailto:gavin@box.com">gavin@box.com</a></p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                created
+                            </th>
+                            <td>
+                                                                    <p>2012-01-01</p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                license
+                            </th>
+                            <td>
+                                                                    <p>Apache 2.0 license.  See LICENSE document for more info</p>
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_datasource" name="property_datasource" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$datasource</h3>
+                <pre class="signature">$datasource : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_tables" name="property_tables" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$tables</h3>
+                <pre class="signature">$tables : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_report" name="property_report" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$report</h3>
+                <pre class="signature">$report : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_form_fields" name="property_form_fields" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$form_fields</h3>
+                <pre class="signature">$form_fields : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_pivot" name="property_pivot" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$pivot</h3>
+                <pre class="signature">$pivot : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_form_data_processed" name="property_form_data_processed" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$form_data_processed</h3>
+                <pre class="signature">$form_data_processed : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_sql" name="property_sql" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$sql</h3>
+                <pre class="signature">$sql : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_select" name="property_select" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$select</h3>
+                <pre class="signature">$select : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_from" name="property_from" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$from</h3>
+                <pre class="signature">$from : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_join" name="property_join" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$join</h3>
+                <pre class="signature">$join : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_where" name="property_where" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$where</h3>
+                <pre class="signature">$where : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_having" name="property_having" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$having</h3>
+                <pre class="signature">$having : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_order" name="property_order" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$order</h3>
+                <pre class="signature">$order : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_limit" name="property_limit" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$limit</h3>
+                <pre class="signature">$limit : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_raw_where" name="property_raw_where" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$raw_where</h3>
+                <pre class="signature">$raw_where : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_non_aggregate_columns" name="property_non_aggregate_columns" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$non_aggregate_columns</h3>
+                <pre class="signature">$non_aggregate_columns : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_CONNECT_TIMEOUT" name="property_CONNECT_TIMEOUT" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$CONNECT_TIMEOUT</h3>
+                <pre class="signature">$CONNECT_TIMEOUT : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct(array  <span class="argument">$datasource</span>, array  <span class="argument">$tables</span>, array  <span class="argument">$report</span>) </pre>
+                <p><em>create a new instance, pass configuration information describing the datasource
+and the report tables and fields.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$datasource </td>
+                                <td><p>Database connection information required :host,user,password,db; optional: port</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$tables </td>
+                                <td><p>Tables to use for this report.  format is array( 'table_name'   =&gt; 'alias' )  there must be at least one &quot;fact&quot; table, and optionally a &quot;dimension&quot; table</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$report </td>
+                                <td><p>config array describing the table structure and other options</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_set_non_aggregate_columns" name="method_set_non_aggregate_columns" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">set_non_aggregate_columns()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">set_non_aggregate_columns(array  <span class="argument">$columns</span>) </pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$columns </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_set_pivot_values" name="method_set_pivot_values" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">set_pivot_values()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">set_pivot_values(string  <span class="argument">$col_name</span>, array  <span class="argument">$values</span>) </pre>
+                <p><em>pivot operations require some setup -- this defines the list of values to turn into
+additional columns when we ask the report to pivot a column.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>the name of the column to pivot</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$values </td>
+                                <td><p>the list of values</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_pivot_values" name="method_get_pivot_values" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_pivot_values()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_pivot_values(string  <span class="argument">$col_name</span>) : array</pre>
+                <p><em>return the list of values for a given pivot column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>the name of the pivot column</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>the list of values defined by set_pivot_values</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_tables" name="method_get_tables" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_tables()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_tables() : array</pre>
+                <p><em>returns the list of table names, not the aliases</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_table_by_alias" name="method_get_table_by_alias" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_table_by_alias()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_table_by_alias(string  <span class="argument">$alias</span>) : string</pre>
+                <p><em>gets the concrete name of a table for the given alias</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$alias </td>
+                                <td><p>The alias name to fetch the table for</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Exception</dt>
+                            <dd><p>if the alias doesn't exist</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The real table name</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_form_fields" name="method_get_form_fields" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_form_fields()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_form_fields() : array</pre>
+                <p><em>return the list of form fields defined by the configuration parameters used
+ to construct this object.  Field names are prefixed by the table *alias*</em></p>
+                <p>so if the configuration section looked like :
+'fields' =&gt; array(
+'fact'  =&gt; array(
+'checksum'  =&gt; '...',
+),
+'dimension' =&gt; array(
+'hostname'  =&gt; '...',
+),</p>
+<p>The result would be an array with the values ('fact-checksum', 'dimension-hostname').</p>
+<p>These are the form field names that will be checked to build the search parameters.</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>the form fields</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_custom_fields" name="method_get_custom_fields" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_custom_fields()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_custom_fields() : array</pre>
+                <p><em>returns a list of custom fields names.</em></p>
+                <p>Custom fields are additional columns that can be used in the SELECT clause,
+but not as WHERE or other conditions.  They are defined in the configuration
+used to create the object</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>the custom field list</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_table_fields" name="method_get_table_fields" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_table_fields()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_table_fields(string  <span class="argument">$table_name = null</span>) : array</pre>
+                <p><em>select the field names for the report tables from the database.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$table_name </td>
+                                <td><p>optional table name.  If none is provided,  all tables defined in the report will be queried.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>the list of columns defined in the database tables.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_distinct_values" name="method_get_distinct_values" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_distinct_values()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_distinct_values(string  <span class="argument">$table</span>, string  <span class="argument">$colname</span>) : array</pre>
+                <p><em>given a table and column, find all the unique values.  This is a utility
+method often used when building dropdown lists on a search form, or getting
+values for pivot operations.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$table </td>
+                                <td><p>the table name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$colname </td>
+                                <td><p>the column name</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>the list of unique values</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_form_field_values" name="method_get_form_field_values" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_form_field_values()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_form_field_values() : array</pre>
+                <p><em>return an associate array with form_field_name =&gt; value for all fields.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>the array of field names and values</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_select" name="method_select" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">select()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">select(string  <span class="argument">$field</span>, string  <span class="argument">$alias</span>, string  <span class="argument">$aggregate</span>) : \MySQLTableReport</pre>
+                <p><em>add a column to the select field list</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$field </td>
+                                <td><p>the field name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$alias </td>
+                                <td><p>the field alias</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$aggregate </td>
+                                <td><p>how to optionally aggregate values in this column</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MySQLTableReport.html">\MySQLTableReport</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_from" name="method_from" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">from()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">from(array  <span class="argument">$table</span>) : \MySQLTableReport</pre>
+                <p><em>define the primary table to select from</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$table </td>
+                                <td><p>The table to select from; the format is array(table_name, alias)</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MySQLTableReport.html">\MySQLTableReport</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_join" name="method_join" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">join()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">join(array  <span class="argument">$table</span>) : \MySQLTableReport</pre>
+                <p><em>add a table to the JOIN clause</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$table </td>
+                                <td><p>The table to join; the format is array(table_name, alias)</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MySQLTableReport.html">\MySQLTableReport</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_where" name="method_where" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">where()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">where(string  <span class="argument">$key</span>, string  <span class="argument">$var_name</span>, string  <span class="argument">$value</span>, string  <span class="argument">$op = null</span>) : \MySQLTableReport</pre>
+                <p><em>add a condition to the WHERE clause.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$key </td>
+                                <td><p>the full column name including table alias</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$var_name </td>
+                                <td><p>the name of the form variable for this column</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$value </td>
+                                <td><p>the form value</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$op </td>
+                                <td><p>the conditional operator to use; default =</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MySQLTableReport.html">\MySQLTableReport</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_group" name="method_group" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">group()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">group(string  <span class="argument">$col_name</span>, string  <span class="argument">$var_name</span>, string  <span class="argument">$expression</span>) : \MySQLTableReport</pre>
+                <p><em>set the GROUP BY expression</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>the name of the form field as a column</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$var_name </td>
+                                <td><p>the form variable name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>the group by expression</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MySQLTableReport.html">\MySQLTableReport</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_order" name="method_order" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">order()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">order(  <span class="argument">$key</span>,   <span class="argument">$field</span>, string  <span class="argument">$expression</span>) : \MySQLTableReport</pre>
+                <p><em>set the ORDER BY clause</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$field </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>the order by expression</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MySQLTableReport.html">\MySQLTableReport</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_limit" name="method_limit" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">limit()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">limit(  <span class="argument">$key</span>,   <span class="argument">$field</span>, string  <span class="argument">$expression</span>) : \MySQLTableReport</pre>
+                <p><em>set the LIMIT clause</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$field </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>the limit expression</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MySQLTableReport.html">\MySQLTableReport</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_having" name="method_having" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">having()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">having(  <span class="argument">$key</span>,   <span class="argument">$field</span>, string  <span class="argument">$expression</span>) : \MySQLTableReport</pre>
+                <p><em>set the HAVING clause</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$field </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>the having expression</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MySQLTableReport.html">\MySQLTableReport</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_raw_where" name="method_raw_where" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">raw_where()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">raw_where(string  <span class="argument">$key</span>, string  <span class="argument">$field</span>, string  <span class="argument">$expression</span>) </pre>
+                <p><em>raw_where is an unprocessed string that is added to the WHERE clause</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$key </td>
+                                <td><p>ignored</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$field </td>
+                                <td><p>ignored</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>The raw WHERE expression</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_pivot" name="method_pivot" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">pivot()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">pivot(string  <span class="argument">$col_name</span>, string  <span class="argument">$var_name</span>, string  <span class="argument">$expression</span>) : \MySQLTableReport|string</pre>
+                <p><em>preform a pivot on a column.  Get the unique list of values
+and return  them as a conditional aggregate expression to be added to the
+select clause.  Right now only one aggregate type is supported: SUM
+Also a little black magic is used to get the column name from the synthetic
+column name needed here.  The column in the form and config should be called:
+pivot-{$column_name} and it&#039;s value should be the column to return when the expression is true.</em></p>
+                <p>For example, if you have a hostname column with a count of signups, and you want to
+pivot on the hostname and return the aggregate signups for each host as its own column,
+then the form field should look like:</p>
+<p><input type="checkbox" name="dimension-pivot-hostname" value="signups" />  Count signups per-host</p>
+<p>The report object config would look like:</p>
+<p>'fields' =&gt; array(
+'dimension' =&gt; array(
+'pivot-hostname'    =&gt; 'pivot|select',
+)
+)</p>
+<p>Then remember to set the unique list of value for this pivot operation:</p>
+<p>$report = new MySQLTableReport( ... );
+$hosts = $report-&gt;get_distinct_values('dimension','hostname');
+$report-&gt;set_pivot_values('dimension-pivot-hostname', $hosts);</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>The name of the pivot column</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$var_name </td>
+                                <td><p>The field variable name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>The column to return in the IF($col_name}='value' ... ) expression</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MySQLTableReport.html">\MySQLTableReport</a>|string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_date_range" name="method_date_range" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">date_range()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">date_range(string  <span class="argument">$col_name</span>, string  <span class="argument">$var_name</span>, string  <span class="argument">$expression</span>) : array</pre>
+                <p><em>look for a range of date values for the given column, and return
+values to be added to the WHERE clause</em></p>
+                <p>This is used when you have a column like &quot;invoice_date&quot; in the report,
+but what you really want to search for is a range of dates between a given
+start and end date.</p>
+<p>To do that, create form fields with _start and _end added to the name,
+and pass the column to this processor.  It will search for the appropriate
+form fields and build the range.</p>
+<input type="text" name="dimension-invoice_date_start">
+<input type="text" name="dimension-invoice_date_end">
+<p>The config settings would look like:</p>
+<p>'fields' =&gt; array(
+'dimension' =&gt; array(
+'invoice_date'  =&gt;  'date_range|clear|where',
+)
+)</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>the base column name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$var_name </td>
+                                <td><p>the base field variable name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>ignored</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>the list of expressions to pass to the where function</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_reldate" name="method_reldate" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">reldate()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">reldate(  <span class="argument">$col_name</span>,   <span class="argument">$var_name</span>,   <span class="argument">$expression</span>,   <span class="argument">$op</span>) </pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$col_name </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$var_name </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$expression </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$op </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_clear" name="method_clear" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">clear()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">clear(string  <span class="argument">$col_name</span>, string  <span class="argument">$var_name</span>, string  <span class="argument">$expression</span>,   <span class="argument">$op = null</span>) : \MySQLTableReport</pre>
+                <p><em>Remove blank strings as values in form fields.</em></p>
+                <p>Most cases, the forms you create can have empty fields which mean those
+conditions should be omitted from the WHERE clause.  However, the form
+will send and empty string.  When you want an empty field to be removed from
+the WHERE clause, pass it through the clear filter first.</p>
+<p>'fields' =&gt; array(
+'dimension' =&gt; array(
+'hostname'  =&gt;  'clear|where', // if hostname is blank, do not include it in the query.
+)
+)</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>the name of the form field as a column</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$var_name </td>
+                                <td><p>the form variable name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>the value of the field</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$op </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MySQLTableReport.html">\MySQLTableReport</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_ge" name="method_ge" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">ge()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">ge(string  <span class="argument">$col_name</span>, string  <span class="argument">$var_name</span>, string  <span class="argument">$expression</span>) : array</pre>
+                <p><em>apply a &quot;greater than or equal to&quot; operator to a WHERE condition, instead
+of the default equality matching</em></p>
+                <p>By default a configuration section like this would produce equality matching:</p>
+<p>'fields' =&gt; array(
+'dimension' =&gt; array(
+'price'  =&gt;  'clear|where', // generates SQL such as: WHERE price = <some value>
+)
+)</p>
+<p>If you need a range of values, include the appropriate operator as a filter:</p>
+<p>'fields' =&gt; array(
+'dimension' =&gt; array(
+'price'  =&gt;  'clear|ge|where', // generates SQL such as: WHERE price &gt;= <some value>
+)
+)</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>The column name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$var_name </td>
+                                <td><p>The field variable name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>The field value</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>condition to pass to next filter</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_le" name="method_le" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">le()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">le(string  <span class="argument">$col_name</span>, string  <span class="argument">$var_name</span>, string  <span class="argument">$expression</span>) : array</pre>
+                <p><em>less than or equal to: see documentation for ge()</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>The column name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$var_name </td>
+                                <td><p>The field variable name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>The field value</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>condition to pass to next filter</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_gt" name="method_gt" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">gt()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">gt(string  <span class="argument">$col_name</span>, string  <span class="argument">$var_name</span>, string  <span class="argument">$expression</span>) : array</pre>
+                <p><em>greater than: see documentation for ge()</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>The column name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$var_name </td>
+                                <td><p>The field variable name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>The field value</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>condition to pass to next filter</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_lt" name="method_lt" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">lt()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">lt(string  <span class="argument">$col_name</span>, string  <span class="argument">$var_name</span>, string  <span class="argument">$expression</span>) : array</pre>
+                <p><em>less than: see documentation for ge()</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>The column name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$var_name </td>
+                                <td><p>The field variable name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>The field value</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>condition to pass to next filter</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_ne" name="method_ne" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">ne()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">ne(string  <span class="argument">$col_name</span>, string  <span class="argument">$var_name</span>, string  <span class="argument">$expression</span>) : array</pre>
+                <p><em>not equals: see documentation for ge()</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>The column name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$var_name </td>
+                                <td><p>The field variable name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>The field value</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>condition to pass to next filter</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_like" name="method_like" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">like()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">like(string  <span class="argument">$col_name</span>, string  <span class="argument">$var_name</span>, string  <span class="argument">$expression</span>) : array</pre>
+                <p><em>like: see documentation for ge()</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$col_name </td>
+                                <td><p>The column name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$var_name </td>
+                                <td><p>The field variable name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$expression </td>
+                                <td><p>The field value</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>condition to pass to next filter</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_process_form_data" name="method_process_form_data" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">process_form_data()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">process_form_data() </pre>
+                <p><em>Read all form data and process values. This will be called automatically
+by query() and execute() methods.</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_remove_schema_name" name="method_remove_schema_name" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">remove_schema_name()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">remove_schema_name(  <span class="argument">$column</span>) </pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$column </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_query" name="method_query" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">query()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">query() : string</pre>
+                <p><em>generate the SQL query and return it as a string.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>the SQL query build by this report object</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_column_names" name="method_get_column_names" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_column_names()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_column_names() : array</pre>
+                <p><em>Returns a list of all column names.  These will be exactly the same as
+the columns returned by the query.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>the list of column names</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_execute" name="method_execute" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">execute()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">execute(string  <span class="argument">$sql = null</span>) : array</pre>
+                <p><em>Execute the generated query on the configured database and return
+a result handle</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$sql </td>
+                                <td><p>optional sql to execute.</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Exception</dt>
+                            <dd><p>if there is an error executing the query</p></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>array that contains the result set</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_search_uri" name="method_get_search_uri" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_search_uri()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_search_uri(array  <span class="argument">$exceptions = null</span>) : string</pre>
+                <p><em>return a urlencoded string of parameters that were used in this report.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$exceptions </td>
+                                <td><p>List of variables names not to append</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The url string</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_init_report" name="method_init_report" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">init_report()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">init_report() </pre>
+                <p><em>reset internal variables</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_connect_to_datasource" name="method_connect_to_datasource" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">connect_to_datasource()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">connect_to_datasource() </pre>
+                <p><em>make a connection to the database, die with an error if this doesn&#039;t work</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_column_aggregate_function" name="method_get_column_aggregate_function" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">get_column_aggregate_function()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_column_aggregate_function(\type  <span class="argument">$name</span>) : null|string</pre>
+                <p><em>given a column name, try to guess the aggregate function name.  For now this
+expects columns with a format like
+colname_cnt
+colname_max
+colname_avg</em></p>
+                <p>It checks the last letters after an underscore and returns an aggregate function that most
+closely matches.  Supported types are:
+_sum _cnt = SUM
+_avg, _median = AVG
+_min, _95, _stddev = MIN
+_max = MAX</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$name </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    null|string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                                                            <p>make this a plugin / configurable</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_filter_where" name="method_filter_where" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">filter_where()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">filter_where() </pre>
+                <p><em>removes all where conditions where the value of the expression is null.</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_check_mysql_error" name="method_check_mysql_error" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">check_mysql_error()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">check_mysql_error(\MySQLi_Result  <span class="argument">$result</span>) </pre>
+                <p><em>check the result of a mysqli query and throw and exception if there was an error</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\MySQLi_Result</td>
+                                <td>$result </td>
+                                <td><p>handle to the result set</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Exception</dt>
+                            <dd><p>if there was a query error</p></dd>
+                                                                    </dl>
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">MySQLTableReport.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/MySQLTableReport.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on October 12th, 2016 at 17:04.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>
