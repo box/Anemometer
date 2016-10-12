@@ -217,4 +217,24 @@ class TestQueryExplain extends PHPUnit_Framework_TestCase
 +----+-------------+---------+------+---------------+-----+---------+-----+------+-------------+
 ', $result);
     }
+
+    public function testQueryWithComment()
+    {
+        /** @var QueryExplain $mock_QueryExplain */
+        $mock_QueryExplain = $this->getMockBuilder(QueryExplain::class)
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $mock_QueryExplain->mysqli = new testMysqli();
+        $mock_QueryExplain->query = 'SELECT /* some comment */col01 from table01 where table01.col02=789';
+
+        static::assertEquals('+----+-------------+---------+------+---------------+-----+---------+-----+------+-------------+
+| id | select_type | table   | type | possible_keys | key | key_len | ref | rows | Extra       |
++----+-------------+---------+------+---------------+-----+---------+-----+------+-------------+
+| 1  | SIMPLE      | table01 | ALL  |               |     |         |     | 1    | Using where |
++----+-------------+---------+------+---------------+-----+---------+-----+------+-------------+
+', $mock_QueryExplain->explain());
+
+    }
 }
