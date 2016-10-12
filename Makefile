@@ -55,11 +55,15 @@ vendor:
 vagrant: ## Start vagrant virtual machine
 	cd vagrant && vagrant up
 
-docs: phpdoc ## Update documentation
+docs: phpdoc graphviz ## Update documentation
 	./vendor/phpdocumentor/phpdocumentor/bin/phpdoc -d lib -t docs
 
 phpdoc:
 	test -f ./vendor/phpdocumentor/phpdocumentor/bin/phpdoc || composer install
+
+graphviz:
+	@echo "Checking if graphviz is installed"
+	@which dot > /dev/null 2>&1 || echo "Install graphviz. On MacOS it's brew install graphviz"
 
 composer: ## Install composer locally
 	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
