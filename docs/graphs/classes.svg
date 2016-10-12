@@ -18,35 +18,35 @@
 <polygon fill="none" stroke="black" points="117.819,-376 35.7979,-376 35.7979,-340 117.819,-340 117.819,-376"/>
 <text text-anchor="middle" x="76.8086" y="-354.7" font-family="Courier,monospace" font-size="11.00">Anemometer</text>
 </g>
-<!-- \\AnemometerModel -->
-<g id="node2" class="node"><title>\\AnemometerModel</title>
-<polygon fill="none" stroke="black" points="134.325,-322 19.2925,-322 19.2925,-286 134.325,-286 134.325,-322"/>
-<text text-anchor="middle" x="76.8086" y="-300.7" font-family="Courier,monospace" font-size="11.00">AnemometerModel</text>
-</g>
-<!-- \\Loader -->
-<g id="node3" class="node"><title>\\Loader</title>
-<polygon fill="none" stroke="black" points="104.416,-268 49.2008,-268 49.2008,-232 104.416,-232 104.416,-268"/>
-<text text-anchor="middle" x="76.8086" y="-246.7" font-family="Courier,monospace" font-size="11.00">Loader</text>
+<!-- \\QueryTableParser -->
+<g id="node2" class="node"><title>\\QueryTableParser</title>
+<polygon fill="none" stroke="black" points="137.426,-322 16.1908,-322 16.1908,-286 137.426,-286 137.426,-322"/>
+<text text-anchor="middle" x="76.8086" y="-300.7" font-family="Courier,monospace" font-size="11.00">QueryTableParser</text>
 </g>
 <!-- \\MySQLTableReport -->
-<g id="node4" class="node"><title>\\MySQLTableReport</title>
-<polygon fill="none" stroke="black" points="137.426,-214 16.1908,-214 16.1908,-178 137.426,-178 137.426,-214"/>
-<text text-anchor="middle" x="76.8086" y="-192.7" font-family="Courier,monospace" font-size="11.00">MySQLTableReport</text>
-</g>
-<!-- \\QueryExplain -->
-<g id="node5" class="node"><title>\\QueryExplain</title>
-<polygon fill="none" stroke="black" points="124.522,-160 29.0955,-160 29.0955,-124 124.522,-124 124.522,-160"/>
-<text text-anchor="middle" x="76.8086" y="-138.7" font-family="Courier,monospace" font-size="11.00">QueryExplain</text>
+<g id="node3" class="node"><title>\\MySQLTableReport</title>
+<polygon fill="none" stroke="black" points="137.426,-268 16.1908,-268 16.1908,-232 137.426,-232 137.426,-268"/>
+<text text-anchor="middle" x="76.8086" y="-246.7" font-family="Courier,monospace" font-size="11.00">MySQLTableReport</text>
 </g>
 <!-- \\QueryRewrite -->
-<g id="node6" class="node"><title>\\QueryRewrite</title>
-<polygon fill="none" stroke="black" points="124.522,-106 29.0955,-106 29.0955,-70 124.522,-70 124.522,-106"/>
-<text text-anchor="middle" x="76.8086" y="-84.7" font-family="Courier,monospace" font-size="11.00">QueryRewrite</text>
+<g id="node4" class="node"><title>\\QueryRewrite</title>
+<polygon fill="none" stroke="black" points="124.522,-214 29.0955,-214 29.0955,-178 124.522,-178 124.522,-214"/>
+<text text-anchor="middle" x="76.8086" y="-192.7" font-family="Courier,monospace" font-size="11.00">QueryRewrite</text>
 </g>
-<!-- \\QueryTableParser -->
-<g id="node7" class="node"><title>\\QueryTableParser</title>
-<polygon fill="none" stroke="black" points="137.426,-52 16.1908,-52 16.1908,-16 137.426,-16 137.426,-52"/>
-<text text-anchor="middle" x="76.8086" y="-30.7" font-family="Courier,monospace" font-size="11.00">QueryTableParser</text>
+<!-- \\AnemometerModel -->
+<g id="node5" class="node"><title>\\AnemometerModel</title>
+<polygon fill="none" stroke="black" points="134.325,-160 19.2925,-160 19.2925,-124 134.325,-124 134.325,-160"/>
+<text text-anchor="middle" x="76.8086" y="-138.7" font-family="Courier,monospace" font-size="11.00">AnemometerModel</text>
+</g>
+<!-- \\Loader -->
+<g id="node6" class="node"><title>\\Loader</title>
+<polygon fill="none" stroke="black" points="104.416,-106 49.2008,-106 49.2008,-70 104.416,-70 104.416,-106"/>
+<text text-anchor="middle" x="76.8086" y="-84.7" font-family="Courier,monospace" font-size="11.00">Loader</text>
+</g>
+<!-- \\QueryExplain -->
+<g id="node7" class="node"><title>\\QueryExplain</title>
+<polygon fill="none" stroke="black" points="124.522,-52 29.0955,-52 29.0955,-16 124.522,-16 124.522,-52"/>
+<text text-anchor="middle" x="76.8086" y="-30.7" font-family="Courier,monospace" font-size="11.00">QueryExplain</text>
 </g>
 </g>
 </svg>
