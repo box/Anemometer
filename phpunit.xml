@@ -1,5 +1,17 @@
-<phpunit
-    colors="true"
-    verbose="true"
-    bootstrap="test/setup.php">
+<phpunit colors="true" verbose="true" bootstrap="test/setup.php">
+    <testsuite name="Tests">
+        <directory>./test</directory>
+    </testsuite>
+
+    <filter>
+        <whitelist>
+            <file>index.php</file>
+            <directory suffix=".php">lib</directory>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true"/>
+    </logging>
+
 </phpunit>

@@ -39,7 +39,7 @@ clean-test: ## remove test and coverage artifacts
 
 
 test: ## run tests quickly with the default PHP
-	phpunit test
+	phpunit
 
 phpunit: vendor/phpunit
 
@@ -67,3 +67,6 @@ composer: ## Install composer locally
 	php composer-setup.php -- --cafile /tmp/cacert.pem
 	php -r "unlink('composer-setup.php');"
 	php -r "unlink('/tmp/cacert.pem');"
+
+cov:  ## Print test coverage report
+	phpunit --whitelist lib/ --coverage-text test/
