@@ -73,4 +73,4 @@ composer: ## Install composer locally
 	php -r "unlink('/tmp/cacert.pem');"
 
 cov:  ## Print test coverage report
-	phpunit --whitelist lib/ --coverage-text test/
+	phpunit --whitelist lib/ --coverage-html .cov test/
