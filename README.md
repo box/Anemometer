@@ -55,7 +55,7 @@ For pt-query-digest version < 2.2
 
     $ pt-query-digest --user=anemometer --password=superSecurePass \
                       --review h=db.example.com,D=slow_query_log,t=global_query_review \
-                      --review-history h=db.example.com,D=slow_query_log,t=global_query_review_history \
+                      --history h=db.example.com,D=slow_query_log,t=global_query_review_history \
                       --no-report --limit=0% \ 
                       --filter=" \$event->{Bytes} = length(\$event->{arg}) and \$event->{hostname}=\"$HOSTNAME\"" \ 
                       /var/lib/mysql/db.example.com-slow.log
