@@ -37,7 +37,7 @@ foreach(glob("conf/datasource_*.inc.php") as $datasource) {
 	require_once($datasource);
 }
 
-foreach(glob("conf/plugins_*.inc.php") as $plugin) {
+foreach(glob("conf/plugin_*.inc.php") as $plugin) {
     require_once($plugin);
 }
 
