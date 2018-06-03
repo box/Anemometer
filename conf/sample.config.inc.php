@@ -129,7 +129,7 @@ $conf['history_defaults'] = array(
 );
 
 $conf['report_defaults'] = array(
-	'fact-group'	=> 'checksum',
+	'fact-group'	=> 'checksum, snippet',
 	'fact-order'	=> 'Query_time_sum DESC',
 	'fact-limit' => '20',
 	'dimension-ts_min_start' => date("Y-m-d H:i:s", strtotime( '-1 day')),
