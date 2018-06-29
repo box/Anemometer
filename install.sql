@@ -122,3 +122,10 @@ CREATE TABLE `global_query_review_history` (
   KEY `ts_min` (`ts_min`),
   KEY `checksum` (`checksum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Create a table for reviewers
+CREATE TABLE `reviewer` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

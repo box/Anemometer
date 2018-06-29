@@ -17,6 +17,9 @@ class AnemometerModel {
 
     private $conf;
     private $datasource_name;
+    /**
+     * @var mysqli
+     */
     private $mysqli;
     private $fact_table;
     private $dimension_table;
@@ -187,7 +190,16 @@ class AnemometerModel {
      * @return array    The list of reviewers
      */
     public function get_reviewers() {
-        return $this->conf['reviewers'];
+        $reviewers = [];
+        $query = "SELECT name FROM reviewer";
+        $result = $this->mysqli->query($query);
+        if ($result->num_rows > 0) {
+
+            while ($row = $result->fetch_assoc()){
+                $reviewers[] = $row['name'];
+            }
+        }
+        return $reviewers;
     }
 
     /**
