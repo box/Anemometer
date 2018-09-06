@@ -2,6 +2,9 @@
     "require-dev": {
         "phpunit/phpunit": "4.5.*",
         "phpdocumentor/phpdocumentor": "2.*"
+    },
+    "require": {
+        "lightsaml/lightsaml": "^1.4"
     }
 }
 
