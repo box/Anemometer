@@ -89,15 +89,12 @@ class Anemometer {
         } else if (get_var('dimension-pivot-'.$checksum_field_name) != null
                    and get_var("dimension-pivot-{$checksum_field_name}-use-values") != null) {
             $values = explode('|',get_var("dimension-pivot-{$checksum_field_name}-use-values"));
-            for ($i=0; $i<count($values); $i++) {
-                $values[$i] = $this->translate_checksum($values[$i]);
-            }
             $this->report_obj->set_pivot_values("dimension-pivot-{$checksum_field_name}", $values);
             //$_GET["dimension-pivot-{$checksum_field_name}"] = get_var('plot_field');
         }
 
         // translate the checksum field from possible hex value
-        $checksum = $this->translate_checksum(get_var("fact-{$checksum_field_name}"));
+        $checksum = get_var("fact-{$checksum_field_name}");
         if (isset($checksum))
         {
 //            print "setting checksum [$checksum]";
@@ -268,7 +265,7 @@ class Anemometer {
      */
     public function quicksearch() {
         $datasource = get_var('datasource');
-        $checksum = $this->translate_checksum(get_var('checksum'));
+        $checksum = get_var('checksum');
         $exists = $this->data_model->checksum_exists($checksum);
         if (!$exists) {
             $this->alert("Unknown checksum: {$checksum}");
@@ -334,7 +331,7 @@ class Anemometer {
         $this->header();
 
         $datasource = get_var('datasource');
-        $checksum = $this->translate_checksum(get_var('checksum'));
+        $checksum = get_var('checksum');
         $start = get_var('start') | 0;
         $rpp = get_var('rpp');
 
@@ -355,31 +352,6 @@ class Anemometer {
         $this->footer();
     }
 
-    private function translate_checksum($checksum)
-    {
-	if (!in_array($this->data_model->get_source_type(), array('slow_query_log','default')))
-	{
-		return $checksum;
-	}
-
-        if (preg_match('/^[0-9]+$/', $checksum))
-        {
-            return $checksum;
-        }
-        else if (preg_match('/^[0-9A-Fa-f]+$/', $checksum))
-        {
-            return $this->bchexdec($checksum);
-        }
-        else if (strlen($checksum) == 0)
-        {
-            return null;
-        }
-        else
-        {
-            throw new Exception("Invalid query checksum");
-        }
-    }
-
     /**
      * Display a specific query from its checksum value
      *
@@ -387,7 +359,7 @@ class Anemometer {
     public function show_query() {
         $this->header();
         $output = 'table';
-        $checksum = $this->translate_checksum(get_var('checksum'));
+        $checksum = get_var('checksum');
         $exists = $this->data_model->checksum_exists($checksum);
         if (!$exists) {
             $this->alert("Unknown checksum: {$checksum}");
@@ -524,7 +496,7 @@ class Anemometer {
      *
      */
     public function upd_query() {
-        $checksum = $this->translate_checksum(get_var('checksum'));
+        $checksum = get_var('checksum');
         $valid_actions = array('Review', 'Review and Update Comments', 'Update Comments', 'Clear Review');
         $submit = get_var('submit');
 
@@ -746,4 +718,3 @@ class Anemometer {
 }
 
 ?>
-
