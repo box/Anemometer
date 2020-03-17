@@ -368,7 +368,8 @@ class Anemometer {
         }
         else if (preg_match('/^[0-9A-Fa-f]+$/', $checksum))
         {
-            return $this->bchexdec($checksum);
+            //return $this->bchexdec($checksum);
+            return $checksum;
         }
         else if (strlen($checksum) == 0)
         {

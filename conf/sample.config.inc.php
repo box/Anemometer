@@ -32,7 +32,7 @@
  * one you want to report on.
  *
  */
- 
+
 foreach(glob("conf/datasource_*.inc.php") as $datasource) {
 	require_once($datasource);
 }
@@ -345,7 +345,7 @@ $conf['reports']['slow_query_log'] = array(
 	'callbacks'     => array(
 		'table' => array(
 			'date'  => function ($x) { $type=''; if ( date('N',strtotime($x)) >= 6) { $type = 'weekend'; } return array($x,$type); },
-			'checksum' => function ($x) { return array(dec2hex($x), ''); }
+			// 'checksum' => function ($x) { return array(dec2hex($x), ''); }
 		)
 	)
 
