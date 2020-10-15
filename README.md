@@ -7,24 +7,14 @@ Box Anemometer
 
 This is the Box Anemometer, the MySQL Slow Query Monitor.  This tool is used to analyze slow query logs collected from MySQL instances to identify problematic queries.
 
-### Documentation ###
-
-1.	[What is Anemometer?](https://github.com/box/Anemometer/wiki)
-2.	[Extra Features](https://github.com/box/Anemometer/wiki/Extra-Features)
-3.	[Using PERFORMANCE_SCHEMA](https://github.com/box/Anemometer/wiki/Using-PERFORMANCE_SCHEMA-in-MySQL-5.6)
-4.	[Collection Script](https://github.com/box/Anemometer/wiki/Anemometer-Collection-Script)
-5.	[Development with Vagrant](https://github.com/box/Anemometer/wiki/Development-with-Vagrant)
-6.	Installation: See Quickstart below
-7.  [Unit Testing](https://github.com/box/Anemometer/wiki/Unit-Testing)
-
 ### Quickstart ###
 
 If you're just completely itching to start using this tool, here's what you need:
 
 1.	a MySQL database to store query analysis data in.
-2.	[pt-query-digest](http://www.percona.com/doc/percona-toolkit/pt-query-digest.html).
-	*	You may as well just get the whole [Percona Toolkit](http://www.percona.com/doc/percona-toolkit) while you're at it :)
-3.	a slow query log from a MySQL server (see [The Slow Query Log](http://dev.mysql.com/doc/refman/5.5/en/slow-query-log.html) for info on getting one)
+2.	[pt-query-digest](https://www.percona.com/doc/percona-toolkit/LATEST/pt-query-digest.html).
+	*	You may as well just get the whole [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/) while you're at it :)
+3.	a slow query log from a MySQL server (see [The Slow Query Log](https://dev.mysql.com/doc/refman/8.0/en/slow-query-log.html) for info on getting one)
 4.	a webserver with PHP 5.5+
 
 
@@ -32,10 +22,11 @@ If you're just completely itching to start using this tool, here's what you need
 
 First up, grab the anemometer code from github. Navigate to the document root of your web server and snag a copy of the Box Anemometer code.
 
-    $ git clone git://github.com/box/Anemometer.git anemometer 
+    $ git clone git@github.com:box/Anemometer.git anemometer
+
 Or, if you have 9418 port closed:
 
-    $ git clone https://github.com/box/Anemometer.git anemometer 
+    $ git clone https://github.com/box/Anemometer.git anemometer
 
 
 Then change your current working directory to the Anemometer directory:
@@ -137,7 +128,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+   https://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
