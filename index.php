@@ -23,8 +23,42 @@ set_include_path( get_include_path() . PATH_SEPARATOR . "./lib");
 require "Helpers.php";
 require "Anemometer.php";
 
-error_reporting(E_ALL);
-$action = isset($_GET['action']) ? $_GET['action'] : 'index';
+//do not display any errors
+//error_reporting(E_ALL);
+ini_set('display_errors', 0);
+
+//for security reason(XSS and SQL Injection)
+$action = isset($_GET['action']) ? htmlentities(addslashes(trim($_GET['action']))) : 'index';
+if(!in_array($action, array('report', 'api', 'show_query', 'graph_search')))
+{
+        $action = 'index';
+}
+
+//for security reason(XSS and SQL Injection)
+$args = array('datasource',
+    'dimension-ts_min_start',
+    'dimension-ts_min_end',
+    'fact-first_seen',
+    'dimension-hostname_max',
+    'fact-group',
+    'table_fields',
+    'fact-order',
+    'fact-having',
+    'fact-limit',
+    'fact-where',
+    'fact-sample',
+    'fact-reviewed_status',
+    'fact-checksum',
+);
+
+//also for security reason(XSS and SQL Injection)
+foreach($args as $arg)
+{
+    if(isset($_GET["$arg"]))
+    {
+        $_GET["$arg"] = htmlspecialchars(htmlentities(addslashes(trim($_GET["$arg"]))));
+    }
+}
 
 $conf = array();
 @include "conf/config.inc.php";
