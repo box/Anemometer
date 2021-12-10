@@ -345,7 +345,6 @@ $conf['reports']['slow_query_log'] = array(
 	'callbacks'     => array(
 		'table' => array(
 			'date'  => function ($x) { $type=''; if ( date('N',strtotime($x)) >= 6) { $type = 'weekend'; } return array($x,$type); },
-			'checksum' => function ($x) { return array(dec2hex($x), ''); }
 		)
 	)
 
