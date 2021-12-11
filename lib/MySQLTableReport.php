@@ -990,7 +990,9 @@ class MySQLTableReport {
         }
 
         $result = $this->mysqli->query($sql);
-        $this->check_mysql_error($result);
+	    
+        //do not display any erros for security reason
+	//$this->check_mysql_error($result);
 
         $result_data = array();
         while ($row = $result->fetch_assoc()) {
